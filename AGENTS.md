@@ -4,16 +4,34 @@
 
 Автономный субагент для перевода подкастов с YouTube.
 
+### Установка
+
+Скопируй файл субагента в директорию ~/.claude/agents/:
+
+```bash
+cp podcast-translator.md ~/.claude/agents/
+```
+
+Или установи из проекта:
+
+```bash
+# Файл уже создан в ~/.claude/agents/podcast-translator.md
+```
+
 ### Как использовать
 
-Из clawdbot или другого Claude Code сессии:
+Из clawdbot или Claude Code:
 
+**Простой запрос:**
 ```
-Запусти субагента для перевода подкаста.
+Переведи этот подкаст: https://www.youtube.com/watch?v=gmkURB_HmQI
+```
 
-Задача: Прочитай /home/clawd/work/podcast-translator/agents/podcast-translator.md и выполни задачу для URL: https://www.youtube.com/watch?v=VIDEO_ID
+Claude автоматически определит и использует podcast-translator агента.
 
-Субагент должен выполнить весь pipeline автономно и вернуться с результатами.
+**Явный вызов:**
+```
+Используй podcast-translator агента для этого URL: https://www.youtube.com/watch?v=gmkURB_HmQI
 ```
 
 ### Что делает агент
@@ -30,14 +48,30 @@
 - Пути ко всем созданным файлам
 - Длительность аудио
 - Количество слов в переводе
+- Размеры файлов
 
-### Пример вызова
+### Конфигурация агента
 
+**Имя**: `podcast-translator`
+**Модель**: `sonnet`
+**Инструменты**: `Bash, Read, Write, Edit`
+**Расположение**: `~/.claude/agents/podcast-translator.md`
+
+### Формат субагента
+
+Субагенты используют YAML frontmatter:
+
+```yaml
+---
+name: podcast-translator
+description: Translates YouTube podcasts from English to Russian
+tools: Bash, Read, Write, Edit
+model: sonnet
+---
 ```
-Используй Agent tool чтобы запустить автономный субагента:
 
-Prompt: "Прочитай /home/clawd/work/podcast-translator/agents/podcast-translator.md и переведи этот подкаст: https://www.youtube.com/watch?v=gmkURB_HmQI"
-Subagent type: general-purpose
+За ним следует system prompt в Markdown формате.
 
-Дождись завершения и покажи мне результаты.
-```
+### Документация
+
+Подробнее о субагентах: https://code.claude.com/docs/en/sub-agents

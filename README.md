@@ -20,8 +20,7 @@ podcast-translator/
 │   └── generate_tts.py         # Генерация TTS
 ├── skills/                     # Claude Skills
 │   └── podcast-translator-skill/ # Skill для перевода
-├── agents/                     # Субагенты
-│   └── podcast-translator.md   # Автономный агент перевода
+├── podcast-translator-skill.skill # Упакованный skill
 ├── audio/                      # Сгенерированная озвучка
 ├── input/                      # Скачанные MP3 файлы
 ├── transcripts/                # Транскрибация (английский)
@@ -92,12 +91,16 @@ pip install faster-whisper edge-tts yt-dlp --break-system-packages
 
 ### 1. Автономный субагент (рекомендуется)
 
-Запусти из clawdbot или Claude Code:
+Субагент установлен в `~/.claude/agents/podcast-translator.md`
 
+Просто попроси:
 ```
-Запусти субагента для перевода подкаста: https://www.youtube.com/watch?v=VIDEO_ID
+Переведи этот подкаст: https://www.youtube.com/watch?v=VIDEO_ID
+```
 
-Прочитай /home/clawd/work/podcast-translator/agents/podcast-translator.md и выполни задачу автономно.
+Или явно укажи:
+```
+Используй podcast-translator агента для этого URL
 ```
 
 Субагент выполнит весь pipeline автоматически и вернёт результаты.
