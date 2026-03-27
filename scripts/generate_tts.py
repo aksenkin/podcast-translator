@@ -151,7 +151,7 @@ def merge_with_ffmpeg(audio_files, output_file):
             except:
                 pass
 
-async def generate_tts(text_file, output_file):
+async def generate_tts(text_file, output_file, voice="ru-RU-DmitryNeural"):
     """Generate Russian TTS audio with proper error handling"""
     text = load_text(text_file)
 
@@ -161,9 +161,7 @@ async def generate_tts(text_file, output_file):
 
     print(f"📄 Generating TTS for: {text_file}")
     print(f"📊 Text length: {len(text)} characters")
-
-    # Use Dmitry Neural voice for Russian
-    voice = "ru-RU-DmitryNeural"
+    print(f"🎙️  Voice: {voice}")
 
     # Chunk the text
     chunks = chunk_text(text)
@@ -207,13 +205,24 @@ async def generate_tts(text_file, output_file):
 
 if __name__ == "__main__":
     if len(sys.argv) < 3:
-        print("Usage: python3 generate_tts.py <input_text_file> <output_audio_file>")
+        print("Usage: python3 generate_tts.py <input_text_file> <output_audio_file> [voice]")
+        print("")
+        print("Arguments:")
+        print("  input_text_file   - Path to Russian text file")
+        print("  output_audio_file - Path to output MP3 file")
+        print("  voice             - Optional TTS voice (default: ru-RU-DmitryNeural)")
+        print("")
+        print("Available Russian voices:")
+        print("  ru-RU-DmitryNeural  - Male voice (default)")
+        print("  ru-RU-SvetlanaNeural - Female voice")
         print("")
         print("Example:")
         print("  python3 generate_tts.py translations/episode_ru.txt audio/episode_ru.mp3")
+        print("  python3 generate_tts.py translations/episode_ru.txt audio/episode_ru.mp3 ru-RU-SvetlanaNeural")
         sys.exit(1)
 
     text_file = sys.argv[1]
     output_file = sys.argv[2]
+    voice = sys.argv[3] if len(sys.argv) > 3 else "ru-RU-DmitryNeural"
 
-    asyncio.run(generate_tts(text_file, output_file))
+    asyncio.run(generate_tts(text_file, output_file, voice))

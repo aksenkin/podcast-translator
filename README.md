@@ -61,7 +61,11 @@ cd /home/clawd/work/podcast-translator
 
 5. **Генерация TTS**
    ```bash
+   # Голос по умолчанию (Dmitry - мужской)
    python3 scripts/generate_tts.py translations/podcast_ru.txt audio/podcast.ru.mp3
+
+   # Женский голос (Svetlana)
+   python3 scripts/generate_tts.py translations/podcast_ru.txt audio/podcast.ru.mp3 ru-RU-SvetlanaNeural
    ```
 
 ## Зависимости
@@ -86,6 +90,30 @@ pip install faster-whisper edge-tts yt-dlp --break-system-packages
 - `TRANSCRIPT_DIR="$PROJECT_DIR/transcripts"`
 - `TRANSLATION_DIR="$PROJECT_DIR/translations"`
 - `AUDIO_DIR="$PROJECT_DIR/audio"`
+
+## Голоса для TTS
+
+### Доступные голоса
+
+- **ru-RU-DmitryNeural** - Мужской голос (по умолчанию)
+- **ru-RU-SvetlanaNeural** - Женский голос
+
+### Использование
+
+```bash
+# По умолчанию (Dmitry)
+python3 scripts/generate_tts.py input.txt output.mp3
+
+# Женский голос (Svetlana)
+python3 scripts/generate_tts.py input.txt output.mp3 ru-RU-SvetlanaNeural
+```
+
+**С субагентом**:
+```
+Переведи этот подкаст с женским голосом: [URL]
+```
+
+Подробнее: [VOICES.md](VOICES.md)
 
 ## Способы использования
 
