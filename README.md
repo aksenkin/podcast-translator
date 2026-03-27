@@ -20,6 +20,8 @@ podcast-translator/
 │   └── generate_tts.py         # Генерация TTS
 ├── skills/                     # Claude Skills
 │   └── podcast-translator-skill/ # Skill для перевода
+├── agents/                     # Субагенты
+│   └── podcast-translator.md   # Автономный агент перевода
 ├── audio/                      # Сгенерированная озвучка
 ├── input/                      # Скачанные MP3 файлы
 ├── transcripts/                # Транскрибация (английский)
@@ -28,14 +30,14 @@ podcast-translator/
 
 ## Использование
 
-### Полный pipeline
+### Полный pipeline (bash скрипт)
 
 ```bash
 cd /home/clawd/work/podcast-translator
 ./scripts/download_and_process.sh "https://www.youtube.com/watch?v=VIDEO_ID"
 ```
 
-### Поэтапно
+### Поэтапно (вручную)
 
 1. **Скачать аудио**
    ```bash
@@ -86,6 +88,33 @@ pip install faster-whisper edge-tts yt-dlp --break-system-packages
 - `TRANSLATION_DIR="$PROJECT_DIR/translations"`
 - `AUDIO_DIR="$PROJECT_DIR/audio"`
 
+## Способы использования
+
+### 1. Автономный субагент (рекомендуется)
+
+Запусти из clawdbot или Claude Code:
+
+```
+Запусти субагента для перевода подкаста: https://www.youtube.com/watch?v=VIDEO_ID
+
+Прочитай /home/clawd/work/podcast-translator/agents/podcast-translator.md и выполни задачу автономно.
+```
+
+Субагент выполнит весь pipeline автоматически и вернёт результаты.
+
+### 2. Bash скрипт (полуавтоматический)
+
+```bash
+cd /home/clawd/work/podcast-translator
+./scripts/download_and_process.sh "https://www.youtube.com/watch?v=VIDEO_ID"
+```
+
+Тебё понадобится вручную перевести на шаге 4 используя podcast-translator skill.
+
+### 3. Поэтапно (полный контроль)
+
+См. ниже "Поэтапное использование".
+
 ## Skill для перевода
 
 Проект включает в себя `podcast-translator-skill` для автоматического перевода:
@@ -107,3 +136,8 @@ pip install faster-whisper edge-tts yt-dlp --break-system-packages
 ## Лицензия
 
 MIT
+
+## Документация
+
+- [AGENTS.md](AGENTS.md) - Документация по субагентам
+
