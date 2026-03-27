@@ -1,6 +1,6 @@
 ---
 name: podcast-translator
-description: Translate podcast transcripts from English to Russian. Use this skill whenever the user needs to translate a podcast transcript, translate audio transcription, or convert English podcast content to Russian. This skill handles the podcast translation workflow: reading prepared transcript files with timestamps, translating while preserving technical terms and names in English, and outputting continuous Russian text without timestamps. Trigger this skill for tasks like "translate this podcast", "convert transcript to Russian", or any podcast/audio translation work.
+description: Translate podcast transcripts from English to Russian. Use this skill whenever the user needs to translate a podcast transcript, translate audio transcription, or convert English podcast content to Russian. This skill handles the complete translation workflow - reading prepared transcript files with timestamps, translating while preserving technical terms and names in English, and outputting clean Russian text ready for TTS. Trigger this skill for tasks like "translate this podcast", "convert transcript to Russian", or any podcast/audio translation work.
 ---
 
 # Podcast Translator Skill
