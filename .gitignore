@@ -1,0 +1,58 @@
+# Binary files
+*.mp3
+*.mp4
+*.webm
+*.wav
+*.m4a
+
+# Transcription and translation files (large)
+input/*
+transcripts/*
+translations/*
+audio/*
+
+# Keep directory structure
+!input/.gitkeep
+!transcripts/.gitkeep
+!translations/.gitkeep
+!audio/.gitkeep
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+
+# Virtual environments
+venv/
+env/
+.venv/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Workspace and testing
+workspace/
+*.workspace/
+podcast-translator-workspace/
+
+# Model cache (huge)
+.cache/
+models/
+
+# Temporary files
+*.tmp
+*.bak
+*.log
