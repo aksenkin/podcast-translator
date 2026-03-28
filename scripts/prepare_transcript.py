@@ -21,12 +21,12 @@ def prepare_for_translation(input_file, output_file):
     Prepare transcript for AI translation
     This just copies the text - translation will be done by AI assistant
     """
-    print(f"Preparing transcript for translation: {input_file}")
+    print(f"STATUS: Preparing transcript for translation: {input_file}", flush=True)
 
     text = load_text(input_file)
 
     if not text.strip():
-        print("Error: Empty input file")
+        print("ERROR: Empty input file", flush=True)
         sys.exit(1)
 
     # Add metadata header
@@ -40,8 +40,8 @@ def prepare_for_translation(input_file, output_file):
     full_text = metadata + text
 
     save_text(full_text, output_file)
-    print(f"✓ Prepared for translation: {output_file}")
-    print(f"📄 Text length: {len(text)} characters")
+    print(f"SUCCESS: Prepared for translation: {output_file}", flush=True)
+    print(f"STATUS: Text length: {len(text)} characters", flush=True)
 
 if __name__ == "__main__":
     import datetime
