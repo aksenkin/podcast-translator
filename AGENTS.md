@@ -1,37 +1,38 @@
-# Субагенты
+# Субагенты и Skills
 
-## Podcast Translation Agent
+## Claude Code Agent
 
-Автономный субагент для перевода подкастов с YouTube.
+Автономный агент для перевода подкастов с YouTube.
 
-### Установка
+### Расположение
 
-Скопируй файл субагента в директорию ~/.claude/agents/:
+- **Проект**: `agents/podcast-translator.md`
+- **Системный**: `~/.claude/agents/podcast-translator.md`
 
-```bash
-cp podcast-translator.md ~/.claude/agents/
-```
+### Конфигурация агента
 
-Или установи из проекта:
-
-```bash
-# Файл уже создан в ~/.claude/agents/podcast-translator.md
+```yaml
+name: podcast-translator
+description: Translates YouTube podcasts from English to Russian. Downloads audio, transcribes, translates, and generates TTS.
+tools: Bash, Read, Write, Edit
+model: sonnet
 ```
 
 ### Как использовать
 
-Из clawdbot или Claude Code:
-
 **Простой запрос:**
 ```
-Переведи этот подкаст: https://www.youtube.com/watch?v=gmkURB_HmQI
+Переведи этот подкаст: https://www.youtube.com/watch?v=VIDEO_ID
 ```
-
-Claude автоматически определит и использует podcast-translator агента.
 
 **Явный вызов:**
 ```
-Используй podcast-translator агента для этого URL: https://www.youtube.com/watch?v=gmkURB_HmQI
+Используй podcast-translator агента для этого URL
+```
+
+**С выбором голоса:**
+```
+Переведи этот подкаст с женским голосом
 ```
 
 ### Что делает агент
@@ -50,16 +51,52 @@ Claude автоматически определит и использует pod
 - Количество слов в переводе
 - Размеры файлов
 
-### Конфигурация агента
+### Доступные голоса
 
-**Имя**: `podcast-translator`
-**Модель**: `sonnet`
-**Инструменты**: `Bash, Read, Write, Edit`
-**Расположение**: `~/.claude/agents/podcast-translator.md`
+- `ru-RU-DmitryNeural` - Мужской голос (по умолчанию)
+- `ru-RU-SvetlanaNeural` - Женский голос
+- `ru-RU-DariyaNeural` - Женский голос
 
-### Формат субагента
+## OpenClaw Skill 🎙️
 
-Субагенты используют YAML frontmatter:
+Автоматический skill для OpenClaw с полным pipeline.
+
+### Расположение
+
+- **Проект**: `skills/podcast-translator/SKILL.md`
+
+### Конфигурация skill
+
+```yaml
+name: podcast-translator
+description: "Translate YouTube podcasts from English to Russian with TTS generation..."
+emoji: "🎙️"
+requires: { "bins": ["yt-dlp", "python3"] }
+```
+
+### Как использовать
+
+Просто отправь YouTube URL:
+
+```
+Переведи этот подкаст: https://www.youtube.com/watch?v=VIDEO_ID
+```
+
+**С выбором голоса:**
+```
+Переведи этот подкаст с женским голосом: [URL]
+```
+
+### Особенности
+
+- Автоматически распознаёт YouTube URLs
+- Спавнит субагент для выполнения pipeline
+- Возвращает результаты по готовности
+- Работает асинхронно (не блокирует conversation)
+
+## Формат агента
+
+Агенты используют YAML frontmatter:
 
 ```yaml
 ---
@@ -72,6 +109,7 @@ model: sonnet
 
 За ним следует system prompt в Markdown формате.
 
-### Документация
+## Документация
 
-Подробнее о субагентах: https://code.claude.com/docs/en/sub-agents
+- [Подробнее о субагентах](https://code.claude.com/docs/en/sub-agents)
+- [OpenClaw Skills документация](https://openclaw.dev/docs/skills)
