@@ -1,38 +1,42 @@
 # Podcast Translator
 
-Автоматизированный pipeline для перевода подкастов с английского на русский язык с возможностью озвучивания.
+Automated pipeline for translating YouTube podcasts from English to Russian with Russian voiceover generation.
 
-## Возможности
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-- 🎥 Скачивание аудио с YouTube
-- 🎤 Транскрибация с использованием faster-whisper (оптимизировано для CPU)
-- 🌍 Перевод на русский язык с сохранением технических терминов
-- 🔊 Генерация русской озвучки через Edge TTS
-- 🤖 Автономный агент для Claude Code
-- 🎙️ OpenClaw Skill для автоматического перевода
+**Read in other languages:** [Русский](README.ru.md)
 
-## Структура проекта
+## Features
+
+- 🎥 Download audio from YouTube
+- 🎤 Transcribe using faster-whisper (CPU-optimized)
+- 🌍 Translate to Russian while preserving technical terms
+- 🔊 Generate Russian voiceover via Edge TTS
+- 🤖 Autonomous agent for Claude Code
+- 🎙️ OpenClaw Skill for automatic translation
+
+## Project Structure
 
 ```
 podcast-translator/
-├── scripts/                    # Основные скрипты
-│   ├── download_and_process.sh # Полный pipeline
-│   ├── transcribe_cached.py    # Транскрибация (CPU-optimized)
-│   ├── prepare_transcript.py   # Подготовка транскрипции
-│   └── generate_tts.py         # Генерация TTS
-├── agents/                     # Claude Code агенты
-│   └── podcast-translator.md   # Автономный агент для перевода
-├── skills/                     # Skills для разных платформ
-│   ├── podcast-translator-skill/ # Claude skill для перевода
-│   └── podcast-translator/      # OpenClaw skill (автоматический pipeline)
-├── podcast-translator-skill.skill # Упакованный Claude skill
-├── audio/                      # Сгенерированная озвучка
-├── input/                      # Скачанные MP3 файлы
-├── transcripts/                # Транскрибация (английский)
-└── translations/               # Переводы (русский)
+├── scripts/                    # Core scripts
+│   ├── download_and_process.sh # Full pipeline
+│   ├── transcribe_cached.py    # Transcription (CPU-optimized)
+│   ├── prepare_transcript.py   # Transcript preparation
+│   └── generate_tts.py         # TTS generation
+├── agents/                     # Claude Code agents
+│   └── podcast-translator.md   # Autonomous translation agent
+├── skills/                     # Skills for different platforms
+│   ├── podcast-translator-skill/ # Claude translation skill
+│   └── podcast-translator/      # OpenClaw skill (automatic pipeline)
+├── podcast-translator-skill.skill # Packaged Claude skill
+├── audio/                      # Generated voiceovers
+├── input/                      # Downloaded MP3 files
+├── transcripts/                # Transcriptions (English)
+└── translations/               # Translations (Russian)
 ```
 
-## Зависимости
+## Dependencies
 
 - Python 3.x
 - faster-whisper
@@ -40,177 +44,189 @@ podcast-translator/
 - yt-dlp
 - ffmpeg
 
-### Установка
+### Installation
 
 ```bash
 pip install faster-whisper edge-tts yt-dlp --break-system-packages
 ```
 
-## Конфигурация
+## Configuration
 
-Все пути настроены в `scripts/download_and_process.sh`:
-- `PROJECT_DIR="/home/clawd/work/podcast-translator"`
+All paths are configured in `scripts/download_and_process.sh` with flexible options:
+
+**Default directory:** `~/podcast-translator`
+
+**Specify custom directory:**
+- Via parameter: `./scripts/download_and_process.sh --destination-dir /path/to/project URL`
+- Via environment variable: `PODCAST_TRANSLATOR_DIR=/path/to/project`
+- Interactive prompt (if not specified)
+
+**Directory structure:**
 - `INPUT_DIR="$PROJECT_DIR/input"`
 - `TRANSCRIPT_DIR="$PROJECT_DIR/transcripts"`
 - `TRANSLATION_DIR="$PROJECT_DIR/translations"`
 - `AUDIO_DIR="$PROJECT_DIR/audio"`
 
-## Голоса для TTS
+## TTS Voices
 
-### Доступные голоса
+### Available Voices
 
-- **ru-RU-DmitryNeural** - Мужской голос (по умолчанию)
-- **ru-RU-SvetlanaNeural** - Женский голос
-- **ru-RU-DariyaNeural** - Женский голос
+- **ru-RU-DmitryNeural** - Male voice (default)
+- **ru-RU-SvetlanaNeural** - Female voice
+- **ru-RU-DariyaNeural** - Female voice
 
-### Использование
+### Usage
 
-**Через CLI:**
+**Via CLI:**
 ```bash
-# По умолчанию (Dmitry)
+# Default (Dmitry)
 python3 scripts/generate_tts.py input.txt output.mp3
 
-# Женский голос (Svetlana)
+# Female voice (Svetlana)
 python3 scripts/generate_tts.py input.txt output.mp3 ru-RU-SvetlanaNeural
 
-# Женский голос (Dariya)
+# Female voice (Dariya)
 python3 scripts/generate_tts.py input.txt output.mp3 ru-RU-DariyaNeural
 ```
 
-**С агентом/skill:**
+**With agent/skill:**
 ```
-Переведи этот подкаст с женским голосом: [URL]
-```
-
-Подробнее: [VOICES.md](VOICES.md)
-
-## Способы использования
-
-### 1. OpenClaw Skill (рекомендуется) 🎙️
-
-Автоматический pipeline через OpenClaw skill. Просто отправь YouTube URL:
-
-```
-Переведи этот подкаст: https://www.youtube.com/watch?v=VIDEO_ID
+Translate this podcast with a female voice: [URL]
 ```
 
-Skill автоматически:
-- Скачает аудио
-- Транскрибирует
-- Переведёт на русский
-- Сгенерирует озвучку
+See: [VOICES.md](VOICES.md)
 
-**С выбором голоса:**
+## Usage Methods
+
+### 1. OpenClaw Skill (Recommended) 🎙️
+
+Automatic pipeline via OpenClaw skill. Just send a YouTube URL:
+
 ```
-Переведи этот подкаст с женским голосом: https://www.youtube.com/watch?v=VIDEO_ID
+Translate this podcast: https://www.youtube.com/watch?v=VIDEO_ID
 ```
 
-Доступные голоса: Dmitry (мужской, по умолчанию), Svetlana (женский), Dariya (женский).
+The skill automatically:
+- Downloads audio
+- Transcribes
+- Translates to Russian
+- Generates voiceover
+
+**With voice selection:**
+```
+Translate this podcast with a female voice: https://www.youtube.com/watch?v=VIDEO_ID
+```
+
+Available voices: Dmitry (male, default), Svetlana (female), Dariya (female).
 
 ### 2. Claude Code Agent
 
-Автономный агент для Claude Code расположен в `agents/podcast-translator.md`:
+Autonomous agent for Claude Code located at `agents/podcast-translator.md`:
 
 ```
-Используй podcast-translator агента для этого URL
+Use the podcast-translator agent for this URL
 ```
 
-Или просто:
+Or simply:
 ```
-Переведи этот подкаст: https://www.youtube.com/watch?v=VIDEO_ID
+Translate this podcast: https://www.youtube.com/watch?v=VIDEO_ID
 ```
 
-Агент спросит про голос и выполнит весь pipeline автономно.
+The agent will ask about voice preference and execute the entire pipeline autonomously.
 
-### 3. Bash скрипт (полуавтоматический)
+### 3. Bash Script (Semi-automatic)
 
 ```bash
 cd /home/clawd/work/podcast-translator
 ./scripts/download_and_process.sh "https://www.youtube.com/watch?v=VIDEO_ID"
 ```
 
-Потребуется вручную перевести на шаге 4 используя podcast-translator skill.
+You'll need to manually translate at step 4 using the podcast-translator skill.
 
-### 4. Поэтапно (полный контроль)
+**With custom directory:**
+```bash
+./scripts/download_and_process.sh --destination-dir /custom/path "URL"
+```
 
-**1. Скачать аудио**
+### 4. Step-by-Step (Full Control)
+
+**1. Download audio**
 ```bash
 yt-dlp -x --audio-format mp3 --audio-quality 0 -o input/podcast.mp3 "URL"
 ```
 
-**2. Транскрибация**
+**2. Transcribe**
 ```bash
 python3 scripts/transcribe_cached.py input/podcast.mp3 transcripts/ small
 ```
 
-**3. Подготовка перевода**
+**3. Prepare for translation**
 ```bash
 python3 scripts/prepare_transcript.py transcripts/podcast.txt translations/podcast_ready.txt
 ```
 
-**4. Перевод** (с использованием skill или вручную)
+**4. Translate** (using skill or manually)
 
-Используй `podcast-translator` skill или переведи вручную.
+Use the `podcast-translator` skill or translate manually.
 
-**5. Генерация TTS**
+**5. Generate TTS**
 ```bash
-# Голос по умолчанию (Dmitry - мужской)
+# Default voice (Dmitry - male)
 python3 scripts/generate_tts.py translations/podcast_ru.txt audio/podcast.ru.mp3
 
-# Женский голос (Svetlana)
+# Female voice (Svetlana)
 python3 scripts/generate_tts.py translations/podcast_ru.txt audio/podcast.ru.mp3 ru-RU-SvetlanaNeural
 ```
 
-## Формат файлов перевода
+## Translation File Format
 
-Pipeline создаёт два файла перевода:
+The pipeline creates two translation files:
 
-**С таймкодами** (`{episode}_ru.txt`):
+**With timestamps** (`{episode}_ru.txt`):
 ```
-[00:00 - 00:05] Первый сегмент перевода
-[00:05 - 00:10] Второй сегмент перевода
-```
-
-**Для TTS** (`{episode}_ru_tts.txt`):
-```
-Первый сегмент перевода. Второй сегмент перевода.
+[00:00 - 00:05] First translation segment
+[00:05 - 00:10] Second translation segment
 ```
 
-## Оптимизация для CPU
+**For TTS** (`{episode}_ru_tts.txt`):
+```
+First translation segment. Second translation segment.
+```
 
-`transcribe_cached.py` оптимизирован для работы на Raspberry Pi ARM:
-- `beam_size=1` (быстрее на CPU)
-- `int8` квантизация
-- Отключён VAD фильтр
+## CPU Optimization
+
+`transcribe_cached.py` is optimized for Raspberry Pi ARM:
+- `beam_size=1` (faster on CPU)
+- `int8` quantization
+- VAD filter disabled
 - 4 CPU threads, 2 workers
-- Прогресс-хартбит каждые 10 секунд
+- Progress heartbeat every 10 seconds
 
-## Лицензия
+## License
 
 MIT
 
-## Интеграции
+## Integrations
 
 ### OpenClaw Skill 🎙️
 
-Автоматический skill для OpenClaw с полным pipeline:
-- Распознаёт YouTube URLs и запросы на перевод
-- Спавнит субагент для выполнения pipeline
-- Поддерживает выбор голоса (Dmitry, Svetlana, Dariya)
-- Возвращает результаты по готовности
+Automatic skill for OpenClaw with full pipeline:
+- Recognizes YouTube URLs and translation requests
+- Spawns subagent to execute pipeline
+- Supports voice selection (Dmitry, Svetlana, Dariya)
+- Returns results when ready
 
-Файл: `skills/podcast-translator/SKILL.md`
+File: `skills/podcast-translator/SKILL.md`
 
 ### Claude Code Agent
 
-Автономный агент для Claude Code (`agents/podcast-translator.md`):
-- Выполняет полный pipeline
-- Поддерживает выбор голоса
-- Возвращает детальную статистику
+Autonomous agent for Claude Code (`agents/podcast-translator.md`):
+- Executes full pipeline
+- Supports voice selection
+- Returns detailed statistics
 
-## Документация
+## Documentation
 
-- [AGENTS.md](AGENTS.md) - Документация по субагентам
-- [VOICES.md](VOICES.md) - Сравнение голосов TTS
-- [PROGRESS_FORMAT.md](PROGRESS_FORMAT.md) - Формат прогресс-вывода для CLI агентов
-
+- [AGENTS.md](AGENTS.md) - Subagent documentation
+- [VOICES.md](VOICES.md) - TTS voice comparison
+- [PROGRESS_FORMAT.md](PROGRESS_FORMAT.md) - Progress output format for CLI agents
