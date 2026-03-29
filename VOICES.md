@@ -1,76 +1,91 @@
-# Голоса для TTS
+# TTS Voices
 
-## Доступные голоса для русского языка
+**Read in other languages:** [Русский](VOICES.ru.md)
 
-### Женские голоса
+## Available Russian Voices
 
-| Голос | ID | Описание |
-|-------|----|----------|
-| Dariya | `ru-RU-DariyaNeural` | Женский голос |
-| Svetlana | `ru-RU-SvetlanaNeural` | Женский голос |
+### Female Voices
 
-### Мужские голоса
+| Voice | ID | Description |
+|-------|----|-------------|
+| Dariya | `ru-RU-DariyaNeural` | Female voice |
+| Svetlana | `ru-RU-SvetlanaNeural` | Female voice |
 
-| Голос | ID | Описание |
-|-------|----|----------|
-| Dmitry | `ru-RU-DmitryNeural` | Мужской голос (по умолчанию) |
+### Male Voices
 
-## Как использовать
+| Voice | ID | Description |
+|-------|----|-------------|
+| Dmitry | `ru-RU-DmitryNeural` | Male voice (default) |
 
-### В командной строке
+## How to Use
 
-**Голос по умолчанию (Dmitry)**:
+### Command Line
+
+**Default voice (Dmitry)**:
 ```bash
-python3 /home/clawd/work/podcast-translator/scripts/generate_tts.py \
+python3 scripts/generate_tts.py \
   translations/podcast_ru.txt \
   audio/podcast_ru.mp3
 ```
 
-**Женский голос (Svetlana)**:
+**Female voice (Svetlana)**:
 ```bash
-python3 /home/clawd/work/podcast-translator/scripts/generate_tts.py \
+python3 scripts/generate_tts.py \
   translations/podcast_ru.txt \
   audio/podcast_ru.mp3 \
   ru-RU-SvetlanaNeural
 ```
 
-### С субагентом
-
-При вызове podcast-translator агента он спросит какой голос использовать:
-
-```
-Переведи этот подкаст: https://www.youtube.com/watch?v=gmkURB_HmQI
-Используй женский голос.
-```
-
-Или просто:
-```
-Переведи этот подкаст с женским голосом: [URL]
+**Female voice (Dariya)**:
+```bash
+python3 scripts/generate_tts.py \
+  translations/podcast_ru.txt \
+  audio/podcast_ru.mp3 \
+  ru-RU-DariyaNeural
 ```
 
-## Сравнение голосов
+### With Subagent
 
-### Dmitry (мужской)
-- Более низкий тембр
-- Стандартный для технических подкастов
-- Хорошая разборчивость
+When invoking the podcast-translator agent, it will ask which voice to use:
 
-### Svetlana (женский)
-- Более высокий тембр
-- Более мягкое звучание
-- Хорошая для образовательного контента
+```
+Translate this podcast: https://www.youtube.com/watch?v=VIDEO_ID
+Use a female voice.
+```
 
-## Все доступные Edge TTS голоса
+Or simply:
+```
+Translate this podcast with a female voice: [URL]
+```
 
-Для получения полного списка всех доступных голосов:
+## Voice Comparison
+
+### Dmitry (Male)
+- Lower pitch
+- Standard for technical podcasts
+- Good intelligibility
+
+### Svetlana (Female)
+- Higher pitch
+- Softer sound
+- Good for educational content
+
+### Dariya (Female)
+- Higher pitch
+- Clear articulation
+- Alternative female voice option
+
+## All Available Edge TTS Voices
+
+To get a complete list of all available voices:
 
 ```bash
 python3 -c "import edge_tts; print('\n'.join([v['Name'] for v in edge_tts.list_voices() if 'ru' in v['Locale']]))"
 ```
 
-## Рекомендации
+## Recommendations
 
-- **Технические подкасты**: Dmitry (мужской голос по умолчанию)
-- **Образовательный контент**: Svetlana (женский голос)
-- **Новостные выпуски**: Dmitry
-- **Обучающие материалы**: Svetlana
+- **Technical podcasts**: Dmitry (default male voice)
+- **Educational content**: Svetlana or Dariya (female voices)
+- **News releases**: Dmitry
+- **Training materials**: Svetlana or Dariya

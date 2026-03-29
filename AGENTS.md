@@ -1,15 +1,17 @@
-# Субагенты и Skills
+# Subagents and Skills
+
+**Read in other languages:** [Русский](AGENTS.ru.md)
 
 ## Claude Code Agent
 
-Автономный агент для перевода подкастов с YouTube.
+Autonomous agent for translating podcasts from YouTube.
 
-### Расположение
+### Location
 
-- **Проект**: `agents/podcast-translator.md`
-- **Системный**: `~/.claude/agents/podcast-translator.md`
+- **Project**: `agents/podcast-translator.md`
+- **System**: `~/.claude/agents/podcast-translator.md`
 
-### Конфигурация агента
+### Agent Configuration
 
 ```yaml
 name: podcast-translator
@@ -18,54 +20,54 @@ tools: Bash, Read, Write, Edit
 model: sonnet
 ```
 
-### Как использовать
+### How to Use
 
-**Простой запрос:**
+**Simple request:**
 ```
-Переведи этот подкаст: https://www.youtube.com/watch?v=VIDEO_ID
-```
-
-**Явный вызов:**
-```
-Используй podcast-translator агента для этого URL
+Translate this podcast: https://www.youtube.com/watch?v=VIDEO_ID
 ```
 
-**С выбором голоса:**
+**Explicit invocation:**
 ```
-Переведи этот подкаст с женским голосом
+Use the podcast-translator agent for this URL
 ```
 
-### Что делает агент
+**With voice selection:**
+```
+Translate this podcast with a female voice
+```
 
-1. 📹 Скачивает аудио с YouTube
-2. 🎤 Транскрибирует в английский текст
-3. 🌍 Подготавливает для перевода
-4. 🇷🇺 Переводит на русский
-5. 🔊 Генерирует русскую озвучку
+### What the Agent Does
 
-### Результат
+1. 📹 Downloads audio from YouTube
+2. 🎤 Transcribes to English text
+3. 🌍 Prepares for translation
+4. 🇷🇺 Translates to Russian
+5. 🔊 Generates Russian voiceover
 
-Агент вернёт:
-- Пути ко всем созданным файлам
-- Длительность аудио
-- Количество слов в переводе
-- Размеры файлов
+### Result
 
-### Доступные голоса
+The agent will return:
+- Paths to all created files
+- Audio duration
+- Word count in translation
+- File sizes
 
-- `ru-RU-DmitryNeural` - Мужской голос (по умолчанию)
-- `ru-RU-SvetlanaNeural` - Женский голос
-- `ru-RU-DariyaNeural` - Женский голос
+### Available Voices
+
+- `ru-RU-DmitryNeural` - Male voice (default)
+- `ru-RU-SvetlanaNeural` - Female voice
+- `ru-RU-DariyaNeural` - Female voice
 
 ## OpenClaw Skill 🎙️
 
-Автоматический skill для OpenClaw с полным pipeline.
+Automatic skill for OpenClaw with full pipeline.
 
-### Расположение
+### Location
 
-- **Проект**: `skills/podcast-translator/SKILL.md`
+- **Project**: `skills/podcast-translator/SKILL.md`
 
-### Конфигурация skill
+### Skill Configuration
 
 ```yaml
 name: podcast-translator
@@ -74,29 +76,29 @@ emoji: "🎙️"
 requires: { "bins": ["yt-dlp", "python3"] }
 ```
 
-### Как использовать
+### How to Use
 
-Просто отправь YouTube URL:
+Just send a YouTube URL:
 
 ```
-Переведи этот подкаст: https://www.youtube.com/watch?v=VIDEO_ID
+Translate this podcast: https://www.youtube.com/watch?v=VIDEO_ID
 ```
 
-**С выбором голоса:**
+**With voice selection:**
 ```
-Переведи этот подкаст с женским голосом: [URL]
+Translate this podcast with a female voice: [URL]
 ```
 
-### Особенности
+### Features
 
-- Автоматически распознаёт YouTube URLs
-- Спавнит субагент для выполнения pipeline
-- Возвращает результаты по готовности
-- Работает асинхронно (не блокирует conversation)
+- Automatically recognizes YouTube URLs
+- Spawns subagent to execute pipeline
+- Returns results when ready
+- Works asynchronously (doesn't block conversation)
 
-## Формат агента
+## Agent Format
 
-Агенты используют YAML frontmatter:
+Agents use YAML frontmatter:
 
 ```yaml
 ---
@@ -107,9 +109,9 @@ model: sonnet
 ---
 ```
 
-За ним следует system prompt в Markdown формате.
+Followed by system prompt in Markdown format.
 
-## Документация
+## Documentation
 
-- [Подробнее о субагентах](https://code.claude.com/docs/en/sub-agents)
-- [OpenClaw Skills документация](https://openclaw.dev/docs/skills)
+- [Subagents documentation](https://code.claude.com/docs/en/sub-agents)
+- [OpenClaw Skills documentation](https://openclaw.dev/docs/skills)
