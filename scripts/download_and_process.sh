@@ -1,22 +1,105 @@
 #!/bin/bash
-# Download and process a specific YouTube video (FIXED - use transcribe_noproxy.py)
+# Download and process a specific YouTube video
+# Usage: ./download_and_process.sh [--destination-dir DIR] URL
 
 set -e
 
-URL="$1"
+# Parse arguments
+DESTINATION_DIR=""
+URL=""
+
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        --destination-dir|-d)
+            DESTINATION_DIR="$2"
+            shift 2
+            ;;
+        -*)
+            echo "❌ Unknown option: $1"
+            echo "Usage: $0 [--destination-dir DIR] URL"
+            exit 1
+            ;;
+        *)
+            URL="$1"
+            shift
+            ;;
+    esac
+done
+
+# Check if URL is provided
+if [ -z "$URL" ]; then
+    echo "❌ Error: URL is required"
+    echo ""
+    echo "Usage: $0 [--destination-dir DIR] URL"
+    echo ""
+    echo "Examples:"
+    echo "  $0 \"https://www.youtube.com/watch?v=VIDEO_ID\""
+    echo "  $0 --destination-dir /path/to/project \"https://www.youtube.com/watch?v=VIDEO_ID\""
+    echo "  $0 -d ~/projects/podcast-translator \"https://www.youtube.com/watch?v=VIDEO_ID\""
+    exit 1
+fi
+
 EPISODE_NAME="podcast_$(date +%Y%m%d_%H%M%S)"
 
-PROJECT_DIR="/home/clawd/work/podcast-translator"
+# Determine PROJECT_DIR
+if [ -n "$DESTINATION_DIR" ]; then
+    PROJECT_DIR=$(cd "$DESTINATION_DIR" 2>/dev/null && pwd) || PROJECT_DIR="$DESTINATION_DIR"
+elif [ -n "$PODCAST_TRANSLATOR_DIR" ]; then
+    # Environment variable for CLI agents
+    PROJECT_DIR="$PODCAST_TRANSLATOR_DIR"
+elif [ -f "./scripts/transcribe_cached.py" ]; then
+    # Current directory
+    PROJECT_DIR="$(pwd)"
+else
+    # Prompt for destination directory
+    echo "🎙️  Podcast Translation Pipeline"
+    echo "==================================="
+    echo ""
+    echo "📍 Please specify the project directory:"
+    echo "   (or press Enter to use default: ~/podcast-translator)"
+    echo ""
+    read -r USER_DIR
+
+    if [ -z "$USER_DIR" ]; then
+        PROJECT_DIR="$HOME/podcast-translator"
+    else
+        PROJECT_DIR=$(cd "$USER_DIR" 2>/dev/null && pwd) || PROJECT_DIR="$USER_DIR"
+    fi
+fi
+
+# Validate project directory
+if [ ! -d "$PROJECT_DIR" ]; then
+    echo "❌ Error: Project directory does not exist: $PROJECT_DIR"
+    echo ""
+    echo "📋 Required for CLI agents: Set PODCAST_TRANSLATOR_DIR environment variable"
+    echo "   export PODCAST_TRANSLATOR_DIR=/path/to/podcast-translator"
+    echo ""
+    echo "📋 Or use --destination-dir parameter:"
+    echo "   $0 --destination-dir /path/to/podcast-translator URL"
+    exit 1
+fi
+
+# Validate required scripts
+if [ ! -f "$PROJECT_DIR/scripts/transcribe_cached.py" ]; then
+    echo "❌ Error: Required scripts not found in: $PROJECT_DIR/scripts/"
+    echo "   Please ensure you're pointing to the correct podcast-translator directory"
+    exit 1
+fi
+
 INPUT_DIR="$PROJECT_DIR/input"
 TRANSCRIPT_DIR="$PROJECT_DIR/transcripts"
 TRANSLATION_DIR="$PROJECT_DIR/translations"
 AUDIO_DIR="$PROJECT_DIR/audio"
 
-echo "🎙️  Podcast Translation (FIXED v2)"
-echo "========================================="
+# Create directories if they don't exist
+mkdir -p "$INPUT_DIR" "$TRANSCRIPT_DIR" "$TRANSLATION_DIR" "$AUDIO_DIR"
+
+echo "🎙️  Podcast Translation Pipeline"
+echo "==================================="
 echo ""
 echo "📋 URL: $URL"
 echo "📂 Episode: $EPISODE_NAME"
+echo "📁 Project: $PROJECT_DIR"
 echo ""
 
 # Step 1: Download audio
