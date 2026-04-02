@@ -21,20 +21,16 @@ Drop a YouTube link → get Russian translation + voiceover.
 
 When user asks to translate a podcast or sends a YouTube URL with translation request:
 
-1. Ask for voice selection (if not specified)
+1. Detect voice preference from user message (if specified)
 2. Spawn sub-agent with the full pipeline task
 3. Reply: "🎙️ Processing podcast — I'll let you know when it's ready!"
 4. Continue conversation (don't wait!)
 
-**Voice Selection:**
-```
-🎙️ Which voice for Russian TTS?
-1. Dmitry (male) - default
-2. Svetlana (female)
-3. Dariya (female)
-
-User: 2 (or press Enter for default)
-```
+**Voice Detection (automatic):**
+- Default: `ru-RU-DmitryNeural` (male voice)
+- "женский голос" / "female" / "Svetlana" / "Светлана" → `ru-RU-SvetlanaNeural`
+- "Dariya" / "Дарья" → `ru-RU-DariyaNeural`
+- No voice specified → use default (Dmitry)
 
 ## Full Workflow (Single Sub-Agent)
 
