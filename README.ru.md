@@ -57,6 +57,66 @@ pip install faster-whisper edge-tts yt-dlp --break-system-packages
 - `TRANSLATION_DIR="$PROJECT_DIR/translations"`
 - `AUDIO_DIR="$PROJECT_DIR/audio"`
 
+## Разрешения OpenClaw
+
+Если используете OpenClaw и постоянно получаете запросы на подтверждение для скриптов podcast-translator, настройте execApprovals:
+
+### Быстрая настройка
+
+```bash
+openclaw approvals set --file podcast-translator-exec-approvals.json
+```
+
+### Ручная настройка
+
+Создайте или обновите `~/.openclaw/exec-approvals.json`:
+
+```json
+{
+  "version": 1,
+  "defaults": {
+    "security": "allowlist"
+  },
+  "agents": {
+    "podcast-translator": {
+      "allowlist": [
+        {
+          "pattern": "python3 *",
+          "commandText": "Python скрипты для перевода подкастов"
+        },
+        {
+          "pattern": "yt-dlp *",
+          "commandText": "Скачивание аудио с YouTube"
+        },
+        {
+          "pattern": "edge-tts *",
+          "commandText": "Генерация TTS озвучки"
+        },
+        {
+          "pattern": "ffmpeg *",
+          "commandText": "Обработка аудио"
+        }
+      ]
+    }
+  }
+}
+```
+
+### Проверка конфигурации
+
+```bash
+openclaw approvals get
+```
+
+Ожидаемый вывод:
+```
+Defaults: security=allowlist
+Agents: 1 (podcast-translator)
+Allowlist: 4 entries
+```
+
+**Примечание по безопасности:** Эта конфигурация разрешает только конкретные команды для агента podcast-translator, а не во всей системе.
+
 ## Голоса для TTS
 
 ### Доступные голоса

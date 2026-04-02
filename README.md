@@ -67,6 +67,66 @@ All paths are configured in `scripts/download_and_process.sh` with flexible opti
 - `TRANSLATION_DIR="$PROJECT_DIR/translations"`
 - `AUDIO_DIR="$PROJECT_DIR/audio"`
 
+## OpenClaw Permissions
+
+If using OpenClaw and constantly getting approval prompts for podcast-translator scripts, configure execApprovals:
+
+### Quick Setup
+
+```bash
+openclaw approvals set --file podcast-translator-exec-approvals.json
+```
+
+### Manual Configuration
+
+Create or update `~/.openclaw/exec-approvals.json`:
+
+```json
+{
+  "version": 1,
+  "defaults": {
+    "security": "allowlist"
+  },
+  "agents": {
+    "podcast-translator": {
+      "allowlist": [
+        {
+          "pattern": "python3 *",
+          "commandText": "Python scripts for podcast translation"
+        },
+        {
+          "pattern": "yt-dlp *",
+          "commandText": "YouTube audio download"
+        },
+        {
+          "pattern": "edge-tts *",
+          "commandText": "Edge TTS generation"
+        },
+        {
+          "pattern": "ffmpeg *",
+          "commandText": "Audio processing"
+        }
+      ]
+    }
+  }
+}
+```
+
+### Verify Configuration
+
+```bash
+openclaw approvals get
+```
+
+Expected output:
+```
+Defaults: security=allowlist
+Agents: 1 (podcast-translator)
+Allowlist: 4 entries
+```
+
+**Security Note**: This configuration only allows specific commands for the podcast-translator agent, not system-wide.
+
 ## TTS Voices
 
 ### Available Voices
