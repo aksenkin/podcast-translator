@@ -185,9 +185,10 @@ Available Russian voices:
 | Dariya | `ru-RU-DariyaNeural` | Female |
 
 **Usage examples:**
-- "Translate this podcast with female voice" → Ask: Svetlana or Dariya?
+- "Translate this podcast with female voice" → Use `ru-RU-SvetlanaNeural`
 - "Translate with Dmitry" → Use `ru-RU-DmitryNeural`
-- "Переведи этот подкаст" → Use default (Dmitry)
+- "Переведи этот подкаст" → Use default (`ru-RU-DmitryNeural`)
+- "Озвучь женским голосом" → Use `ru-RU-SvetlanaNeural`
 
 ## Project Structure
 
