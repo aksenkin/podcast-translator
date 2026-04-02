@@ -52,7 +52,7 @@ If a tool is missing, STOP and report what's needed.
 Run the COMPLETE pipeline — do not stop until all steps are done.
 
 ### Configuration
-- PROJECT_DIR="/home/clawd/work/podcast-translator"
+- PROJECT_DIR="{SKILL_DIR}"  # Auto-detected: points to skill installation directory
 - Voice: {voice}  # "ru-RU-DmitryNeural", "ru-RU-SvetlanaNeural", or "ru-RU-DariyaNeural"
 
 ### Step 1: Download Audio
@@ -69,7 +69,7 @@ Print: `STATUS: Downloaded audio: {filename}`
 ### Step 2: Transcribe to English
 ```bash
 echo "STATUS: Starting transcription..."
-python3 $PROJECT_DIR/skills/podcast-translator/scripts/transcribe_cached.py \\
+python3 $PROJECT_DIR/scripts/transcribe_cached.py \\
   "$INPUT_FILE" \\
   "$PROJECT_DIR/transcripts/" \\
   small
