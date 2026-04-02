@@ -61,7 +61,7 @@ Run the COMPLETE pipeline — do not stop until all steps are done.
 
 ### Step 1: Download Audio
 ```bash
-cd /home/clawd/work/podcast-translator
+cd "$PROJECT_DIR"
 echo "STATUS: Downloading audio from YouTube..."
 yt-dlp -x --audio-format mp3 --audio-quality 0 \\
   -o "input/podcast_$(date +%Y%m%d_%H%M%S).mp3" \\
@@ -73,9 +73,9 @@ Print: `STATUS: Downloaded audio: {filename}`
 ### Step 2: Transcribe to English
 ```bash
 echo "STATUS: Starting transcription..."
-python3 scripts/transcribe_cached.py \\
+python3 $PROJECT_DIR/skills/podcast-translator/scripts/transcribe_cached.py \\
   "$INPUT_FILE" \\
-  /home/clawd/work/podcast-translator/transcripts/ \\
+  "$PROJECT_DIR/transcripts/" \\
   small
 ```
 Output: `transcripts/{name}.txt`
@@ -84,9 +84,9 @@ Print: `STATUS: Transcription complete: {segments} segments`
 ### Step 3: Prepare for Translation
 ```bash
 echo "STATUS: Preparing transcript for translation..."
-python3 scripts/prepare_transcript.py \\
+python3 $PROJECT_DIR/skills/podcast-translator/scripts/prepare_transcript.py \\
   "$TRANSCRIPT_FILE" \\
-  "/home/clawd/work/podcast-translator/translations/{basename}_ready.txt"
+  "$PROJECT_DIR/translations/{basename}_ready.txt"
 ```
 Output: `translations/{basename}_ready.txt`
 Print: `STATUS: Prepared for translation`
@@ -111,9 +111,9 @@ Print: `STATUS: Translation complete: {word_count} words`
 ### Step 4.5: Extract TTS Text (SCRIPT - saves tokens!)
 ```bash
 echo "STATUS: Extracting TTS text from translation..."
-python3 scripts/extract_tts_text.py \\
-  "/home/clawd/work/podcast-translator/translations/{basename}_ru.txt" \\
-  "/home/clawd/work/podcast-translator/translations/{basename}_ru_tts.txt"
+python3 $PROJECT_DIR/skills/podcast-translator/scripts/extract_tts_text.py \\
+  "$PROJECT_DIR/translations/{basename}_ru.txt" \\
+  "$PROJECT_DIR/translations/{basename}_ru_tts.txt"
 ```
 Output: `translations/{basename}_ru_tts.txt` (clean Russian text, no timestamps)
 Print: `SUCCESS: TTS text extracted`
@@ -121,13 +121,33 @@ Print: `SUCCESS: TTS text extracted`
 ### Step 5: Generate Russian TTS
 ```bash
 echo "STATUS: Starting TTS generation..."
-python3 scripts/generate_tts.py \\
-  "/home/clawd/work/podcast-translator/translations/{basename}_ru_tts.txt" \\
-  "/home/clawd/work/podcast-translator/audio/{basename}.ru.mp3" \\
+python3 $PROJECT_DIR/skills/podcast-translator/scripts/generate_tts.py \\
+  "$PROJECT_DIR/translations/{basename}_ru_tts.txt" \\
+  "$PROJECT_DIR/audio/{basename}.ru.mp3" \\
   "{voice}"
 ```
 Output: `audio/{basename}.ru.mp3`
 Print: `SUCCESS: TTS generation complete`
+
+### Step 6: Create Output Manifest (CRITICAL for file delivery)
+
+⚠️ CRITICAL: Create manifest file so main agent can find and send the files
+
+```bash
+MANIFEST_FILE="$PROJECT_DIR/translations/{basename}_manifest.txt"
+
+cat > "$MANIFEST_FILE" << 'EOF'
+===OPENCLAW_OUTPUTS_COMPLETE===
+translation:translations/{basename}_ru.txt
+tts_text:translations/{basename}_ru_tts.txt
+audio:audio/{basename}.ru.mp3
+transcript:transcripts/{basename}.txt
+base_dir:$PROJECT_DIR
+===OPENCLAW_OUTPUTS_END===
+EOF
+
+echo "===MANIFEST:$MANIFEST_FILE==="
+```
 
 ### Report
 
@@ -149,7 +169,7 @@ Provide summary in natural language:
 """,
     label="podcast-translator",
     runTimeoutSeconds=1800,
-    cleanup="delete"
+    cleanup="keep"
 )
 ```
 
