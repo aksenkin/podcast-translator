@@ -91,26 +91,32 @@ python3 scripts/prepare_transcript.py \\
 Output: `translations/{basename}_ready.txt`
 Print: `STATUS: Prepared for translation`
 
-### Step 4: Translate to Russian
+### Step 4: Translate to Russian (TOKEN EFFICIENT)
 ```bash
 echo "STATUS: Translating to Russian (this may take a few minutes)..."
 echo "HEARTBEAT: Translation in progress..."
 ```
 
-Read the prepared file and create TWO output files:
+Read the prepared file and create ONE translation file:
 
 **translations/{basename}_ru.txt** (with timestamps):
 - Preserve all timestamps: `[00:00 - 00:05]`
-- Each timestamped segment on its own line
+- Format: `[timestamp] English text` → `[timestamp] Russian translation`
 - Translate to Russian, keep technical terms in English (OpenAI, Anthropic, API, GPU, etc.)
 - Remove metadata headers
-
-**translations/{basename}_ru_tts.txt** (without timestamps):
-- Remove all timestamps
-- Continuous Russian prose
-- For TTS generation
+- Each timestamped segment on its own line
 
 Print: `STATUS: Translation complete: {word_count} words`
+
+### Step 4.5: Extract TTS Text (SCRIPT - saves tokens!)
+```bash
+echo "STATUS: Extracting TTS text from translation..."
+python3 scripts/extract_tts_text.py \\
+  "/home/clawd/work/podcast-translator/translations/{basename}_ru.txt" \\
+  "/home/clawd/work/podcast-translator/translations/{basename}_ru_tts.txt"
+```
+Output: `translations/{basename}_ru_tts.txt` (clean Russian text, no timestamps)
+Print: `SUCCESS: TTS text extracted`
 
 ### Step 5: Generate Russian TTS
 ```bash
