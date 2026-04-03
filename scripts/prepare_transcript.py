@@ -16,12 +16,18 @@ def save_text(text, file_path):
     with open(file_path, 'w', encoding='utf-8') as f:
         f.write(text)
 
+def remove_timestamps(line):
+    """Remove timestamp prefix from a line"""
+    import re
+    # Match pattern like [00:00 - 00:05] or [MM:SS - MM:SS]
+    pattern = r'^\[\d{2}:\d{2}\s*-\s*\d{2}:\d{2}\]\s*'
+    return re.sub(pattern, '', line)
+
 def prepare_for_translation(input_file, output_file):
     """
-    Prepare transcript for AI translation
-    This just copies the text - translation will be done by AI assistant
+    Prepare transcript for TTS generation by removing timestamps
     """
-    print(f"STATUS: Preparing transcript for translation: {input_file}", flush=True)
+    print(f"STATUS: Preparing transcript for TTS: {input_file}", flush=True)
 
     text = load_text(input_file)
 
@@ -29,19 +35,19 @@ def prepare_for_translation(input_file, output_file):
         print("ERROR: Empty input file", flush=True)
         sys.exit(1)
 
-    # Add metadata header
-    metadata = f"""# Podcast Translation Request
-# Source Language: English
-# Target Language: Russian
-# Generated: {datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
+    # Remove timestamps from each line
+    lines = text.split('\n')
+    cleaned_lines = []
+    for line in lines:
+        cleaned_line = remove_timestamps(line)
+        if cleaned_line.strip():  # Only keep non-empty lines
+            cleaned_lines.append(cleaned_line.strip())
 
----
-"""
-    full_text = metadata + text
+    cleaned_text = '\n'.join(cleaned_lines)
 
-    save_text(full_text, output_file)
-    print(f"SUCCESS: Prepared for translation: {output_file}", flush=True)
-    print(f"STATUS: Text length: {len(text)} characters", flush=True)
+    save_text(cleaned_text, output_file)
+    print(f"SUCCESS: Prepared for TTS: {output_file}", flush=True)
+    print(f"STATUS: Original text: {len(text)} characters, Cleaned: {len(cleaned_text)} characters", flush=True)
 
 if __name__ == "__main__":
     import datetime

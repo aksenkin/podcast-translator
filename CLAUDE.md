@@ -19,7 +19,7 @@ The pipeline follows a 5-stage process:
 ### Key Components
 
 - **scripts/transcribe_cached.py** - CPU-optimized transcription using faster-whisper with int8 quantization
-- **scripts/prepare_transcript.py** - Adds metadata header for translation workflow
+- **scripts/prepare_transcript.py** - Removes timestamps from transcript for TTS generation
 - **scripts/generate_tts.py** - Async TTS generation with chunking and FFmpeg merge
 - **scripts/download_and_process.sh** - Full pipeline orchestration
 - **skills/podcast-translator-skill/** - Claude skill for EN→RU translation with timestamp preservation
@@ -93,11 +93,11 @@ See VOICES.md for voice comparisons and usage examples.
 ## Translation Skill
 
 The `podcast-translator` skill handles EN→RU translation:
-- Reads `{episode}_ready.txt` files with timestamps
-- Creates two outputs:
-  - `{episode}_ru.txt` - with timestamps for alignment
-  - `{episode}_ru_tts.txt` - clean text for TTS
+- Reads transcript files from `transcripts/`
+- Creates TTS-ready output:
+  - `{episode}_ru_tts.txt` - clean Russian text without timestamps
 - Preserves technical terms in English (OpenAI, GPU, API, etc.)
+- Removes all unspeakable characters (Chinese, Japanese, Korean, etc.)
 
 See skills/podcast-translator-skill/SKILL.md for translation guidelines.
 
