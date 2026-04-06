@@ -297,12 +297,24 @@ The podcast-translator now includes a fully automated system for processing YouT
 #### 1. YouTube Video Collector (Cron Job #1)
 
 **Schedule:** Daily at 08:30
-**Script:** `channel_monitor.py`
+**Wrapper Script:** `run_channel_monitor.sh`
+**Core Script:** `channel_monitor.py`
+
+**Execution Method:**
+Cron jobs use bash wrapper scripts with `Execute:` prefix to ensure proper command execution in OpenClaw isolated sessions:
 
 ```bash
-# Cron job executes:
+# Cron job message (OpenClaw):
+Execute: bash /home/clawd/.openclaw/workspace/skills/podcast-translator/run_channel_monitor.sh
+
+# Wrapper script executes:
 python3 channel_monitor.py --videos-per-channel 3 --json-output
 ```
+
+**Logging:**
+- Logs to `/tmp/channel-monitor-cron.log`
+- Includes timestamps and execution results
+- Useful for debugging cron job issues
 
 **Functionality:**
 - Monitors configured YouTube channels
@@ -323,12 +335,24 @@ python3 channel_monitor.py --videos-per-channel 3 --json-output
 #### 2. Queue Processor (Cron Job #2)
 
 **Schedule:** Every 2 hours (example: 08:40, 10:40, 12:40, 14:40, 16:40, 18:40)
-**Script:** `queue_processor.py`
+**Wrapper Script:** `run_queue_processor.sh`
+**Core Script:** `queue_processor.py`
+
+**Execution Method:**
+Cron jobs use bash wrapper scripts with `Execute:` prefix to ensure proper command execution in OpenClaw isolated sessions:
 
 ```bash
-# Cron job executes:
+# Cron job message (OpenClaw):
+Execute: bash /home/clawd/.openclaw/workspace/skills/podcast-translator/run_queue_processor.sh
+
+# Wrapper script executes:
 python3 queue_processor.py --max-videos 2
 ```
+
+**Logging:**
+- Logs to `/tmp/queue-processor-cron.log`
+- Includes timestamps and execution results
+- Useful for debugging cron job issues
 
 **Functionality:**
 - Processes up to 2 videos per run
@@ -456,16 +480,55 @@ base_dir:$SKILL_DIR
 ```
 
 **Cron Jobs:**
+
+OpenClaw cron jobs use bash wrapper scripts to execute Python commands. The `Execute:` prefix ensures proper command execution in isolated sessions.
+
+**Create Cron Job #1 (YouTube Video Collector):**
+```bash
+openclaw cron add \
+  --name "youtube-collector" \
+  --cron "30 8 * * *" \
+  --tz "Europe/Minsk" \
+  --description "YouTube Video Collector" \
+  --session isolated \
+  --timeout-seconds 900 \
+  --no-deliver \
+  --message "Execute: bash /home/clawd/.openclaw/workspace/skills/podcast-translator/run_channel_monitor.sh"
+```
+
+**Create Cron Job #2 (Queue Processor):**
+```bash
+openclaw cron add \
+  --name "queue-processor" \
+  --cron "40 8,10,12,14,16,18 * * *" \
+  --tz "Europe/Minsk" \
+  --description "Queue Processor - Process 2 videos every 2 hours" \
+  --session isolated \
+  --timeout-seconds 14400 \
+  --no-deliver \
+  --message "Execute: bash /home/clawd/.openclaw/workspace/skills/podcast-translator/run_queue_processor.sh"
+```
+
+**Manage Cron Jobs:**
 ```bash
 # List all cron jobs
 openclaw cron list
 
-# View specific job
+# View specific job details
 openclaw cron runs --id <job-id>
 
-# Run job manually
+# Run job manually (for testing)
 openclaw cron run <job-id>
+
+# Delete a cron job
+openclaw cron rm <job-id>
 ```
+
+**Key Points:**
+- Use `Execute:` prefix in `--message` to execute bash commands
+- Wrapper scripts handle logging to `/tmp/*-cron.log`
+- Isolated sessions require `agentTurn` payload (not `systemEvent`)
+- `--no-deliver` suppresses Telegram delivery for cron job results
 
 ### Daily Workflow
 
@@ -504,27 +567,55 @@ openclaw logs --tail 50 | grep "queue-processor\|youtube-collector"
 
 ### Configuration Files
 
+**Wrapper Scripts:**
+
+The system uses bash wrapper scripts to ensure proper command execution in OpenClaw isolated sessions:
+
+**run_channel_monitor.sh** (Cron Job #1):
+```bash
+#!/bin/bash
+cd /home/clawd/.openclaw/workspace/skills/podcast-translator
+python3 channel_monitor.py --videos-per-channel 3 --json-output
+```
+
+**run_queue_processor.sh** (Cron Job #2):
+```bash
+#!/bin/bash
+cd /home/clawd/.openclaw/workspace/skills/podcast-translator
+python3 queue_processor.py --max-videos 2
+```
+
 **Cron Job #1 (YouTube Video Collector):**
 ```bash
-openclaw cron add --name "youtube-collector" \
+openclaw cron add \
+  --name "youtube-collector" \
   --cron "30 8 * * *" \
+  --tz "Europe/Minsk" \
   --description "YouTube Video Collector" \
   --session isolated \
   --timeout-seconds 900 \
   --no-deliver \
-  --message "cd /home/clawd/.openclaw/workspace/skills/podcast-translator && python3 channel_monitor.py --videos-per-channel 3 --json-output"
+  --message "Execute: bash /home/clawd/.openclaw/workspace/skills/podcast-translator/run_channel_monitor.sh"
 ```
 
 **Cron Job #2 (Queue Processor):**
 ```bash
-openclaw cron add --name "queue-processor" \
+openclaw cron add \
+  --name "queue-processor" \
   --cron "40 8,10,12,14,16,18 * * *" \
-  --description "Queue Processor - Process 2 videos every 2 hours (08:40-18:40)" \
+  --tz "Europe/Minsk" \
+  --description "Queue Processor - Process 2 videos every 2 hours" \
   --session isolated \
   --timeout-seconds 14400 \
   --no-deliver \
-  --message "cd /home/clawd/.openclaw/workspace/skills/podcast-translator && python3 queue_processor.py --max-videos 2"
+  --message "Execute: bash /home/clawd/.openclaw/workspace/skills/podcast-translator/run_queue_processor.sh"
 ```
+
+**Important Notes:**
+- Use `Execute:` prefix to execute bash commands in isolated sessions
+- Wrapper scripts log to `/tmp/*-cron.log` for debugging
+- `--no-deliver` prevents Telegram spam for cron job results
+- `--session isolated` is required (cannot use `systemEvent` with `--no-deliver`)
 
 ### Manual Testing
 
@@ -564,6 +655,26 @@ python3 queue_manager.py add VIDEO_ID "Title" "Channel"
 - Check time window (08:30-20:00)
 - Verify queue has pending videos
 - Check `youtube-queue.json` format
+
+**Cron job executes but doesn't process videos:**
+- Check wrapper script logs: `tail -f /tmp/queue-processor-cron.log`
+- Verify `Execute:` prefix in cron job message
+- Test wrapper script manually: `bash run_queue_processor.sh`
+- Check if Python scripts are executable
+- Verify OpenClaw permissions: `openclaw approvals get`
+
+**Debugging cron jobs:**
+```bash
+# View cron job execution logs
+tail -50 /tmp/queue-processor-cron.log
+tail -50 /tmp/channel-monitor-cron.log
+
+# Run wrapper script manually
+bash /home/clawd/.openclaw/workspace/skills/podcast-translator/run_queue_processor.sh
+
+# Check if cron job message is correct
+openclaw cron list --json | jq '.jobs[] | select(.name == "queue-processor") | .payload.message'
+```
 
 ### Performance
 
