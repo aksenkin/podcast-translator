@@ -301,15 +301,24 @@ The podcast-translator now includes a fully automated system for processing YouT
 **Core Script:** `channel_monitor.py`
 
 **Execution Method:**
-Cron jobs use bash wrapper scripts with `Execute:` prefix to ensure proper command execution in OpenClaw isolated sessions:
+Cron jobs use `systemEvent` payload with `main` session to execute bash commands directly:
 
 ```bash
-# Cron job message (OpenClaw):
-Execute: bash /home/clawd/.openclaw/workspace/skills/podcast-translator/run_channel_monitor.sh
+# Cron job configuration (OpenClaw):
+openclaw cron add \
+  --name "youtube-collector" \
+  --cron "30 8 * * *" \
+  --session main \
+  --system-event "bash /path/to/run_channel_monitor.sh"
 
 # Wrapper script executes:
 python3 channel_monitor.py --videos-per-channel 3 --json-output
 ```
+
+**Key Points:**
+- `--session main` + `--system-event` = executes bash commands directly ✅
+- `--session isolated` + `--message` = passes to AI as prompt (doesn't work) ❌
+- Main session processes commands immediately without AI interpretation
 
 **Logging:**
 - Logs to `/tmp/channel-monitor-cron.log`
@@ -339,15 +348,24 @@ python3 channel_monitor.py --videos-per-channel 3 --json-output
 **Core Script:** `queue_processor.py`
 
 **Execution Method:**
-Cron jobs use bash wrapper scripts with `Execute:` prefix to ensure proper command execution in OpenClaw isolated sessions:
+Cron jobs use `systemEvent` payload with `main` session to execute bash commands directly:
 
 ```bash
-# Cron job message (OpenClaw):
-Execute: bash /home/clawd/.openclaw/workspace/skills/podcast-translator/run_queue_processor.sh
+# Cron job configuration (OpenClaw):
+openclaw cron add \
+  --name "queue-processor" \
+  --cron "40 8,10,12,14,16,18 * * *" \
+  --session main \
+  --system-event "bash /path/to/run_queue_processor.sh"
 
 # Wrapper script executes:
 python3 queue_processor.py --max-videos 2
 ```
+
+**Key Points:**
+- `--session main` + `--system-event` = executes bash commands directly ✅
+- `--session isolated` + `--message` = passes to AI as prompt (doesn't work) ❌
+- Main session processes commands immediately without AI interpretation
 
 **Logging:**
 - Logs to `/tmp/queue-processor-cron.log`
@@ -569,7 +587,7 @@ openclaw logs --tail 50 | grep "queue-processor\|youtube-collector"
 
 **Wrapper Scripts:**
 
-The system uses bash wrapper scripts to ensure proper command execution in OpenClaw isolated sessions:
+The system uses bash wrapper scripts to ensure proper command execution:
 
 **run_channel_monitor.sh** (Cron Job #1):
 ```bash
@@ -592,10 +610,9 @@ openclaw cron add \
   --cron "30 8 * * *" \
   --tz "Europe/Minsk" \
   --description "YouTube Video Collector" \
-  --session isolated \
-  --timeout-seconds 900 \
-  --no-deliver \
-  --message "Execute: bash /home/clawd/.openclaw/workspace/skills/podcast-translator/run_channel_monitor.sh"
+  --session main \
+  --system-event "bash /home/clawd/.openclaw/workspace/skills/podcast-translator/run_channel_monitor.sh" \
+  --timeout-seconds 900
 ```
 
 **Cron Job #2 (Queue Processor):**
@@ -605,11 +622,16 @@ openclaw cron add \
   --cron "40 8,10,12,14,16,18 * * *" \
   --tz "Europe/Minsk" \
   --description "Queue Processor - Process 2 videos every 2 hours" \
-  --session isolated \
-  --timeout-seconds 14400 \
-  --no-deliver \
-  --message "Execute: bash /home/clawd/.openclaw/workspace/skills/podcast-translator/run_queue_processor.sh"
+  --session main \
+  --system-event "bash /home/clawd/.openclaw/workspace/skills/podcast-translator/run_queue_processor.sh" \
+  --timeout-seconds 14400
 ```
+
+**Important Configuration Notes:**
+- `--session main` + `--system-event` = executes bash commands directly ✅
+- `--session isolated` + `--message` = passes to AI as prompt (doesn't work) ❌
+- Main session processes commands immediately without AI interpretation
+- Cannot use `--no-deliver` with main session (results will be sent to chat)
 
 **Important Notes:**
 - Use `Execute:` prefix to execute bash commands in isolated sessions
