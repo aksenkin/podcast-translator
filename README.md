@@ -355,7 +355,7 @@ python3 channel_monitor.py --videos-per-channel 3 --json-output
 
 #### 2. Queue Processor (Cron Job #2)
 
-**Schedule:** Every 2 hours (08:40, 10:40, 12:40, 14:40, 16:40, 18:40)
+**Schedule:** Every 2 hours (example: 08:40, 10:40, 12:40, 14:40, 16:40, 18:40)
 **Script:** `queue_processor.py`
 
 ```bash
@@ -371,6 +371,14 @@ python3 queue_processor.py --max-videos 2
 - Reads manifest to find generated MP3 files
 - Sends MP3 files to Telegram with metadata
 - Marks videos as completed or failed
+
+**Processing Interval (2 hours):**
+The 2-hour interval between runs is designed for CPU-constrained systems like Raspberry Pi 5:
+- **Transcription load:** faster-whisper uses significant CPU resources during transcription
+- **Thermal management:** Prevents CPU overheating on ARM devices
+- **System stability:** Avoids throttling and system slowdowns during intensive tasks
+- **Background processing:** Allows system to perform other tasks without interference
+- **Adjustable:** Interval can be reduced on more powerful systems (e.g., every 1 hour or 30 minutes)
 
 **Time Window Protection:**
 - Skips processing if before 08:30 or after 20:00
@@ -499,11 +507,12 @@ openclaw cron run <job-id>
 - Adds new videos to queue
 - Skips duplicates
 
-**08:40, 10:40, 12:40, 14:40, 16:40, 18:40** - Queue Processor runs
+**Every 2 hours** (example: 08:40, 10:40, 12:40, 14:40, 16:40, 18:40) - Queue Processor runs
 - Processes 2 videos per run
 - 12 videos processed per day (6 runs × 2 videos)
 - Each video: ~2 hours (download → transcribe → translate → TTS)
 - MP3 files sent to Telegram automatically
+- **2-hour interval** prevents CPU overload on constrained systems (e.g., Raspberry Pi 5)
 
 **After 20:00** - Processing stops
 - Queue Processor checks time window
