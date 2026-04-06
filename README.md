@@ -258,35 +258,6 @@ First translation segment. Second translation segment.
 - 4 CPU threads, 2 workers
 - Progress heartbeat every 10 seconds
 
-## License
-
-MIT
-
-## Integrations
-
-### OpenClaw Skill 🎙️
-
-Automatic skill for OpenClaw with full pipeline:
-- Recognizes YouTube URLs and translation requests
-- Spawns subagent to execute pipeline
-- Supports voice selection (Dmitry, Svetlana, Dariya)
-- Returns results when ready
-
-File: `skills/podcast-translator/SKILL.md`
-
-### Claude Code Agent
-
-Autonomous agent for Claude Code (`agents/podcast-translator.md`):
-- Executes full pipeline
-- Supports voice selection
-- Returns detailed statistics
-
-## Documentation
-
-- [AGENTS.md](AGENTS.md) - Subagent documentation
-- [VOICES.md](VOICES.md) - TTS voice comparison
-- [PROGRESS_FORMAT.md](PROGRESS_FORMAT.md) - Progress output format for CLI agents
-
 ---
 
 ## Automated Queue Processing System 🤖
@@ -610,3 +581,34 @@ python3 queue_manager.py add VIDEO_ID "Title" "Channel"
 ---
 
 **The automated system runs 24/7, processing YouTube videos without manual intervention!** 🚀
+
+---
+
+## License
+
+MIT
+
+## Integrations
+
+### OpenClaw Skill 🎙️
+
+Automatic skill for OpenClaw with full pipeline:
+- Recognizes YouTube URLs and translation requests
+- Spawns subagent to execute pipeline
+- Supports voice selection (Dmitry, Svetlana, Dariya)
+- Returns results when ready
+
+File: `skills/podcast-translator/SKILL.md`
+
+### Claude Code Agent
+
+Autonomous agent for Claude Code (`agents/podcast-translator.md`):
+- Executes full pipeline
+- Supports voice selection
+- Returns detailed statistics
+
+## Documentation
+
+- [AGENTS.md](AGENTS.md) - Subagent documentation
+- [VOICES.md](VOICES.md) - TTS voice comparison
+- [PROGRESS_FORMAT.md](PROGRESS_FORMAT.md) - Progress output format for CLI agents
