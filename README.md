@@ -270,7 +270,7 @@ The podcast-translator now includes a fully automated system for processing YouT
 ┌─────────────────────────────────────────────────────────────────┐
 │                   Cron Job #1 (08:30 daily)                     │
 │                YouTube Video Collector                          │
-│                                                                  │
+│                                                                 │
 │  ✅ Check channels → ✅ Add new videos to queue                 │
 └──────────────────────────┬──────────────────────────────────────┘
                            │
@@ -286,8 +286,8 @@ The podcast-translator now includes a fully automated system for processing YouT
 ┌─────────────────────────────────────────────────────────────────┐
 │                Cron Job #2 (08:40-18:40)                        │
 │                  Queue Processor                                │
-│                  Every 2 hours                                 │
-│                                                                  │
+│                   Every 2 hours                                 │
+│                                                                 │
 │  ✅ Get video → ✅ Spawn subagent → ✅ Send MP3 to Telegram     │
 └─────────────────────────────────────────────────────────────────┘
 ```
