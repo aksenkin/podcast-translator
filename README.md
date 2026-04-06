@@ -67,65 +67,37 @@ All paths are configured in `scripts/download_and_process.sh` with flexible opti
 - `TRANSLATION_DIR="$PROJECT_DIR/translations"`
 - `AUDIO_DIR="$PROJECT_DIR/audio"`
 
-## OpenClaw Permissions
+## OpenClaw Setup
 
-If using OpenClaw and constantly getting approval prompts for podcast-translator scripts, configure execApprovals:
+**Permissions:**
 
-### Quick Setup
+OpenClaw requires proper permissions configuration for podcast-translator scripts. You have two options:
 
-```bash
-openclaw approvals set --file podcast-translator-exec-approvals.json
-```
+**Option 1: Disable permission management (simplest)**
 
-### Manual Configuration
-
-Create or update `~/.openclaw/exec-approvals.json`:
+Set `security=full` in your `~/.openclaw/exec-approvals.json` to allow all commands without prompts:
 
 ```json
 {
   "version": 1,
   "defaults": {
-    "security": "allowlist"
-  },
-  "agents": {
-    "podcast-translator": {
-      "allowlist": [
-        {
-          "pattern": "python3 *",
-          "commandText": "Python scripts for podcast translation"
-        },
-        {
-          "pattern": "yt-dlp *",
-          "commandText": "YouTube audio download"
-        },
-        {
-          "pattern": "edge-tts *",
-          "commandText": "Edge TTS generation"
-        },
-        {
-          "pattern": "ffmpeg *",
-          "commandText": "Audio processing"
-        }
-      ]
-    }
+    "security": "full",
+    "ask": "off",
+    "askFallback": "full"
   }
 }
 ```
 
-### Verify Configuration
+This is the simplest option and recommended for personal installations.
 
+**Option 2: Configure allowlist**
+
+For more control, use `security=allowlist` and configure specific command patterns for `python3`, `yt-dlp`, `edge-tts`, `ffmpeg`, and the skill scripts directory.
+
+Check current configuration:
 ```bash
 openclaw approvals get
 ```
-
-Expected output:
-```
-Defaults: security=allowlist
-Agents: 1 (podcast-translator)
-Allowlist: 4 entries
-```
-
-**Security Note**: This configuration only allows specific commands for the podcast-translator agent, not system-wide.
 
 ## TTS Voices
 
