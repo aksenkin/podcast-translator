@@ -338,7 +338,7 @@ python3 channel_monitor.py --videos-per-channel 3 --json-output
 ```
 
 **Functionality:**
-- Monitors configured YouTube channels (AIDailyBrief, mreflow)
+- Monitors configured YouTube channels
 - Uses `yt-dlp` to fetch latest videos from each channel
 - Adds new videos to `youtube-queue.json`
 - Skips duplicates automatically
@@ -348,8 +348,7 @@ python3 channel_monitor.py --videos-per-channel 3 --json-output
 ```json
 {
   "channels": [
-    {"name": "AIDailyBrief", "url": "https://www.youtube.com/@AIDailyBrief"},
-    {"name": "mreflow", "url": "https://www.youtube.com/@mreflow"}
+    {"name": "ChannelName", "url": "https://www.youtube.com/@channel"}
   ]
 }
 ```
@@ -496,8 +495,8 @@ openclaw cron run <job-id>
 ### Daily Workflow
 
 **08:30** - YouTube Video Collector runs
-- Checks 2 channels (AIDailyBrief, mreflow)
-- Adds ~15 new videos to queue
+- Checks configured YouTube channels
+- Adds new videos to queue
 - Skips duplicates
 
 **08:40, 10:40, 12:40, 14:40, 16:40, 18:40** - Queue Processor runs
