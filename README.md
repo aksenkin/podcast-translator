@@ -329,7 +329,7 @@ The podcast-translator now includes a fully automated system for processing YouT
 
 #### 1. YouTube Video Collector (Cron Job #1)
 
-**Schedule:** Daily at 08:30 Europe/Minsk
+**Schedule:** Daily at 08:30
 **Script:** `channel_monitor.py`
 
 ```bash
@@ -533,7 +533,6 @@ openclaw logs --tail 50 | grep "queue-processor\|youtube-collector"
 ```bash
 openclaw cron add --name "youtube-collector" \
   --cron "30 8 * * *" \
-  --tz "Europe/Minsk" \
   --description "YouTube Video Collector" \
   --session isolated \
   --timeout-seconds 900 \
@@ -545,7 +544,6 @@ openclaw cron add --name "youtube-collector" \
 ```bash
 openclaw cron add --name "queue-processor" \
   --cron "40 8,10,12,14,16,18 * * *" \
-  --tz "Europe/Minsk" \
   --description "Queue Processor - Process 2 videos every 2 hours (08:40-18:40)" \
   --session isolated \
   --timeout-seconds 14400 \
@@ -575,7 +573,6 @@ python3 queue_manager.py add VIDEO_ID "Title" "Channel"
 
 **Cron job not running:**
 - Check schedule: `openclaw cron list`
-- Verify timezone: Europe/Minsk
 - Check job status: `openclaw cron runs --id <job-id>`
 
 **Subagent spawn failing:**
