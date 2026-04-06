@@ -71,10 +71,16 @@ async def generate_audio_chunks(chunks, voice, temp_dir):
 
     return audio_segments
 
-def merge_with_ffmpeg(audio_files, output_file):
+def merge_with_ffmpeg(audio_files, output_file, title=None, artist=None):
     """
     Merge audio files using ffmpeg concat demuxer
     This function handles errors gracefully
+
+    Args:
+        audio_files: List of audio file paths to merge
+        output_file: Path for output MP3 file
+        title: Metadata title (video title)
+        artist: Metadata artist (channel name)
     """
     if not audio_files:
         print("ERROR: No audio files to merge", flush=True)
@@ -104,7 +110,7 @@ def merge_with_ffmpeg(audio_files, output_file):
 
     print(f"STATUS: Merge list created: {len(audio_files)} files", flush=True)
 
-    # Run ffmpeg concat demuxer
+    # Run ffmpeg concat demuxer with metadata
     cmd = [
         'ffmpeg',
         '-f', 'concat',
@@ -112,9 +118,17 @@ def merge_with_ffmpeg(audio_files, output_file):
         '-i', concat_file,
         '-c', 'copy',
         '-map_metadata', '0',
-        '-y',  # Overwrite output file
-        output_file
     ]
+
+    # Add metadata tags if provided
+    if title:
+        cmd.extend(['-metadata', f"title={title}"])
+        print(f"STATUS: Setting title: {title}", flush=True)
+    if artist:
+        cmd.extend(['-metadata', f"artist={artist}"])
+        print(f"STATUS: Setting artist: {artist}", flush=True)
+
+    cmd.extend(['-y', output_file])  # Overwrite output file
 
     try:
         print(f"STATUS: Running ffmpeg...", flush=True)
@@ -152,8 +166,16 @@ def merge_with_ffmpeg(audio_files, output_file):
             except:
                 pass
 
-async def generate_tts(text_file, output_file, voice="ru-RU-DmitryNeural"):
-    """Generate Russian TTS audio with proper error handling"""
+async def generate_tts(text_file, output_file, voice="ru-RU-DmitryNeural", title=None, artist=None):
+    """Generate Russian TTS audio with proper error handling
+
+    Args:
+        text_file: Path to input text file
+        output_file: Path to output MP3 file
+        voice: TTS voice to use
+        title: Metadata title (video title)
+        artist: Metadata artist (channel name)
+    """
     text = load_text(text_file)
 
     if not text.strip():
@@ -181,8 +203,8 @@ async def generate_tts(text_file, output_file, voice="ru-RU-DmitryNeural"):
 
         print(f"STATUS: Generated {len(audio_segments)} audio segments", flush=True)
 
-        # Merge with ffmpeg concat demuxer
-        success = merge_with_ffmpeg(audio_segments, output_file)
+        # Merge with ffmpeg concat demuxer and add metadata
+        success = merge_with_ffmpeg(audio_segments, output_file, title=title, artist=artist)
 
         return success
 
@@ -206,12 +228,14 @@ async def generate_tts(text_file, output_file, voice="ru-RU-DmitryNeural"):
 
 if __name__ == "__main__":
     if len(sys.argv) < 3:
-        print("Usage: python3 generate_tts.py <input_text_file> <output_audio_file> [voice]")
+        print("Usage: python3 generate_tts.py <input_text_file> <output_audio_file> [voice] [title] [artist]")
         print("")
         print("Arguments:")
         print("  input_text_file   - Path to Russian text file")
         print("  output_audio_file - Path to output MP3 file")
         print("  voice             - Optional TTS voice (default: ru-RU-DmitryNeural)")
+        print("  title             - Optional metadata title (video title)")
+        print("  artist            - Optional metadata artist (channel name)")
         print("")
         print("Available Russian voices:")
         print("  ru-RU-DmitryNeural  - Male voice (default)")
@@ -220,10 +244,13 @@ if __name__ == "__main__":
         print("Example:")
         print("  python3 generate_tts.py translations/episode_ru.txt audio/episode_ru.mp3")
         print("  python3 generate_tts.py translations/episode_ru.txt audio/episode_ru.mp3 ru-RU-SvetlanaNeural")
+        print("  python3 generate_tts.py translations/episode_ru.txt audio/episode_ru.mp3 ru-RU-DmitryNeural \"Video Title\" \"Channel Name\"")
         sys.exit(1)
 
     text_file = sys.argv[1]
     output_file = sys.argv[2]
     voice = sys.argv[3] if len(sys.argv) > 3 else "ru-RU-DmitryNeural"
+    title = sys.argv[4] if len(sys.argv) > 4 else None
+    artist = sys.argv[5] if len(sys.argv) > 5 else None
 
-    asyncio.run(generate_tts(text_file, output_file, voice))
+    asyncio.run(generate_tts(text_file, output_file, voice, title, artist))
