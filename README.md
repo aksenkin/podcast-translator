@@ -43,12 +43,36 @@ podcast-translator/
 - edge-tts
 - yt-dlp
 - ffmpeg
+- deno (optional, recommended for yt-dlp)
 
 ### Installation
 
+**Python dependencies:**
 ```bash
 pip install faster-whisper edge-tts yt-dlp --break-system-packages
 ```
+
+**Deno (optional but recommended):**
+Deno may be required for yt-dlp to work with certain YouTube features, especially for extracting video information from JavaScript-heavy sites or handling age-restricted content.
+
+```bash
+curl -fsSL https://deno.land/install.sh | sh
+```
+
+After installation, restart your terminal or add Deno to PATH:
+```bash
+export PATH="$HOME/.deno/bin:$PATH"
+```
+
+**Verify installations:**
+```bash
+python3 --version
+deno --version
+ffmpeg --version
+yt-dlp --version
+```
+
+**Note:** Deno is optional for basic yt-dlp functionality but recommended for better compatibility with YouTube's JavaScript-based features and age-restricted content.
 
 ## Configuration
 
