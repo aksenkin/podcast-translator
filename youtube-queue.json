@@ -1,0 +1,202 @@
+{
+  "pending": [
+    {
+      "videoId": "0oBJ7PY1q9s",
+      "title": "The AI Sandbox - CES, Nvidia News, Cool AI Tools and More!",
+      "url": "https://www.youtube.com/watch?v=0oBJ7PY1q9s",
+      "channel": "mreflow",
+      "addedAt": "2026-04-08T05:32:14.808870Z"
+    },
+    {
+      "videoId": "eU3XwwguttU",
+      "title": "The AI Sandbox - Keeping Looped in on AI, My Income Sources, AI in Education, The Metaverse and more",
+      "url": "https://www.youtube.com/watch?v=eU3XwwguttU",
+      "channel": "mreflow",
+      "addedAt": "2026-04-08T05:32:14.808873Z"
+    },
+    {
+      "videoId": "QymmGOKO5sk",
+      "title": "OpenAI's Latest Move Doesn't Add Up",
+      "url": "https://www.youtube.com/watch?v=QymmGOKO5sk",
+      "channel": "mreflow",
+      "addedAt": "2026-04-08T05:32:14.808877Z"
+    },
+    {
+      "videoId": "_E7XMiVomJA",
+      "title": "Should We Be Scared of Anthropic's Mythos?",
+      "url": "https://www.youtube.com/watch?v=_E7XMiVomJA",
+      "channel": "AIDailyBrief",
+      "addedAt": "2026-04-09T05:30:59.556441Z"
+    },
+    {
+      "videoId": "BZ1hs2ZcnJc",
+      "title": "AI News: Anthropic Leak is Bigger Than You Think",
+      "url": "https://www.youtube.com/watch?v=BZ1hs2ZcnJc",
+      "channel": "mreflow",
+      "addedAt": "2026-04-09T05:30:59.556495Z"
+    },
+    {
+      "videoId": "-lRnSrhTXDc",
+      "title": "OpenAI Just Made History (Holy Sh*t?!)",
+      "url": "https://www.youtube.com/watch?v=-lRnSrhTXDc",
+      "channel": "mreflow",
+      "addedAt": "2026-04-09T05:30:59.556504Z"
+    },
+    {
+      "videoId": "20vZc0cOpOw",
+      "title": "All of AI's New Models and Tools",
+      "url": "https://www.youtube.com/watch?v=20vZc0cOpOw",
+      "channel": "AIDailyBrief",
+      "addedAt": "2026-04-10T05:30:12.266666Z"
+    },
+    {
+      "videoId": "P_oabCLJhb0",
+      "title": "OpenAI Proposes a New Deal",
+      "url": "https://www.youtube.com/watch?v=P_oabCLJhb0",
+      "channel": "AIDailyBrief",
+      "addedAt": "2026-04-10T05:30:12.266692Z"
+    },
+    {
+      "videoId": "7IgfvURUUx4",
+      "title": "This Unknown AI Model is Shockingly Good",
+      "url": "https://www.youtube.com/watch?v=7IgfvURUUx4",
+      "channel": "mreflow",
+      "addedAt": "2026-04-10T05:30:12.266699Z"
+    },
+    {
+      "videoId": "634oIgg3v5c",
+      "title": "Why Every AI Product Seems the Same",
+      "url": "https://www.youtube.com/watch?v=634oIgg3v5c",
+      "channel": "AIDailyBrief",
+      "addedAt": "2026-04-10T15:33:54.742800Z"
+    },
+    {
+      "videoId": "SguncMvE77I",
+      "title": "AI News: The Scariest AI Model Ever!",
+      "url": "https://www.youtube.com/watch?v=SguncMvE77I",
+      "channel": "mreflow",
+      "addedAt": "2026-04-10T15:33:54.742848Z"
+    },
+    {
+      "videoId": "pRoIjB5eNKo",
+      "title": "Claude Mythos Explained",
+      "url": "https://www.youtube.com/watch?v=pRoIjB5eNKo",
+      "channel": "mreflow",
+      "addedAt": "2026-04-11T05:30:15.833276Z"
+    }
+  ],
+  "processing": null,
+  "completed": [
+    {
+      "videoId": "slX_lDDobEs",
+      "title": "This Datacenter Problem Nobody's Talking About",
+      "url": "https://www.youtube.com/watch?v=slX_lDDobEs",
+      "channel": "mreflow",
+      "addedAt": "2026-04-08T05:32:14.808866Z",
+      "startedAt": "2026-04-10T15:35:43.268294Z",
+      "completedAt": "2026-04-10T15:37:25.996575Z"
+    }
+  ],
+  "failed": [
+    {
+      "videoId": "fs_Y3gvj7lk",
+      "title": "Agent Skills Masterclass with Nufar Gaspar",
+      "url": "https://www.youtube.com/watch?v=fs_Y3gvj7lk",
+      "channel": "AIDailyBrief",
+      "addedAt": "2026-04-05T20:11:14.050671Z",
+      "startedAt": "2026-04-06T13:42:02.622569Z",
+      "failedAt": "2026-04-06T13:42:07.301400Z",
+      "error": "error: unknown option '--runtime'\n"
+    },
+    {
+      "videoId": "Jov9Mn2Q2s8",
+      "title": "The Ultimate AI Catch-Up Guide",
+      "url": "https://www.youtube.com/watch?v=Jov9Mn2Q2s8",
+      "channel": "AIDailyBrief",
+      "addedAt": "2026-04-05T20:11:14.050697Z",
+      "startedAt": "2026-04-06T13:42:07.301795Z",
+      "failedAt": "2026-04-06T13:42:10.952921Z",
+      "error": "error: unknown option '--runtime'\n"
+    },
+    {
+      "videoId": "bkzMuF7bKqY",
+      "title": "🤯 ChatGPT Talks Back (Example)",
+      "url": "https://www.youtube.com/watch?v=bkzMuF7bKqY",
+      "channel": "AIDailyBrief",
+      "addedAt": "2026-04-05T20:11:14.050701Z",
+      "startedAt": "2026-04-06T15:43:13.987377Z",
+      "failedAt": "2026-04-06T15:43:28.330194Z",
+      "error": "Gateway agent failed; falling back to embedded: Error: Unknown agent id \"podcast-translator\". Use \"openclaw agents list\" to see configured agents.\nError: Unknown agent id \"podcast-translator\". Use \"openclaw agents list\" to see configured agents.\n"
+    },
+    {
+      "videoId": "ptxvJXzO1pE",
+      "title": "Talking Glasses?! MetaAI Takes Over RayBan! 🔊",
+      "url": "https://www.youtube.com/watch?v=ptxvJXzO1pE",
+      "channel": "AIDailyBrief",
+      "addedAt": "2026-04-05T20:11:14.050705Z",
+      "startedAt": "2026-04-06T15:43:28.331062Z",
+      "failedAt": "2026-04-06T15:43:43.347222Z",
+      "error": "Gateway agent failed; falling back to embedded: Error: Unknown agent id \"podcast-translator\". Use \"openclaw agents list\" to see configured agents.\nError: Unknown agent id \"podcast-translator\". Use \"openclaw agents list\" to see configured agents.\n"
+    },
+    {
+      "videoId": "Jlh-Hy185r0",
+      "title": "Meta's AI: Your Selfies Turn Picasso in a Snap! 🎨✨ Backdrop, Restyle and Stickers",
+      "url": "https://www.youtube.com/watch?v=Jlh-Hy185r0",
+      "channel": "AIDailyBrief",
+      "addedAt": "2026-04-05T20:11:14.050708Z",
+      "startedAt": "2026-04-06T15:58:36.532533Z",
+      "failedAt": "2026-04-06T15:58:46.914694Z",
+      "error": "Gateway agent failed; falling back to embedded: Error: Pass --to <E.164>, --session-id, or --agent to choose a session\nError: Pass --to <E.164>, --session-id, or --agent to choose a session\n"
+    },
+    {
+      "videoId": "OYyS0Gu5xj8",
+      "title": "AI News: Anthropic Went Crazy This Week!",
+      "url": "https://www.youtube.com/watch?v=OYyS0Gu5xj8",
+      "channel": "mreflow",
+      "addedAt": "2026-04-05T20:11:14.050711Z",
+      "startedAt": "2026-04-06T15:58:57.225976Z",
+      "failedAt": "2026-04-06T15:59:06.567143Z",
+      "error": "Error: Pass --to <E.164>, --session-id, or --agent to choose a session\n"
+    },
+    {
+      "videoId": "tZ2B3itsgUw",
+      "title": "The AI Sandbox - Testing Cool AI Stuff Live",
+      "url": "https://www.youtube.com/watch?v=tZ2B3itsgUw",
+      "channel": "mreflow",
+      "addedAt": "2026-04-05T20:11:14.050717Z",
+      "startedAt": "2026-04-06T21:07:01.157731Z",
+      "failedAt": "2026-04-06T21:07:11.187267Z",
+      "error": "Error: Pass --to <E.164>, --session-id, or --agent to choose a session\n"
+    },
+    {
+      "videoId": "osycm8ZK7iY",
+      "title": "How AI Gets Data Wrong (and how to fix it)",
+      "url": "https://www.youtube.com/watch?v=osycm8ZK7iY",
+      "channel": "mreflow",
+      "addedAt": "2026-04-05T20:11:14.050725Z",
+      "startedAt": "2026-04-07T10:59:31.222502Z",
+      "failedAt": "2026-04-07T11:00:10.633943Z",
+      "error": "[diagnostic] lane task error: lane=main durationMs=15420 error=\"Error: session file locked (timeout 10000ms): pid=2029 /home/clawd/.openclaw/agents/claude/sessions/887028cd-581c-4831-8eba-6cecf4a5af87.jsonl.lock\"\n[diagnostic] lane task error: lane=session:agent:claude:main durationMs=15425 error=\"Error: session file locked (timeout 10000ms): pid=2029 /home/clawd/.openclaw/agents/claude/sessions/887028cd-581c-4831-8eba-6cecf4a5af87.jsonl.lock\"\n[model-fallback/decision] model fallback decision: decision=candidate_failed requested=zai/glm-4.7 candidate=zai/glm-4.7 reason=timeout next=none\nFailoverError: session file locked (timeout 10000ms): pid=2029 /home/clawd/.openclaw/agents/claude/sessions/887028cd-581c-4831-8eba-6cecf4a5af87.jsonl.lock\n"
+    },
+    {
+      "videoId": "4-XNvaV2KPk",
+      "title": "Claude's Source Code Got Leaked Across The Whole Internet",
+      "url": "https://www.youtube.com/watch?v=4-XNvaV2KPk",
+      "channel": "mreflow",
+      "addedAt": "2026-04-07T05:31:28.928258Z",
+      "startedAt": "2026-04-07T13:00:35.764278Z",
+      "failedAt": "2026-04-07T13:00:53.558578Z",
+      "error": "[openclaw] Failed to start CLI: Error: Cannot find module '@buape/carbon'\nRequire stack:\n- /home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/dist/ui-7MjYF8PY.js\n    at Function._resolveFilename (node:internal/modules/cjs/loader:1383:15)\n    at Function.resolve (node:internal/modules/helpers:157:19)\n    at jitiResolve (/home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/node_modules/jiti/dist/jiti.cjs:1:148703)\n    at jitiRequire (/home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/node_modules/jiti/dist/jiti.cjs:1:150290)\n    at /home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/node_modules/jiti/dist/jiti.cjs:1:157987\n    at /home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/dist/ui-7MjYF8PY.js:14:15\n    at eval_evalModule (/home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/node_modules/jiti/dist/jiti.cjs:1:155533)\n    at jitiRequire (/home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/node_modules/jiti/dist/jiti.cjs:1:150967)\n    at /home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/node_modules/jiti/dist/jiti.cjs:1:157987\n    at /home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/dist/channel-D0kY3Gd-.js:29:19\n    at eval_evalModule (/home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/node_modules/jiti/dist/jiti.cjs:1:155533)\n    at jitiRequire (/home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/node_modules/jiti/dist/jiti.cjs:1:150967)\n    at /home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/node_modules/jiti/dist/jiti.cjs:1:157987\n    at /home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/dist/extensions/discord/channel-plugin-api.js:1:431\n    at eval_evalModule (/home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/node_modules/jiti/dist/jiti.cjs:1:155533)\n    at jitiRequire (/home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/node_modules/jiti/dist/jiti.cjs:1:150967)\n    at /home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/node_modules/jiti/dist/jiti.cjs:1:157987\n    at loadBundledEntryModuleSync (file:///home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/dist/channel-entry-contract-DyY5TZkc.js:68:35)\n    at loadBundledEntryExportSync (file:///home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/dist/channel-entry-contract-DyY5TZkc.js:73:17)\n    at Object.loadChannelPlugin (file:///home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/dist/channel-entry-contract-DyY5TZkc.js:82:34)\n    at getBundledChannelPlugin (file:///home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/dist/bootstrap-registry-DSG7nIY1.js:164:24)\n    at getBootstrapChannelPlugin (file:///home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/dist/bootstrap-registry-DSG7nIY1.js:245:24)\n    at iterateBootstrapChannelPlugins (file:///home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/dist/bootstrap-registry-DSG7nIY1.js:234:18)\n    at iterateBootstrapChannelPlugins.next (<anonymous>)\n    at listChannelSecretTargetRegistryEntries (file:///home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/dist/target-registry-4ZVRjB-K.js:9:13)\n    at file:///home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/dist/target-registry-4ZVRjB-K.js:432:7\n    at ModuleJob.run (node:internal/modules/esm/module_job:343:25)\n    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:665:26)\n    at async Object.register (file:///home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/dist/command-registry-CNkzrn92.js:119:5)\n    at async registerCoreCliByName (file:///home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/dist/command-registry-CNkzrn92.js:175:2)\n    at async runCli (file:///home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/dist/run-main-8bQWSeWd.js:398:5)\n"
+    },
+    {
+      "videoId": "Jg-wQBw0LDQ",
+      "title": "Introducing Maturity Maps: A New Way to Measure AI Adoption",
+      "url": "https://www.youtube.com/watch?v=Jg-wQBw0LDQ",
+      "channel": "AIDailyBrief",
+      "addedAt": "2026-04-07T13:01:49.342109Z",
+      "startedAt": "2026-04-07T13:01:54.263375Z",
+      "failedAt": "2026-04-07T13:03:48.694335Z",
+      "error": "Config invalid\nFile: ~/.openclaw/openclaw.json\nProblem:\n  - tools.web.search: tools.web.search provider-owned config moved to plugins.entries.<plugin>.config.webSearch. Run \"openclaw doctor --fix\".\nLegacy config keys detected:\n  - tools.web.search: tools.web.search provider-owned config moved to plugins.entries.<plugin>.config.webSearch. Run \"openclaw doctor --fix\".\n\nRun: openclaw doctor --fix\n"
+    }
+  ]
+}

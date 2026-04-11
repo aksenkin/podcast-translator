@@ -11,14 +11,14 @@ You are an autonomous podcast translation agent. When invoked with a YouTube URL
 
 ## Configuration
 
-**Project directory**: `/home/clawd/work/podcast-translator`
+**Project directory**: `/home/clawd/.openclaw/workspace/skills/podcast-translator`
 
 **Paths**:
-- Scripts: `/home/clawd/work/podcast-translator/scripts/`
-- Input: `/home/clawd/work/podcast-translator/input/`
-- Transcripts: `/home/clawd/work/podcast-translator/transcripts/`
-- Translations: `/home/clawd/work/podcast-translator/translations/`
-- Audio: `/home/clawd/work/podcast-translator/audio/`
+- Scripts: `/home/clawd/.openclaw/workspace/skills/podcast-translator/scripts/`
+- Input: `/home/clawd/.openclaw/workspace/skills/podcast-translator/input/`
+- Transcripts: `/home/clawd/.openclaw/workspace/skills/podcast-translator/transcripts/`
+- Translations: `/home/clawd/.openclaw/workspace/skills/podcast-translator/translations/`
+- Audio: `/home/clawd/.openclaw/workspace/skills/podcast-translator/audio/`
 
 ## Pipeline
 
@@ -50,7 +50,7 @@ Execute these steps in order:
 Download the YouTube video as MP3:
 ```bash
 yt-dlp -x --audio-format mp3 --audio-quality 0 \
-  -o "/home/clawd/work/podcast-translator/input/podcast_$(date +%Y%m%d_%H%M%S).mp3" \
+  -o "/home/clawd/.openclaw/workspace/skills/podcast-translator/input/podcast_$(date +%Y%m%d_%H%M%S).mp3" \
   "$YOUTUBE_URL"
 ```
 
@@ -60,9 +60,9 @@ Get the downloaded filename and report it.
 
 Transcribe using faster-whisper:
 ```bash
-python3 /home/clawd/work/podcast-translator/scripts/transcribe_cached.py \
+python3 /home/clawd/.openclaw/workspace/skills/podcast-translator/scripts/transcribe_cached.py \
   "$INPUT_FILE" \
-  /home/clawd/work/podcast-translator/transcripts/ \
+  /home/clawd/.openclaw/workspace/skills/podcast-translator/transcripts/ \
   small
 ```
 
@@ -72,7 +72,7 @@ The output will be in `transcripts/` with `.txt` extension.
 
 Prepare the transcript:
 ```bash
-python3 /home/clawd/work/podcast-translator/scripts/prepare_transcript.py \
+python3 /home/clawd/.openclaw/workspace/skills/podcast-translator/scripts/prepare_transcript.py \
   "$TRANSCRIPT_FILE" \
   "$READY_FILE"
 ```
@@ -114,14 +114,14 @@ Generate text-to-speech audio using the TTS-ready file (without timestamps):
 
 **Default voice (Dmitry - male)**:
 ```bash
-python3 /home/clawd/work/podcast-translator/scripts/generate_tts.py \
+python3 /home/clawd/.openclaw/workspace/skills/podcast-translator/scripts/generate_tts.py \
   "$TRANSLATION_RU_TTS" \
   "$AUDIO_OUTPUT"
 ```
 
 **Female voice (Svetlana)**:
 ```bash
-python3 /home/clawd/work/podcast-translator/scripts/generate_tts.py \
+python3 /home/clawd/.openclaw/workspace/skills/podcast-translator/scripts/generate_tts.py \
   "$TRANSLATION_RU_TTS" \
   "$AUDIO_OUTPUT" \
   "$VOICE"
