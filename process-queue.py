@@ -288,6 +288,56 @@ class QueueProcessor:
                 "error": str(e)
             }
 
+    def translate_only(self, video_id):
+        """Translate a single video using GoogleTranslator (fallback for LLM).
+
+        Reads the _ready.txt file (already has timestamps removed by
+        prepare_transcript.py) and produces a clean _ru_tts.txt file
+        ready for TTS generation.
+
+        Args:
+            video_id: YouTube video ID to translate
+
+        Returns:
+            Dict with translation result
+        """
+        # Find the ready file for this video
+        # Check both timestamped and simple naming patterns
+        ready_files = list((self.skill_dir / "translations").glob(f"*{video_id}*_ready.txt"))
+        if not ready_files:
+            # Try finding any ready file that was recently created
+            ready_files = sorted((self.skill_dir / "translations").glob("*_ready.txt"), key=lambda f: f.stat().st_mtime, reverse=True)
+
+        if not ready_files:
+            return {"success": False, "error": f"No ready file found for {video_id}"}
+
+        ready_file = ready_files[0]
+        print(f"STATUS: Translating {ready_file.name} via GoogleTranslator")
+
+        try:
+            transcript_content = ready_file.read_text(encoding='utf-8')
+            translator = GoogleTranslator(source='en', target='ru')
+
+            # Translate line by line — _ready.txt already has no timestamps
+            translation_lines = []
+            for line in transcript_content.split("\n"):
+                if line.strip():
+                    try:
+                        translated_text = translator.translate(line.strip())
+                        translation_lines.append(translated_text)
+                    except Exception:
+                        translation_lines.append(line.strip())
+
+            # Write directly to _ru_tts.txt (clean text, ready for TTS)
+            tts_file = ready_file.parent / ready_file.name.replace("_ready.txt", "_ru_tts.txt")
+            tts_file.write_text("\n".join(translation_lines), encoding='utf-8')
+            print(f"SUCCESS: TTS text saved: {tts_file.name}")
+
+            return {"success": True, "tts_text": str(tts_file)}
+
+        except Exception as e:
+            return {"success": False, "error": str(e)}
+
     def run_once(self, channels):
         """Run one complete cycle: check channels, process one video.
 
@@ -327,6 +377,23 @@ class QueueProcessor:
 
 def main():
     """Main entry point."""
+    processor = QueueProcessor()
+
+    # Check for --translate-only flag
+    if "--translate-only" in sys.argv:
+        idx = sys.argv.index("--translate-only")
+        if idx + 1 >= len(sys.argv):
+            print("Error: --translate-only requires a video ID")
+            sys.exit(1)
+        video_id = sys.argv[idx + 1]
+        result = processor.translate_only(video_id)
+        if result["success"]:
+            print(f"✅ Translation complete: {result.get('translation', '')}")
+        else:
+            print(f"❌ Translation failed: {result.get('error', '')}")
+            sys.exit(1)
+        return
+
     # YouTube channels to monitor
     channels = [
         {
@@ -338,8 +405,6 @@ def main():
             "name": "mreflow"
         }
     ]
-
-    processor = QueueProcessor()
 
     # Run one complete cycle
     result = processor.run_once(channels)

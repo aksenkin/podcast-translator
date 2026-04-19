@@ -210,6 +210,21 @@ class YouTubeChannelMonitor:
         print(f"   Completed: {status['completed']}")
         print(f"   Failed: {status['failed']}")
 
+        # Launch queue_processor immediately if videos were added
+        if added_count > 0:
+            try:
+                print(f"\n🚀 Launching queue_processor...")
+                subprocess.Popen(
+                    ["python3", str(self.skill_dir / "queue_processor.py"), "--max-videos", "1"],
+                    cwd=str(self.skill_dir),
+                    stdout=subprocess.DEVNULL,
+                    stderr=subprocess.DEVNULL,
+                    start_new_session=True
+                )
+                print(f"✅ queue_processor started in background")
+            except Exception as e:
+                print(f"⚠️  Failed to launch queue_processor: {e}")
+
         return self.results
 
     def run(self, videos_per_channel=3):

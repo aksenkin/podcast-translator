@@ -209,11 +209,24 @@ def main():
     elif command == "next":
         video = qm.get_next_video()
         if video:
-            print(f"Processing: {video['title']}")
-            print(f"Video ID: {video['videoId']}")
-            print(f"Channel: {video['channel']}")
+            # Check for --json flag
+            if "--json" in sys.argv:
+                print(json.dumps({
+                    "videoId": video["videoId"],
+                    "title": video["title"],
+                    "channel": video["channel"],
+                    "url": f"https://www.youtube.com/watch?v={video['videoId']}",
+                    "startedAt": video.get("startedAt", "")
+                }, indent=2, ensure_ascii=False))
+            else:
+                print(f"Processing: {video['title']}")
+                print(f"Video ID: {video['videoId']}")
+                print(f"Channel: {video['channel']}")
         else:
-            print("No videos in queue")
+            if "--json" in sys.argv:
+                print(json.dumps({"empty": True}))
+            else:
+                print("No videos in queue")
 
     elif command == "complete":
         if len(sys.argv) < 3:
