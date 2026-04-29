@@ -8,7 +8,7 @@ Manages a queue of YouTube videos to translate, processing them one at a time.
 import json
 import os
 import subprocess
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 
 
@@ -58,7 +58,7 @@ class QueueManager:
         added_count = 0
         for video in videos:
             if video["videoId"] not in existing_ids:
-                video["addedAt"] = datetime.utcnow().isoformat() + "Z"
+                video["addedAt"] = datetime.now(timezone.utc).isoformat()
                 queue["pending"].append(video)
                 added_count += 1
 
@@ -68,9 +68,13 @@ class QueueManager:
     def get_next_video(self):
         """Get the next video to process.
 
+        Resets stale processing video first.
+
         Returns:
             Video dict or None if no pending videos
         """
+        self.reset_stale()
+
         queue = self._load_queue()
 
         if not queue["pending"]:
@@ -78,7 +82,7 @@ class QueueManager:
 
         # Move first pending video to processing
         video = queue["pending"].pop(0)
-        video["startedAt"] = datetime.utcnow().isoformat() + "Z"
+        video["startedAt"] = datetime.now(timezone.utc).isoformat()
         queue["processing"] = video
 
         self._save_queue(queue)
@@ -95,7 +99,7 @@ class QueueManager:
 
         if queue["processing"] and queue["processing"]["videoId"] == video_id:
             video = queue["processing"]
-            video["completedAt"] = datetime.utcnow().isoformat() + "Z"
+            video["completedAt"] = datetime.now(timezone.utc).isoformat()
             if output_files:
                 video["outputFiles"] = output_files
             queue["completed"].append(video)
@@ -117,7 +121,7 @@ class QueueManager:
 
         if queue["processing"] and queue["processing"]["videoId"] == video_id:
             video = queue["processing"]
-            video["failedAt"] = datetime.utcnow().isoformat() + "Z"
+            video["failedAt"] = datetime.now(timezone.utc).isoformat()
             video["error"] = error
             queue["failed"].append(video)
             queue["processing"] = None
@@ -126,6 +130,58 @@ class QueueManager:
             return True
 
         return False
+
+    def reset_stale(self, max_minutes=30):
+        """Return a stuck video from processing back to pending.
+
+        If a video has been in processing for longer than max_minutes
+        and no transcribe/python process is running for it, it's stale.
+
+        Args:
+            max_minutes: Maximum allowed time in processing (default 30)
+
+        Returns:
+            Dict with videoId and action taken, or None
+        """
+        queue = self._load_queue()
+
+        if not queue["processing"]:
+            return None
+
+        video = queue["processing"]
+        started_at = video.get("startedAt", "")
+        if not started_at:
+            return None
+
+        try:
+            started = datetime.fromisoformat(started_at.replace("Z", "+00:00"))
+            elapsed_minutes = (datetime.now(timezone.utc) - started).total_seconds() / 60
+        except (ValueError, TypeError):
+            return None
+
+        if elapsed_minutes <= max_minutes:
+            return None
+
+        # Check if any transcription process is actually running
+        video_id = video["videoId"]
+        try:
+            result = subprocess.run(
+                ["pgrep", "-f", f"transcribe.*{video_id}"],
+                capture_output=True, text=True, timeout=5
+            )
+            if result.returncode == 0 and result.stdout.strip():
+                # Process is alive, not stale
+                return None
+        except Exception:
+            pass
+
+        # Return to pending
+        video.pop("startedAt", None)
+        queue["pending"].insert(0, video)
+        queue["processing"] = None
+        self._save_queue(queue)
+
+        return {"videoId": video_id, "action": "returned_to_pending", "stale_minutes": round(elapsed_minutes)}
 
     def get_status(self):
         """Get queue status.
@@ -146,7 +202,7 @@ class QueueManager:
     def clear_old_completed(self, days=7):
         """Remove completed entries older than specified days."""
         queue = self._load_queue()
-        cutoff = datetime.utcnow().timestamp() - (days * 86400)
+        cutoff = datetime.now(timezone.utc).timestamp() - (days * 86400)
 
         old_completed = []
         new_completed = []
@@ -186,6 +242,7 @@ def main():
         print("  complete <videoId>                 Mark video as completed")
         print("  fail <videoId> <error>             Mark video as failed")
         print("  status                             Show queue status")
+        print("  reset-stale                        Return stuck video to pending")
         print("  clear-old [days]                   Clear old completed entries")
         sys.exit(1)
 
@@ -260,6 +317,13 @@ def main():
             print(f"\nCurrently processing:")
             print(f"  {status['current']['title']}")
             print(f"  {status['current']['videoId']}")
+
+    elif command == "reset-stale":
+        result = qm.reset_stale()
+        if result:
+            print(f"Returned {result['videoId']} to pending (was stuck for {result['stale_minutes']} min)")
+        else:
+            print("No stale videos found")
 
     elif command == "clear-old":
         days = int(sys.argv[2]) if len(sys.argv) > 2 else 7

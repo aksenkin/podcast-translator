@@ -10,12 +10,16 @@ input/*
 transcripts/*
 translations/*
 audio/*
+chunks/*
+logs/*
 
 # Keep directory structure
 !input/.gitkeep
 !transcripts/.gitkeep
 !translations/.gitkeep
 !audio/.gitkeep
+!chunks/.gitkeep
+!logs/.gitkeep
 
 # Python
 __pycache__/

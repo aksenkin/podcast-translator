@@ -20,8 +20,8 @@ import time
 from pathlib import Path
 
 LOCK_FILE = "/tmp/podcast-queue.lock"
-CRON_JOB_ID = "a79e58b0-f9bd-4911-86a7-44c01a1ae572"
-TIMEOUT_SECONDS = 1800  # 30 minutes
+# Look up cron job by name instead of hardcoding ID
+TIMEOUT_SECONDS = 7200  # 2 hours
 
 
 def read_lock():
@@ -80,13 +80,39 @@ def handle_timeout(signum, frame):
 
 
 def run_pipeline():
-    """Trigger the queue-processor cron job."""
+    """Trigger the queue-processor cron job by name."""
     print(f"STATUS: Starting pipeline at {time.strftime('%Y-%m-%d %H:%M:%S')}")
-    print(f"STATUS: Cron job ID: {CRON_JOB_ID}")
 
     try:
+        # Find queue-processor cron job by name
         result = subprocess.run(
-            ["openclaw", "cron", "run", CRON_JOB_ID],
+            ["openclaw", "cron", "list", "--json"],
+            capture_output=True, text=True, timeout=30
+        )
+        if result.returncode != 0:
+            print(f"ERROR: Failed to list cron jobs: {result.stderr}")
+            return 1
+
+        import json
+        jobs = json.loads(result.stdout)
+        # Handle both list and dict with 'jobs' key
+        if isinstance(jobs, dict):
+            jobs = jobs.get('jobs', [])
+
+        cron_job_id = None
+        for j in jobs:
+            if j.get('name') == 'queue-processor':
+                cron_job_id = j.get('id')
+                break
+
+        if not cron_job_id:
+            print("ERROR: queue-processor cron job not found")
+            return 1
+
+        print(f"STATUS: Found queue-processor cron job: {cron_job_id}")
+
+        result = subprocess.run(
+            ["openclaw", "cron", "run", cron_job_id],
             timeout=TIMEOUT_SECONDS,
             capture_output=False
         )
@@ -99,7 +125,7 @@ def run_pipeline():
         return result.returncode
 
     except subprocess.TimeoutExpired:
-        print("ERROR: Pipeline timed out after 30 minutes")
+        print("ERROR: Pipeline timed out after 2 hours")
         return 2
     except Exception as e:
         print(f"ERROR: Pipeline failed: {e}")
