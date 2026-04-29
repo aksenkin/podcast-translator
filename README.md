@@ -8,29 +8,40 @@ Automated pipeline for translating YouTube podcasts from English to Russian with
 
 ## Features
 
-- 🎥 Download audio from YouTube
-- 🎤 Transcribe using faster-whisper (CPU-optimized)
-- 🌍 Translate to Russian while preserving technical terms
-- 🔊 Generate Russian voiceover via Edge TTS
-- 🤖 Autonomous agent for Claude Code
-- 🎙️ OpenClaw Skill for automatic translation
+- Download audio from YouTube
+- Transcribe using faster-whisper (CPU-optimized, chunk-based for long videos)
+- Translate to Russian while preserving technical terms
+- Generate Russian voiceover via Edge TTS
+- Autonomous agent for Claude Code
+- OpenClaw Skill for automatic translation
+- Queue system with cron-based processing
 
 ## Project Structure
 
 ```
 podcast-translator/
 ├── scripts/                    # Core scripts
+│   ├── chunk_audio.py          # Split long audio into chunks
+│   ├── transcribe_cached.py   # Short video transcription (CPU-optimized)
+│   ├── transcribe_chunk.py    # Chunk transcription (--all flag loads model once)
+│   ├── assemble_chunks.py     # Assemble chunk transcripts (no chunk headers)
+│   ├── prepare_transcript.py  # Transcript preparation for translation
+│   ├── generate_tts.py        # TTS generation
+│   ├── extract_tts_text.py   # Extract TTS text from translation
 │   ├── download_and_process.sh # Full pipeline
-│   ├── transcribe_cached.py    # Transcription (CPU-optimized)
-│   ├── prepare_transcript.py   # Transcript preparation
-│   └── generate_tts.py         # TTS generation
+│   └── log_helper.py          # Progress logging helpers
 ├── agents/                     # Claude Code agents
-│   └── podcast-translator.md   # Autonomous translation agent
+│   └── podcast-translator.md  # Autonomous translation agent
 ├── skills/                     # Skills for different platforms
 │   ├── podcast-translator-skill/ # Claude translation skill
 │   └── podcast-translator/      # OpenClaw skill (automatic pipeline)
 ├── podcast-translator-skill.skill # Packaged Claude skill
+├── channel_monitor.py          # YouTube channel monitor
+├── queue_manager.py            # Queue state management
+├── run_pipeline.py             # Pipeline launcher with PID-lock
+├── process-queue.py            # Queue processor (--translate-only fallback)
 ├── audio/                      # Generated voiceovers
+├── chunks/                     # Audio chunks and transcripts
 ├── input/                      # Downloaded MP3 files
 ├── transcripts/                # Transcriptions (English)
 └── translations/               # Translations (Russian)
@@ -53,8 +64,6 @@ pip install faster-whisper edge-tts yt-dlp --break-system-packages
 ```
 
 **Deno (optional but recommended):**
-Deno may be required for yt-dlp to work with certain YouTube features, especially for extracting video information from JavaScript-heavy sites or handling age-restricted content.
-
 ```bash
 curl -fsSL https://deno.land/install.sh | sh
 ```
@@ -62,65 +71,6 @@ curl -fsSL https://deno.land/install.sh | sh
 After installation, restart your terminal or add Deno to PATH:
 ```bash
 export PATH="$HOME/.deno/bin:$PATH"
-```
-
-**Verify installations:**
-```bash
-python3 --version
-deno --version
-ffmpeg --version
-yt-dlp --version
-```
-
-**Note:** Deno is optional for basic yt-dlp functionality but recommended for better compatibility with YouTube's JavaScript-based features and age-restricted content.
-
-## Configuration
-
-All paths are configured in `scripts/download_and_process.sh` with flexible options:
-
-**Default directory:** `~/podcast-translator`
-
-**Specify custom directory:**
-- Via parameter: `./scripts/download_and_process.sh --destination-dir /path/to/project URL`
-- Via environment variable: `PODCAST_TRANSLATOR_DIR=/path/to/project`
-- Interactive prompt (if not specified)
-
-**Directory structure:**
-- `INPUT_DIR="$PROJECT_DIR/input"`
-- `TRANSCRIPT_DIR="$PROJECT_DIR/transcripts"`
-- `TRANSLATION_DIR="$PROJECT_DIR/translations"`
-- `AUDIO_DIR="$PROJECT_DIR/audio"`
-
-## OpenClaw Setup
-
-**Permissions:**
-
-OpenClaw requires proper permissions configuration for podcast-translator scripts. You have two options:
-
-**Option 1: Disable permission management (simplest)**
-
-Set `security=full` in your `~/.openclaw/exec-approvals.json` to allow all commands without prompts:
-
-```json
-{
-  "version": 1,
-  "defaults": {
-    "security": "full",
-    "ask": "off",
-    "askFallback": "full"
-  }
-}
-```
-
-This is the simplest option and recommended for personal installations.
-
-**Option 2: Configure allowlist**
-
-For more control, use `security=allowlist` and configure specific command patterns for `python3`, `yt-dlp`, `edge-tts`, `ffmpeg`, and the skill scripts directory.
-
-Check current configuration:
-```bash
-openclaw approvals get
 ```
 
 ## TTS Voices
@@ -154,7 +104,7 @@ See: [VOICES.md](VOICES.md)
 
 ## Usage Methods
 
-### 1. OpenClaw Skill (Recommended) 🎙️
+### 1. OpenClaw Skill (Recommended)
 
 Automatic pipeline via OpenClaw skill. Just send a YouTube URL:
 
@@ -164,16 +114,9 @@ Translate this podcast: https://www.youtube.com/watch?v=VIDEO_ID
 
 The skill automatically:
 - Downloads audio
-- Transcribes
+- Transcribes (with chunking for long videos)
 - Translates to Russian
 - Generates voiceover
-
-**With voice selection:**
-```
-Translate this podcast with a female voice: https://www.youtube.com/watch?v=VIDEO_ID
-```
-
-Available voices: Dmitry (male, default), Svetlana (female), Dariya (female).
 
 ### 2. Claude Code Agent
 
@@ -183,86 +126,76 @@ Autonomous agent for Claude Code located at `agents/podcast-translator.md`:
 Use the podcast-translator agent for this URL
 ```
 
-Or simply:
-```
-Translate this podcast: https://www.youtube.com/watch?v=VIDEO_ID
-```
-
-The agent will ask about voice preference and execute the entire pipeline autonomously.
-
-### 3. Bash Script (Semi-automatic)
-
-```bash
-cd /home/clawd/work/podcast-translator
-./scripts/download_and_process.sh "https://www.youtube.com/watch?v=VIDEO_ID"
-```
-
-You'll need to manually translate at step 4 using the podcast-translator skill.
-
-**With custom directory:**
-```bash
-./scripts/download_and_process.sh --destination-dir /custom/path "URL"
-```
-
-### 4. Step-by-Step (Full Control)
+### 3. Step-by-Step (Full Control)
 
 **1. Download audio**
 ```bash
-yt-dlp -x --audio-format mp3 --audio-quality 0 -o input/podcast.mp3 "URL"
+yt-dlp -x --audio-format mp3 --audio-quality 0 -o "input/{videoId}.mp3" "URL"
 ```
 
-**2. Transcribe**
+**2. Check duration and chunk if needed**
 ```bash
-python3 scripts/transcribe_cached.py input/podcast.mp3 transcripts/ small
+python3 scripts/chunk_audio.py "input/{videoId}.mp3"
 ```
 
-**3. Prepare for translation**
+If `chunking: true`, go to step 3a. If `chunking: false`, transcribe directly:
 ```bash
-python3 scripts/prepare_transcript.py transcripts/podcast.txt translations/podcast_ready.txt
+python3 scripts/transcribe_cached.py "input/{videoId}.mp3" transcripts/ small
 ```
 
-**4. Translate** (using skill or manually)
-
-Use the `podcast-translator` skill or translate manually.
-
-**5. Generate TTS**
+**3a. Transcribe all chunks** (model loads once, processes sequentially):
 ```bash
-# Default voice (Dmitry - male)
-python3 scripts/generate_tts.py translations/podcast_ru.txt audio/podcast.ru.mp3
-
-# Female voice (Svetlana)
-python3 scripts/generate_tts.py translations/podcast_ru.txt audio/podcast.ru.mp3 ru-RU-SvetlanaNeural
+python3 scripts/transcribe_chunk.py --all {videoId}
 ```
 
-## Translation File Format
-
-The pipeline creates two translation files:
-
-**With timestamps** (`{episode}_ru.txt`):
-```
-[00:00 - 00:05] First translation segment
-[00:05 - 00:10] Second translation segment
+**3b. Assemble chunks into single transcript:**
+```bash
+python3 scripts/assemble_chunks.py {videoId}
 ```
 
-**For TTS** (`{episode}_ru_tts.txt`):
+**4. Prepare for translation**
+```bash
+python3 scripts/prepare_transcript.py "transcripts/{videoId}.txt" "translations/{videoId}_ready.txt"
 ```
-First translation segment. Second translation segment.
+
+**5. Translate** (using skill or manually)
+
+**6. Generate TTS**
+```bash
+python3 scripts/generate_tts.py "translations/{videoId}_ru_tts.txt" "audio/{videoId}.ru.mp3"
 ```
+
+## Chunk-Based Transcription
+
+For videos longer than 5 minutes, the pipeline automatically splits audio into chunks:
+
+1. `chunk_audio.py` splits audio into 5-minute chunks
+2. `transcribe_chunk.py --all {videoId}` loads the whisper model once and transcribes all chunks sequentially
+3. `assemble_chunks.py {videoId}` assembles chunk transcripts into a single file (without chunk headers)
+4. Cleanup deletes chunk audio and transcript files
+
+**Key features:**
+- `--all` flag: loads model once (~2s from cache), processes all chunks without gaps
+- PID-lock: prevents parallel transcription processes
+- `os.nice(10)`: lowers CPU priority for background processing
+- Model cache: loads from local HuggingFace cache in ~2 seconds
 
 ## CPU Optimization
 
-`transcribe_cached.py` is optimized for Raspberry Pi ARM:
+All transcription scripts are optimized for Raspberry Pi ARM:
 - `beam_size=1` (faster on CPU)
 - `int8` quantization
 - VAD filter disabled
 - 4 CPU threads, 2 workers
 - Progress heartbeat every 10 seconds
+- `os.nice(10)` for background priority
+- PID-lock to prevent parallel whisper processes
 
 ---
 
-## Automated Queue Processing System 🤖
+## Automated Queue Processing System
 
-The podcast-translator now includes a fully automated system for processing YouTube videos via cron jobs and OpenClaw subagents.
+The podcast-translator includes a fully automated system for processing YouTube videos via OpenClaw cron jobs.
 
 ### Architecture Overview
 
@@ -271,7 +204,8 @@ The podcast-translator now includes a fully automated system for processing YouT
 │                   Cron Job #1 (08:30 daily)                     │
 │                YouTube Video Collector                          │
 │                                                                 │
-│  ✅ Check channels → ✅ Add new videos to queue                │
+│  Check channels → Add new videos to queue                      │
+│  Then trigger: python3 run_pipeline.py                          │
 └──────────────────────────┬──────────────────────────────────────┘
                            │
                            ↓
@@ -279,16 +213,24 @@ The podcast-translator now includes a fully automated system for processing YouT
                     │   Queue      │
                     │   (JSON)     │
                     │              │
-                    │ pending: 14  │
+                    │ pending: 3   │
                     └──────────────┘
                            │
                            ↓
 ┌─────────────────────────────────────────────────────────────────┐
-│                Cron Job #2 (08:40-18:40)                        │
-│                  Queue Processor                                │
-│                   Every 2 hours                                 │
+│                Cron Job #2 (08:40 daily)                         │
+│                  Queue Processor (agentTurn)                    │
 │                                                                 │
-│  ✅ Get video → ✅ Spawn subagent → ✅ Send MP3 to Telegram    │
+│  For each video:                                                │
+│  1. Get next pending video                                      │
+│  2. Download audio (yt-dlp)                                     │
+│  3. Chunk & transcribe (--all, model loads once)                │
+│  4. Assemble chunks (no chunk headers)                          │
+│  5. Prepare transcript                                          │
+│  6. Translate EN→RU (LLM in-context)                           │
+│  7. Generate TTS (edge-tts)                                     │
+│  8. Send result via Telegram                                     │
+│  9. Mark complete/failed, continue to next video                │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
@@ -296,348 +238,123 @@ The podcast-translator now includes a fully automated system for processing YouT
 
 #### 1. YouTube Video Collector (Cron Job #1)
 
-**Schedule:** Daily at 08:30
-**Wrapper Script:** `run_channel_monitor.sh`
-**Core Script:** `channel_monitor.py`
+**Schedule:** Daily at 08:30 (Europe/Minsk)
+**Script:** `channel_monitor.py`
 
-**Execution Method:**
-Cron jobs use `systemEvent` payload with `main` session to execute bash commands directly:
+Monitors configured YouTube channels, adds new videos to queue, then triggers the queue processor via `run_pipeline.py`.
 
-```bash
-# Cron job configuration (OpenClaw):
-openclaw cron add \
-  --name "youtube-collector" \
-  --cron "30 8 * * *" \
-  --session main \
-  --system-event "bash /path/to/run_channel_monitor.sh"
-
-# Wrapper script executes:
-python3 channel_monitor.py --videos-per-channel 3 --json-output
-```
-
-**Key Points:**
-- `--session main` + `--system-event` = executes bash commands directly ✅
-- `--session isolated` + `--message` = passes to AI as prompt (doesn't work) ❌
-- Main session processes commands immediately without AI interpretation
-
-**Logging:**
-- Logs to `/tmp/channel-monitor-cron.log`
-- Includes timestamps and execution results
-- Useful for debugging cron job issues
-
-**Functionality:**
-- Monitors configured YouTube channels
-- Uses `yt-dlp` to fetch latest videos from each channel
-- Adds new videos to `youtube-queue.json`
-- Skips duplicates automatically
-- Returns statistics: checked/added/skipped videos
-
-**Configuration:** `/home/clawd/.openclaw/workspace/youtube-channels.json`
-```json
-{
-  "channels": [
-    {"name": "ChannelName", "url": "https://www.youtube.com/@channel"}
-  ]
-}
-```
+**Configuration:** `youtube-channels.json`
 
 #### 2. Queue Processor (Cron Job #2)
 
-**Schedule:** Every 2 hours (example: 08:40, 10:40, 12:40, 14:40, 16:40, 18:40)
-**Wrapper Script:** `run_queue_processor.sh`
-**Core Script:** `queue_processor.py`
+**Schedule:** Daily at 08:40 (Europe/Minsk)
+**Type:** `agentTurn` payload (LLM executes pipeline steps via exec)
+**Agent:** `main` (with `podcast-translator` skill loaded)
+**Timeout:** 2 hours (7200s)
 
-**Execution Method:**
-Cron jobs use `systemEvent` payload with `main` session to execute bash commands directly:
+Uses OpenClaw's `agentTurn` to execute the pipeline. The agent receives a detailed payload describing each step and executes them sequentially. On failure, marks the video as failed and continues to the next video.
 
-```bash
-# Cron job configuration (OpenClaw):
-openclaw cron add \
-  --name "queue-processor" \
-  --cron "40 8,10,12,14,16,18 * * *" \
-  --session main \
-  --system-event "bash /path/to/run_queue_processor.sh"
-
-# Wrapper script executes:
-python3 queue_processor.py --max-videos 2
-```
-
-**Key Points:**
-- `--session main` + `--system-event` = executes bash commands directly ✅
-- `--session isolated` + `--message` = passes to AI as prompt (doesn't work) ❌
-- Main session processes commands immediately without AI interpretation
-
-**Logging:**
-- Logs to `/tmp/queue-processor-cron.log`
-- Includes timestamps and execution results
-- Useful for debugging cron job issues
-
-**Functionality:**
-- Processes up to 2 videos per run
-- Clears old completed entries from queue
-- Checks time window (only 08:30-20:00)
-- Spawns OpenClaw subagent for each video
-- Reads manifest to find generated MP3 files
-- Sends MP3 files to Telegram with metadata
-- Marks videos as completed or failed
-
-**Processing Interval (2 hours):**
-The 2-hour interval between runs is designed for CPU-constrained systems like Raspberry Pi 5:
-- **Transcription load:** faster-whisper uses significant CPU resources during transcription
-- **Thermal management:** Prevents CPU overheating on ARM devices
-- **System stability:** Avoids throttling and system slowdowns during intensive tasks
-- **Background processing:** Allows system to perform other tasks without interference
-- **Adjustable:** Interval can be reduced on more powerful systems (e.g., every 1 hour or 30 minutes)
-
-**Time Window Protection:**
-- Skips processing if before 08:30 or after 20:00
-- Just shows queue status and exits gracefully
+**Key features:**
+- `--all` flag for chunk transcription (model loads once)
+- No chunk headers in assembled transcripts
+- PID-lock prevents concurrent transcription
+- Stale video watchdog returns stuck processing videos to pending
+- `{SKILL_DIR}` auto-substituted by OpenClaw for skill directory path
+- Telegram delivery for success/failure notifications
 
 #### 3. Queue Manager
 
 **Script:** `queue_manager.py`
 
-**Queue Structure:** `youtube-queue.json`
+**Commands:**
+```bash
+python3 queue_manager.py add VIDEO_ID "Title" "Channel"    # Add video
+python3 queue_manager.py next                               # Get next pending
+python3 queue_manager.py status                             # Show queue stats
+python3 queue_manager.py complete VIDEO_ID                  # Mark done
+python3 queue_manager.py fail VIDEO_ID "Error message"     # Mark failed
+python3 queue_manager.py reset-stale                        # Return stuck videos to pending
+```
+
+**Stale video watchdog:** `reset-stale` checks if a video has been in "processing" state for more than 30 minutes with no live transcription process. If so, it returns the video to pending.
+
+#### 4. Pipeline Launcher
+
+**Script:** `run_pipeline.py`
+
+Triggers the queue-processor cron job with PID-lock concurrency control. Prevents concurrent runs. Looks up the cron job by name (`queue-processor`) instead of hardcoded ID.
+
+```bash
+python3 run_pipeline.py              # Trigger queue-processor
+python3 run_pipeline.py --status     # Check if pipeline is running
+python3 run_pipeline.py --force      # Force run even if lock exists
+```
+
+### OpenClaw Skill Configuration
+
+The `podcast-translator` skill is loaded via the `openclaw-workspace` source (direct path, not symlink). To add it to an agent:
+
 ```json
 {
-  "pending": [...],      // Videos waiting to be processed
-  "processing": null,    // Currently processing video
-  "completed": [...],    // Successfully processed videos
-  "failed": []           // Failed videos with error messages
+  "id": "main",
+  "name": "main",
+  "skills": ["podcast-translator"]
 }
 ```
 
-**Methods:**
-- `add_videos()` - Add videos to queue (skip duplicates)
-- `get_next_video()` - Get next pending video
-- `mark_processing()` - Mark video as processing
-- `mark_completed()` - Mark video as completed
-- `mark_failed()` - Mark video as failed
-- `clear_all_completed()` - Remove all completed entries
-- `get_status()` - Get queue statistics
+**Important:** Do not create a symlink from `~/.openclaw/skills/podcast-translator` to `~/.openclaw/workspace/skills/podcast-translator`. OpenClaw's gateway will reject symlinks that resolve outside their configured root (`symlink-escape` security check). The skill is automatically discoverable via the `openclaw-workspace` source.
 
-#### 4. OpenClaw Subagent
+### Cron Job Configuration
 
-**Skill:** `SKILL.md` (podcast-translator)
+Cron jobs are configured in `~/.openclaw/cron/jobs.json` with `agentTurn` payload type.
 
-**Pipeline Steps:**
-1. **Download Audio** - `yt-dlp` extracts MP3 from YouTube
-2. **Transcribe** - `faster-whisper` transcribes to English
-3. **Prepare** - Format transcript for translation
-4. **Translate** - Translate to Russian (preserves timestamps)
-5. **Extract TTS Text** - Remove timestamps for TTS generation
-6. **Generate TTS** - Edge TTS creates Russian voiceover **with MP3 metadata**
-7. **Create Manifest** - Output manifest for file delivery
+**Queue Processor job** (key fields):
+- `agentId`: `"main"`
+- `sessionTarget`: `"isolated"`
+- `schedule`: `"40 8 * * *"` (daily at 08:40)
+- `timeoutSeconds`: 7200
+- Payload contains detailed step-by-step pipeline instructions
 
-**MP3 Metadata:**
-- **Title:** YouTube video title
-- **Artist:** Channel name
-- Added via ffmpeg metadata tags
-
-**Manifest File:** `translations/{basename}_manifest.txt`
-```
-===OPENCLAW_OUTPUTS_COMPLETE===
-translation:translations/{basename}_ru.txt
-tts_text:translations/{basename}__ru_tts.txt
-audio:audio/{basename}.ru.mp3
-transcript:transcripts/{basename}.txt
-base_dir:$SKILL_DIR
-===OPENCLAW_OUTPUTS_END===
-```
-
-#### 5. Telegram Delivery
-
-**Method:** `queue_processor.py:send_to_telegram()`
-
-**Functionality:**
-- Sends MP3 file via OpenClaw Telegram integration
-- Includes message with video title, channel, and file size
-- Uses `openclaw message send --channel telegram --media <file>`
-- 5-minute timeout for large files
-- Returns delivery status and message ID
-
-**Message Format:**
-```
-🎙️ {Video Title}
-
-📺 Channel: {Channel Name}
-🆔 Video ID: {Video ID}
-📊 Size: {X} MB
-
-🔗 Original: https://www.youtube.com/watch?v={Video ID}
-```
-
-### Directory Structure
-
-```
-/home/clawd/.openclaw/workspace/
-├── youtube-channels.json              # Channel configuration
-├── youtube-queue.json                 # Queue state
-└── skills/podcast-translator/
-    ├── SKILL.md                       # OpenClaw skill definition
-    ├── channel_monitor.py             # YouTube Video Collector
-    ├── queue_processor.py             # Queue Processor
-    ├── queue_manager.py               # Queue state management
-    ├── scripts/
-    │   ├── generate_tts.py            # TTS with MP3 metadata
-    │   ├── transcribe_cached.py       # Transcription
-    │   ├── prepare_transcript.py      # Transcript preparation
-    │   └── extract_tts_text.py        # TTS text extraction
-    ├── audio/                         # Generated MP3 files
-    ├── input/                         # Downloaded audio
-    ├── transcripts/                   # English transcriptions
-    └── translations/                  # Russian translations
-```
-
-### OpenClaw Setup
-
-**Symlink:**
-```bash
-/home/clawd/.openclaw/skills/podcast-translator →
-  /home/clawd/.openclaw/workspace/skills/podcast-translator
-```
-
-**Cron Jobs:**
-
-OpenClaw cron jobs use bash wrapper scripts to execute Python commands. The `Execute:` prefix ensures proper command execution in isolated sessions.
-
-**Create Cron Job #1 (YouTube Video Collector):**
-```bash
-openclaw cron add \
-  --name "youtube-collector" \
-  --cron "30 8 * * *" \
-  --tz "Europe/Minsk" \
-  --description "YouTube Video Collector" \
-  --session isolated \
-  --timeout-seconds 900 \
-  --no-deliver \
-  --message "Execute: bash /home/clawd/.openclaw/workspace/skills/podcast-translator/run_channel_monitor.sh"
-```
-
-**Create Cron Job #2 (Queue Processor):**
-```bash
-openclaw cron add \
-  --name "queue-processor" \
-  --cron "40 8,10,12,14,16,18 * * *" \
-  --tz "Europe/Minsk" \
-  --description "Queue Processor - Process 2 videos every 2 hours" \
-  --session isolated \
-  --timeout-seconds 14400 \
-  --no-deliver \
-  --message "Execute: bash /home/clawd/.openclaw/workspace/skills/podcast-translator/run_queue_processor.sh"
-```
-
-**Manage Cron Jobs:**
-```bash
-# List all cron jobs
-openclaw cron list
-
-# View specific job details
-openclaw cron runs --id <job-id>
-
-# Run job manually (for testing)
-openclaw cron run <job-id>
-
-# Delete a cron job
-openclaw cron rm <job-id>
-```
-
-**Key Points:**
-- Use `Execute:` prefix in `--message` to execute bash commands
-- Wrapper scripts handle logging to `/tmp/*-cron.log`
-- Isolated sessions require `agentTurn` payload (not `systemEvent`)
-- `--no-deliver` suppresses Telegram delivery for cron job results
+**YouTube Collector job** (key fields):
+- `sessionTarget`: `"main"`
+- `schedule`: `"30 8 * * *"` (daily at 08:30)
+- After collecting videos, triggers `run_pipeline.py` to start processing
 
 ### Daily Workflow
 
 **08:30** - YouTube Video Collector runs
 - Checks configured YouTube channels
 - Adds new videos to queue
-- Skips duplicates
+- Triggers queue processor
 
-**Every 2 hours** (example: 08:40, 10:40, 12:40, 14:40, 16:40, 18:40) - Queue Processor runs
-- Processes 2 videos per run
-- 12 videos processed per day (6 runs × 2 videos)
-- Each video: ~2 hours (download → transcribe → translate → TTS)
-- MP3 files sent to Telegram automatically
-- **2-hour interval** prevents CPU overload on constrained systems (e.g., Raspberry Pi 5)
-
-**After 20:00** - Processing stops
-- Queue Processor checks time window
-- Only shows queue status, no processing
+**08:40** - Queue Processor runs
+- Processes all pending videos sequentially
+- Downloads, transcribes (with chunking), translates, generates TTS
+- Sends Telegram notification for each video (success or failure)
+- Sends final summary
 
 ### Monitoring
 
 **Check queue status:**
 ```bash
-python3 /home/clawd/.openclaw/workspace/skills/podcast-translator/queue_manager.py status
+python3 queue_manager.py status
 ```
 
-**View cron job runs:**
+**Check pipeline lock:**
 ```bash
-openclaw cron runs --id <job-id>
+python3 run_pipeline.py --status
 ```
 
-**Check logs:**
+**View video processing logs:**
 ```bash
-openclaw logs --tail 50 | grep "queue-processor\|youtube-collector"
+ls -lt logs/
+cat logs/{videoId}.log
 ```
 
-### Configuration Files
-
-**Wrapper Scripts:**
-
-The system uses bash wrapper scripts to ensure proper command execution:
-
-**run_channel_monitor.sh** (Cron Job #1):
+**View transcription logs:**
 ```bash
-#!/bin/bash
-cd /home/clawd/.openclaw/workspace/skills/podcast-translator
-python3 channel_monitor.py --videos-per-channel 3 --json-output
+cat logs/{videoId}.log | grep TRANSCRIBE
 ```
-
-**run_queue_processor.sh** (Cron Job #2):
-```bash
-#!/bin/bash
-cd /home/clawd/.openclaw/workspace/skills/podcast-translator
-python3 queue_processor.py --max-videos 2
-```
-
-**Cron Job #1 (YouTube Video Collector):**
-```bash
-openclaw cron add \
-  --name "youtube-collector" \
-  --cron "30 8 * * *" \
-  --tz "Europe/Minsk" \
-  --description "YouTube Video Collector" \
-  --session main \
-  --system-event "bash /home/clawd/.openclaw/workspace/skills/podcast-translator/run_channel_monitor.sh" \
-  --timeout-seconds 900
-```
-
-**Cron Job #2 (Queue Processor):**
-```bash
-openclaw cron add \
-  --name "queue-processor" \
-  --cron "40 8,10,12,14,16,18 * * *" \
-  --tz "Europe/Minsk" \
-  --description "Queue Processor - Process 2 videos every 2 hours" \
-  --session main \
-  --system-event "bash /home/clawd/.openclaw/workspace/skills/podcast-translator/run_queue_processor.sh" \
-  --timeout-seconds 14400
-```
-
-**Important Configuration Notes:**
-- `--session main` + `--system-event` = executes bash commands directly ✅
-- `--session isolated` + `--message` = passes to AI as prompt (doesn't work) ❌
-- Main session processes commands immediately without AI interpretation
-- Cannot use `--no-deliver` with main session (results will be sent to chat)
-
-**Important Notes:**
-- Use `Execute:` prefix to execute bash commands in isolated sessions
-- Wrapper scripts log to `/tmp/*-cron.log` for debugging
-- `--no-deliver` prevents Telegram spam for cron job results
-- `--session isolated` is required (cannot use `systemEvent` with `--no-deliver`)
 
 ### Manual Testing
 
@@ -649,7 +366,7 @@ python3 channel_monitor.py --videos-per-channel 3
 
 **Test Queue Processor:**
 ```bash
-python3 queue_processor.py --max-videos 1
+python3 run_pipeline.py
 ```
 
 **Add video manually:**
@@ -657,63 +374,10 @@ python3 queue_processor.py --max-videos 1
 python3 queue_manager.py add VIDEO_ID "Title" "Channel"
 ```
 
-### Troubleshooting
-
-**Cron job not running:**
-- Check schedule: `openclaw cron list`
-- Check job status: `openclaw cron runs --id <job-id>`
-
-**Subagent spawn failing:**
-- Check skill symlink: `ls -la /home/clawd/.openclaw/skills/podcast-translator`
-- Verify execApprovals: `openclaw approvals get`
-- Check SKILL.md exists
-
-**MP3 not sent to Telegram:**
-- Check `send_to_telegram()` method in `queue_processor.py`
-- Verify OpenClaw Telegram integration
-- Check file permissions
-
-**Queue not processing:**
-- Check time window (08:30-20:00)
-- Verify queue has pending videos
-- Check `youtube-queue.json` format
-
-**Cron job executes but doesn't process videos:**
-- Check wrapper script logs: `tail -f /tmp/queue-processor-cron.log`
-- Verify `Execute:` prefix in cron job message
-- Test wrapper script manually: `bash run_queue_processor.sh`
-- Check if Python scripts are executable
-- Verify OpenClaw permissions: `openclaw approvals get`
-
-**Debugging cron jobs:**
+**Reset stuck videos:**
 ```bash
-# View cron job execution logs
-tail -50 /tmp/queue-processor-cron.log
-tail -50 /tmp/channel-monitor-cron.log
-
-# Run wrapper script manually
-bash /home/clawd/.openclaw/workspace/skills/podcast-translator/run_queue_processor.sh
-
-# Check if cron job message is correct
-openclaw cron list --json | jq '.jobs[] | select(.name == "queue-processor") | .payload.message'
+python3 queue_manager.py reset-stale
 ```
-
-### Performance
-
-**Processing Time:**
-- Video download: ~2 minutes
-- Transcription: ~20 minutes (CPU-optimized)
-- Translation: ~30 minutes (AI)
-- TTS generation: ~5 minutes
-- **Total per video:** ~1 hour (actual time depends on video length)
-
-**Daily Capacity:**
-- 6 cron job runs × 2 videos = 12 videos/day
-- Queue clears accumulated videos in ~1-2 days
-
----
-
-**The automated system runs 24/7, processing YouTube videos without manual intervention!** 🚀
 
 ---
 
@@ -721,27 +385,9 @@ openclaw cron list --json | jq '.jobs[] | select(.name == "queue-processor") | .
 
 MIT
 
-## Integrations
-
-### OpenClaw Skill 🎙️
-
-Automatic skill for OpenClaw with full pipeline:
-- Recognizes YouTube URLs and translation requests
-- Spawns subagent to execute pipeline
-- Supports voice selection (Dmitry, Svetlana, Dariya)
-- Returns results when ready
-
-File: `skills/podcast-translator/SKILL.md`
-
-### Claude Code Agent
-
-Autonomous agent for Claude Code (`agents/podcast-translator.md`):
-- Executes full pipeline
-- Supports voice selection
-- Returns detailed statistics
-
 ## Documentation
 
 - [AGENTS.md](AGENTS.md) - Subagent documentation
 - [VOICES.md](VOICES.md) - TTS voice comparison
 - [PROGRESS_FORMAT.md](PROGRESS_FORMAT.md) - Progress output format for CLI agents
+- [CLAUDE.md](CLAUDE.md) - Claude Code project instructions
