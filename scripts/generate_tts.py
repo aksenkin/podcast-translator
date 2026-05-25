@@ -23,6 +23,9 @@ import subprocess
 from pathlib import Path
 from edge_tts import Communicate
 
+sys.path.insert(0, str(Path(__file__).parent))
+from heartbeat import TranscriptionHeartbeat
+
 MAX_CHARS = 1000
 
 
@@ -75,16 +78,30 @@ def merge_audio(chunk_files, output_file):
 
 
 async def generate_tts(text_file, output_file, voice="ru-RU-DmitryNeural",
-                       title=None, artist=None):
-    """Generate TTS audio from text file with chunking."""
+                       title=None, artist=None, video_id=None):
+    """Generate TTS audio from text file with chunking and heartbeat."""
+    
+    # Initialize heartbeat for TTS phase
+    hb = TranscriptionHeartbeat(video_id) if video_id else None
+    
+    if hb:
+        hb.phase("tts", f"Starting TTS generation: {os.path.basename(text_file)}")
+    
     text = load_text(text_file)
     if not text:
         print("ERROR: Empty text file", flush=True)
+        if hb:
+            hb.fail("Empty text file")
         return False
 
     print(f"STATUS: TTS generating — {len(text)} chars, voice: {voice}", flush=True)
+    if hb:
+        hb.heartbeat(f"Text loaded: {len(text)} chars")
+    
     chunks = chunk_text(text)
     print(f"STATUS: Split into {len(chunks)} chunks", flush=True)
+    if hb:
+        hb.update_progress(5, f"Split into {len(chunks)} TTS chunks", phase="tts")
 
     with tempfile.TemporaryDirectory() as tmp_dir:
         chunk_files = []
@@ -92,35 +109,61 @@ async def generate_tts(text_file, output_file, voice="ru-RU-DmitryNeural",
         for i, chunk in enumerate(chunks, 1):
             chunk_path = os.path.join(tmp_dir, f"chunk_{i:04d}.mp3")
             print(f"STATUS: Generating chunk {i}/{len(chunks)} ({len(chunk)} chars)", flush=True)
+            
+            if hb:
+                progress = int((i / len(chunks)) * 90)  # 5-95%
+                hb.update_progress(progress, f"TTS chunk {i}/{len(chunks)}", phase="tts")
 
             try:
                 await generate_chunk(chunk, voice, chunk_path)
                 if os.path.exists(chunk_path) and os.path.getsize(chunk_path) > 0:
                     chunk_files.append(chunk_path)
+                    if hb:
+                        hb.heartbeat(f"TTS chunk {i}/{len(chunks)} generated")
                 else:
-                    print(f"ERROR: Chunk {i} produced empty audio", flush=True)
+                    error = f"Chunk {i} produced empty audio"
+                    print(f"ERROR: {error}", flush=True)
+                    if hb:
+                        hb.fail(error)
                     return False
             except Exception as e:
-                print(f"ERROR: Chunk {i} failed: {e}", flush=True)
+                error = f"Chunk {i} failed: {e}"
+                print(f"ERROR: {error}", flush=True)
+                if hb:
+                    hb.fail(error)
                 return False
 
         if not chunk_files:
-            print("ERROR: No audio chunks generated", flush=True)
+            error = "No audio chunks generated"
+            print(f"ERROR: {error}", flush=True)
+            if hb:
+                hb.fail(error)
             return False
 
         if len(chunk_files) == 1:
             # Single chunk — just copy
             import shutil
             shutil.copy2(chunk_files[0], output_file)
+            if hb:
+                hb.heartbeat("Single TTS chunk copied")
         else:
             # Merge chunks
             print(f"STATUS: Merging {len(chunk_files)} chunks with ffmpeg", flush=True)
+            if hb:
+                hb.update_progress(95, "Merging TTS chunks with ffmpeg", phase="tts")
             if not merge_audio(chunk_files, output_file):
-                print("ERROR: ffmpeg merge failed", flush=True)
+                error = "ffmpeg merge failed"
+                print(f"ERROR: {error}", flush=True)
+                if hb:
+                    hb.fail(error)
                 return False
+            if hb:
+                hb.heartbeat("TTS chunks merged")
 
     # Add metadata if provided
     if title or artist:
+        if hb:
+            hb.heartbeat("Adding metadata")
         meta_path = output_file + ".meta.mp3"
         cmd = ["ffmpeg", "-y", "-i", output_file]
         if title:
@@ -144,6 +187,12 @@ async def generate_tts(text_file, output_file, voice="ru-RU-DmitryNeural",
     duration = float(dur_result.stdout.strip()) if dur_result.returncode == 0 else 0
 
     print(f"SUCCESS: TTS audio saved to {output_file} ({duration:.0f}s)", flush=True)
+    
+    # TTS complete — finish heartbeat
+    if hb:
+        hb.update_progress(100, f"TTS complete: {duration:.0f}s", phase="complete")
+        hb.finish()
+    
     return True
 
 
@@ -162,6 +211,7 @@ if __name__ == '__main__':
     voice = sys.argv[3] if len(sys.argv) > 3 else "ru-RU-DmitryNeural"
     title = sys.argv[4] if len(sys.argv) > 4 else None
     artist = sys.argv[5] if len(sys.argv) > 5 else None
+    video_id = sys.argv[6] if len(sys.argv) > 6 else None
 
-    success = asyncio.run(generate_tts(text_file, output_file, voice, title, artist))
+    success = asyncio.run(generate_tts(text_file, output_file, voice, title, artist, video_id))
     sys.exit(0 if success else 1)
