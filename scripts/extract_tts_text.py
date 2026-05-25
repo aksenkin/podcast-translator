@@ -1,36 +1,50 @@
 #!/usr/bin/env python3
 """
-Extract clean TTS text from translation file (removes timestamps)
+Extract TTS-ready text from translation file (removes timestamps).
 """
 
 import sys
 import re
 
 def extract_tts_text(input_file, output_file):
-    """Extract clean Russian text from translation file (remove timestamps)"""
-    print(f"STATUS: Extracting TTS text from {input_file}", flush=True)
-
+    """Extract Russian text without timestamps."""
     with open(input_file, 'r', encoding='utf-8') as f:
         lines = f.readlines()
 
-    clean_lines = []
+    # Filter out timestamp lines and extract just the Russian text
+    tts_lines = []
     for line in lines:
-        # Remove timestamp pattern: [MM:SS - MM:SS]
-        clean_line = re.sub(r'^\[\d{2}:\d{2}\s*-\s*\d{2}:\d{2}\]\s*', '', line)
-        if clean_line.strip():
-            clean_lines.append(clean_line.strip())
+        line = line.strip()
+        # Skip empty lines
+        if not line:
+            continue
+        # Skip metadata/manifest lines
+        if line.startswith('==='):
+            continue
+        # Extract text after timestamp
+        # Pattern: [00:00 - 00:03] Text here
+        match = re.match(r'^\[\d{2}:\d{2}\s*-\s*\d{2}:\d{2}\]\s*(.+)$', line)
+        if match:
+            text = match.group(1).strip()
+            if text:
+                tts_lines.append(text)
 
-    clean_text = '\n'.join(clean_lines)
+    # Join with spaces for natural TTS flow
+    tts_text = ' '.join(tts_lines)
 
     with open(output_file, 'w', encoding='utf-8') as f:
-        f.write(clean_text)
+        f.write(tts_text)
 
-    print(f"SUCCESS: TTS text extracted to {output_file}", flush=True)
-    print(f"STATUS: {len(clean_lines)} lines, {len(clean_text)} characters", flush=True)
+    print(f"Extracted {len(tts_lines)} segments")
+    print(f"Output: {output_file}")
+    return len(tts_lines)
 
-if __name__ == "__main__":
-    if len(sys.argv) < 3:
-        print("Usage: python3 extract_tts_text.py <input_file> <output_file>")
+if __name__ == '__main__':
+    if len(sys.argv) != 3:
+        print("Usage: extract_tts_text.py <input_file> <output_file>")
         sys.exit(1)
 
-    extract_tts_text(sys.argv[1], sys.argv[2])
+    input_file = sys.argv[1]
+    output_file = sys.argv[2]
+
+    extract_tts_text(input_file, output_file)

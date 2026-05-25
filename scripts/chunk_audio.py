@@ -31,7 +31,38 @@ DEFAULT_CHUNK_DURATION = 300  # 5 minutes
 
 
 def get_audio_duration(audio_file):
-    """Get audio duration in seconds using ffprobe."""
+    """Get audio duration in seconds using ffprobe.
+
+    IMPORTANT FIX for VBR MP3 files from yt-dlp:
+    --------------------------------------------
+    yt-dlp downloads audio as VBR (Variable Bitrate) MP3 by default.
+    ffprobe -show_entries format=duration often returns wildly incorrect
+    durations for VBR MP3s because the container metadata is unreliable.
+
+    Example of the bug:
+      - Actual podcast: ~10 minutes (600s)
+      - ffprobe format=duration: 74.7s (wrong!)
+      - This caused the script to skip chunking entirely with
+        "duration_below_threshold", producing an incomplete transcript.
+
+    The fix uses ffprobe's stream-level duration which decodes the actual
+    audio frames, giving the correct duration for VBR MP3s.
+    """
+    # Try stream-level duration first (accurate for VBR MP3s)
+    result = subprocess.run(
+        ["ffprobe", "-v", "error", "-show_entries", "stream=duration",
+         "-of", "default=noprint_wrappers=1:nokey=1", str(audio_file)],
+        capture_output=True, text=True, timeout=30
+    )
+    if result.returncode == 0 and result.stdout.strip():
+        try:
+            duration = float(result.stdout.strip().splitlines()[0])
+            if duration > 0:
+                return duration
+        except (ValueError, IndexError):
+            pass
+
+    # Fallback to format-level duration (may be inaccurate for VBR)
     result = subprocess.run(
         ["ffprobe", "-v", "error", "-show_entries", "format=duration",
          "-of", "default=noprint_wrappers=1:nokey=1", str(audio_file)],

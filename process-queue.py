@@ -1,22 +1,33 @@
 #!/usr/bin/env python3
 """
-YouTube Video Queue Processor
+YouTube Video Queue Processor for OpenClaw
 
-Processes videos from the queue one at a time.
-This script is designed for cron jobs.
+Processes videos from the queue sequentially with retry support.
+Failed videos are returned to queue (up to 3 attempts).
+After 3 failures, sends Telegram notification.
+
+Usage:
+  python3 process-queue.py --max-videos 1 --json
+  python3 process-queue.py status
+  python3 process-queue.py check-notify  # Check for failed videos needing notification
 """
 
 import json
-import os
-import subprocess
 import sys
+import os
 from pathlib import Path
 from datetime import datetime
-from deep_translator import GoogleTranslator
 
-# Add current directory to path for imports
 sys.path.insert(0, str(Path(__file__).parent))
 from queue_manager import QueueManager
+
+
+def send_telegram_message(message, target="49621692"):
+    """Send message via OpenClaw CLI."""
+    try:
+        os.system(f'openclaw message send --channel telegram --target {target} --message "{message}"')
+    except Exception as e:
+        print(f"Failed to send Telegram message: {e}")
 
 
 class QueueProcessor:
@@ -27,395 +38,246 @@ class QueueProcessor:
         self.skill_dir = Path(skill_dir)
         self.qm = QueueManager(self.skill_dir / "youtube-queue.json")
 
-    def add_youtube_videos_to_queue(self, channels):
-        """Check YouTube channels for new videos and add to queue.
-
-        Args:
-            channels: List of dicts with 'url' and 'name' keys
-
-        Returns:
-            Dict with count of added videos and video info
+    def process_video(self):
         """
-        all_videos = []
-
-        for channel in channels:
-            try:
-                result = subprocess.run(
-                    [
-                        "yt-dlp",
-                        "--get-id",
-                        "--get-title",
-                        "--playlist-end", "3",
-                        channel["url"]
-                    ],
-                    capture_output=True,
-                    text=True,
-                    timeout=60
-                )
-
-                if result.returncode == 0:
-                    lines = result.stdout.strip().split("\n")
-                    # Output format: title on odd lines, id on even lines
-                    for i in range(0, len(lines), 2):
-                        if i + 1 < len(lines):
-                            title = lines[i].strip()
-                            video_id = lines[i + 1].strip()
-                            if video_id and video_id != "%{id}":
-                                all_videos.append({
-                                    "videoId": video_id,
-                                    "title": title,
-                                    "channel": channel["name"]
-                                })
-
-            except subprocess.TimeoutExpired:
-                print(f"Timeout checking channel: {channel['name']}")
-            except Exception as e:
-                print(f"Error checking channel {channel['name']}: {e}")
-
-        # Add to queue (duplicates are filtered automatically)
-        added_count = self.qm.add_videos(all_videos)
-
-        return {
-            "checked": len(all_videos),
-            "added": added_count,
-            "videos": all_videos
-        }
-
-    def process_next_video(self):
-        """Process the next video in the queue.
+        Take the next video from the queue.
+        Moves it from pending → processing and returns video info.
 
         Returns:
-            Dict with processing result
+            Dict with video info or None if queue is empty
         """
         video = self.qm.get_next_video()
 
         if not video:
-            return {
-                "success": True,
-                "message": "No videos in queue to process"
-            }
+            return None
 
-        youtube_url = f"https://www.youtube.com/watch?v={video['videoId']}"
+        video_id = video['videoId']
+        youtube_url = f"https://www.youtube.com/watch?v={video_id}"
 
-        print(f"🎙️ Processing: {video['title']}")
-        print(f"📹 Video ID: {video['videoId']}")
+        print(f"📹 Processing: {video['title']}")
         print(f"📺 Channel: {video['channel']}")
+        print(f"🆔 ID: {video_id}")
         print(f"🔗 URL: {youtube_url}")
+        
+        if video.get('attempts', 0) > 0:
+            print(f"🔄 Retry attempt: {video['attempts']}/3")
+        if video.get('lastError'):
+            print(f"⚠️  Last error: {video['lastError'][:80]}...")
 
-        try:
-            # Generate timestamp for this run
-            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            basename = f"podcast_{timestamp}"
+        return {
+            "videoId": video_id,
+            "title": video['title'],
+            "channel": video['channel'],
+            "url": youtube_url,
+            "startedAt": video.get('startedAt', ''),
+            "attempts": video.get('attempts', 0)
+        }
 
-            # Step 1: Download audio
-            print("\n📥 Step 1: Downloading audio...")
-            download_result = subprocess.run(
-                [
-                    "yt-dlp",
-                    "-x",
-                    "--audio-format", "mp3",
-                    "--audio-quality", "0",
-                    "-o", f"{self.skill_dir}/input/{basename}.%(ext)s",
-                    youtube_url
-                ],
-                capture_output=True,
-                text=True,
-                timeout=300
+    def mark_failed_with_retry(self, video_id, error):
+        """Mark video as failed with automatic retry logic.
+        
+        Returns True if video was returned to queue for retry.
+        Returns False if video permanently failed (3+ attempts).
+        """
+        result = self.qm.mark_failed(video_id, error)
+        
+        if result["action"] == "retry":
+            print(f"⚠️  Video failed (attempt {result['attempts']}/3), returned to queue")
+            return True
+        elif result["action"] == "failed":
+            print(f"❌ Video PERMANENTLY FAILED after {result['attempts']} attempts")
+            
+            # Send Telegram notification
+            title = result.get('title', 'Unknown')
+            error_msg = result.get('lastError', 'Unknown error')
+            notification = (
+                f"🚨 Видео НЕ УДАЛОСЬ перевести после 3 попыток:\n\n"
+                f"📹 {title}\n"
+                f"🆔 {video_id}\n"
+                f"❌ Ошибка: {error_msg[:200]}\n\n"
+                f"Попробуй перевести вручную или проверь логи."
             )
+            send_telegram_message(notification)
+            return False
+        
+        return True  # not_found case
 
-            if download_result.returncode != 0:
-                raise Exception(f"Download failed: {download_result.stderr}")
-
-            # Find the downloaded file
-            input_dir = self.skill_dir / "input"
-            input_files = list(input_dir.glob(f"{basename}.*"))
-            if not input_files:
-                raise Exception(f"Downloaded file not found: {basename}.*")
-            input_file = input_files[0]
-            print(f"✅ Downloaded: {input_file.name}")
-
-            # Step 2: Transcribe
-            print("\n⏱️ Step 2: Transcribing...")
-            transcribe_result = subprocess.run(
-                [
-                    "python3",
-                    str(self.skill_dir / "scripts" / "transcribe_cached.py"),
-                    str(input_file),
-                    str(self.skill_dir / "transcripts"),
-                    "small"
-                ],
-                capture_output=True,
-                text=True,
-                timeout=7200  # 2 hours for transcription on ARM
+    def check_failed_notifications(self):
+        """Check for videos that failed 3+ times and send notifications.
+        
+        Returns:
+            List of notified videos
+        """
+        failed = self.qm.get_failed_for_notification()
+        notified = []
+        
+        for video in failed:
+            title = video.get('title', 'Unknown')
+            video_id = video['videoId']
+            error = video.get('lastError', 'Unknown error')
+            attempts = video.get('attempts', 0)
+            
+            notification = (
+                f"🚨 Видео НЕ УДАЛОСЬ перевести после {attempts} попыток:\n\n"
+                f"📹 {title}\n"
+                f"🆔 {video_id}\n"
+                f"❌ Ошибка: {error[:200]}\n\n"
+                f"Попробуй перевести вручную или проверь логи."
             )
+            
+            send_telegram_message(notification)
+            self.qm.mark_notified(video_id)
+            notified.append(video_id)
+        
+        return notified
 
-            if transcribe_result.returncode != 0:
-                raise Exception(f"Transcription failed: {transcribe_result.stderr}")
-
-            transcript_file = self.skill_dir / "transcripts" / f"{basename}.txt"
-            print(f"✅ Transcribed: {transcript_file.name}")
-
-            # Step 3: Prepare for translation
-            print("\n📝 Step 3: Preparing for translation...")
-            prepare_result = subprocess.run(
-                [
-                    "python3",
-                    str(self.skill_dir / "scripts" / "prepare_transcript.py"),
-                    str(transcript_file),
-                    str(self.skill_dir / "translations" / f"{basename}_ready.txt")
-                ],
-                capture_output=True,
-                text=True,
-                timeout=60
-            )
-
-            if prepare_result.returncode != 0:
-                raise Exception(f"Prepare failed: {prepare_result.stderr}")
-
-            print("✅ Prepared for translation")
-
-            # Step 4: Translate to Russian (via agent - need to read file and create translation)
-            print("\n🌐 Step 4: Translating to Russian...")
-
-            ready_file = self.skill_dir / "translations" / f"{basename}_ready.txt"
-            if not ready_file.exists():
-                raise Exception(f"Ready file not found: {ready_file}")
-
-            # Read transcript
-            transcript_content = ready_file.read_text(encoding='utf-8')
-
-            # Initialize translator
-            translator = GoogleTranslator(source='en', target='ru')
-
-            # Create translation with timestamps preserved
-            translation_lines = []
-            print("   Translating text...")
-            for line in transcript_content.split("\n"):
-                if line.strip():
-                    # Preserve timestamp format [00:00 - 00:05]
-                    if line.startswith("[") and "]" in line:
-                        timestamp_end = line.index("]") + 1
-                        timestamp = line[:timestamp_end]
-                        text = line[timestamp_end:].strip()
-                        if text:
-                            # Translate text to Russian
-                            try:
-                                translated_text = translator.translate(text)
-                                translation_lines.append(f"{timestamp} {translated_text}")
-                            except Exception as e:
-                                print(f"   Translation error for segment: {e}")
-                                translation_lines.append(f"{timestamp} {text}")
-                    else:
-                        translation_lines.append(line)
-
-            # Write translation file
-            translation_file = self.skill_dir / "translations" / f"{basename}_ru.txt"
-            translation_file.write_text("\n".join(translation_lines), encoding='utf-8')
-
-            print(f"✅ Translation: {translation_file.name}")
-
-            # Step 5: Extract TTS text
-            print("\n🎤 Step 5: Extracting TTS text...")
-            extract_result = subprocess.run(
-                [
-                    "python3",
-                    str(self.skill_dir / "scripts" / "extract_tts_text.py"),
-                    str(translation_file),
-                    str(self.skill_dir / "translations" / f"{basename}_ru_tts.txt")
-                ],
-                capture_output=True,
-                text=True,
-                timeout=60
-            )
-
-            if extract_result.returncode != 0:
-                raise Exception(f"Extract TTS failed: {extract_result.stderr}")
-
-            tts_file = self.skill_dir / "translations" / f"{basename}_ru_tts.txt"
-            print(f"✅ TTS text: {tts_file.name}")
-
-            # Step 6: Generate Russian TTS
-            print("\n🔊 Step 6: Generating Russian TTS...")
-            tts_result = subprocess.run(
-                [
-                    "python3",
-                    str(self.skill_dir / "scripts" / "generate_tts.py"),
-                    str(tts_file),
-                    str(self.skill_dir / "audio" / f"{basename}.ru.mp3"),
-                    "ru-RU-DmitryNeural"
-                ],
-                capture_output=True,
-                text=True,
-                timeout=600
-            )
-
-            if tts_result.returncode != 0:
-                raise Exception(f"TTS generation failed: {tts_result.stderr}")
-
-            output_audio = self.skill_dir / "audio" / f"{basename}.ru.mp3"
-            print(f"✅ Russian audio: {output_audio.name}")
-
-            # Mark as completed
-            self.qm.mark_completed(
-                video["videoId"],
-                {
-                    "audio": str(output_audio),
-                    "translation": str(translation_file),
-                    "ttsText": str(tts_file),
-                    "transcript": str(transcript_file)
-                }
-            )
-
-            print(f"\n✅ Successfully processed: {video['title']}")
-
-            return {
-                "success": True,
-                "video": video,
-                "output_files": {
-                    "audio": str(output_audio),
-                    "translation": str(translation_file),
-                    "tts_text": str(tts_file)
-                }
-            }
-
-        except Exception as e:
-            print(f"\n❌ Error processing video: {e}")
-            self.qm.mark_failed(video["videoId"], str(e))
-
-            return {
-                "success": False,
-                "video": video,
-                "error": str(e)
-            }
-
-    def translate_only(self, video_id):
-        """Translate a single video using GoogleTranslator (fallback for LLM).
-
-        Reads the _ready.txt file (already has timestamps removed by
-        prepare_transcript.py) and produces a clean _ru_tts.txt file
-        ready for TTS generation.
+    def run(self, max_videos=1, json_output=False):
+        """
+        Process pending videos from the queue.
 
         Args:
-            video_id: YouTube video ID to translate
+            max_videos: Maximum number of videos to process (default: 1)
+            json_output: Output results as JSON
 
         Returns:
-            Dict with translation result
+            Dict with processing results
         """
-        # Find the ready file for this video
-        # Check both timestamped and simple naming patterns
-        ready_files = list((self.skill_dir / "translations").glob(f"*{video_id}*_ready.txt"))
-        if not ready_files:
-            # Try finding any ready file that was recently created
-            ready_files = sorted((self.skill_dir / "translations").glob("*_ready.txt"), key=lambda f: f.stat().st_mtime, reverse=True)
+        start_time = datetime.now()
+        print(f"🚀 Queue Processor Started at {start_time.strftime('%H:%M:%S')}")
 
-        if not ready_files:
-            return {"success": False, "error": f"No ready file found for {video_id}"}
+        # Time window check: only process between 08:30 and 20:00
+        current_hour = start_time.hour
+        current_minute = start_time.minute
+        current_time = current_hour * 100 + current_minute
 
-        ready_file = ready_files[0]
-        print(f"STATUS: Translating {ready_file.name} via GoogleTranslator")
+        if current_time < 830 or current_time >= 2000:
+            print(f"⏰ Current time: {start_time.strftime('%H:%M')}")
+            print(f"⚠️  Outside processing window (08:30-20:00)")
+            print(f"📊 Queue check only — skipping processing\n")
 
-        try:
-            transcript_content = ready_file.read_text(encoding='utf-8')
-            translator = GoogleTranslator(source='en', target='ru')
-
-            # Translate line by line — _ready.txt already has no timestamps
-            translation_lines = []
-            for line in transcript_content.split("\n"):
-                if line.strip():
-                    try:
-                        translated_text = translator.translate(line.strip())
-                        translation_lines.append(translated_text)
-                    except Exception:
-                        translation_lines.append(line.strip())
-
-            # Write directly to _ru_tts.txt (clean text, ready for TTS)
-            tts_file = ready_file.parent / ready_file.name.replace("_ready.txt", "_ru_tts.txt")
-            tts_file.write_text("\n".join(translation_lines), encoding='utf-8')
-            print(f"SUCCESS: TTS text saved: {tts_file.name}")
-
-            return {"success": True, "tts_text": str(tts_file)}
-
-        except Exception as e:
-            return {"success": False, "error": str(e)}
-
-    def run_once(self, channels):
-        """Run one complete cycle: check channels, process one video.
-
-        Args:
-            channels: List of YouTube channels to check
-
-        Returns:
-            Dict with results
-        """
-        print(f"🔍 Checking YouTube channels at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-
-        # Step 1: Check for new videos
-        check_result = self.add_youtube_videos_to_queue(channels)
-
-        print(f"\n📊 Check results:")
-        print(f"  Videos found: {check_result['checked']}")
-        print(f"  Added to queue: {check_result['added']}")
-
-        # Step 2: Get queue status
-        status = self.qm.get_status()
-        print(f"\n📋 Queue status:")
-        print(f"  Pending: {status['pending']}")
-        print(f"  Completed: {status['completed']}")
-        print(f"  Failed: {status['failed']}")
-
-        # Step 3: Process next video (if any)
-        if status['pending'] > 0:
-            print(f"\n🎬 Processing next video...")
-            process_result = self.process_next_video()
-            return process_result
-        else:
-            return {
+            status = self.qm.get_status()
+            result = {
                 "success": True,
-                "message": "No new videos to process"
+                "skipped": True,
+                "reason": "outside_processing_window",
+                "message": f"Current time {start_time.strftime('%H:%M')} is outside processing window (08:30-20:00)",
+                "queue_status": status,
+                "processed": 0
             }
+
+            if json_output:
+                print(json.dumps(result, indent=2, ensure_ascii=False))
+
+            return result
+
+        print(f"✅ Within processing window (08:30-20:00)")
+        print(f"⏰ Max videos to process: {max_videos}\n")
+
+        # Show initial status
+        status = self.qm.get_detailed_status()
+        print(f"📊 Queue Status:")
+        print(f"   Pending: {status['pending']} ({status['pending_with_retries']} with retries)")
+        print(f"   Processing: {status['processing']}")
+        print(f"   Completed: {status['completed']}")
+        print(f"   Failed: {status['failed']}")
+        print(f"   Notified: {status['notified']}")
+
+        if status['pending'] == 0:
+            result = {
+                "success": True,
+                "message": "Queue is empty",
+                "processed": 0,
+                "videos": []
+            }
+            if json_output:
+                print(json.dumps(result, indent=2, ensure_ascii=False))
+            return result
+
+        # Take videos from queue (pending → processing)
+        videos = []
+        for i in range(max_videos):
+            video_info = self.process_video()
+            if video_info:
+                videos.append(video_info)
+            else:
+                break
+
+        result = {
+            "success": True,
+            "processed": len(videos),
+            "videos": videos,
+            "queue_status": self.qm.get_status()
+        }
+
+        if json_output:
+            print(json.dumps(result, indent=2, ensure_ascii=False))
+
+        return result
 
 
 def main():
-    """Main entry point."""
+    """Main entry point for queue processor."""
+    import argparse
+
+    parser = argparse.ArgumentParser(
+        description="Process YouTube video translation queue"
+    )
+    parser.add_argument(
+        "--max-videos",
+        type=int,
+        default=1,
+        help="Maximum number of videos to process (default: 1)"
+    )
+    parser.add_argument(
+        "--json-output",
+        action="store_true",
+        help="Output results as JSON"
+    )
+    parser.add_argument(
+        "command",
+        nargs="?",
+        default=None,
+        help="Optional command: 'status', 'check-notify'"
+    )
+
+    args = parser.parse_args()
+
     processor = QueueProcessor()
 
-    # Check for --translate-only flag
-    if "--translate-only" in sys.argv:
-        idx = sys.argv.index("--translate-only")
-        if idx + 1 >= len(sys.argv):
-            print("Error: --translate-only requires a video ID")
-            sys.exit(1)
-        video_id = sys.argv[idx + 1]
-        result = processor.translate_only(video_id)
-        if result["success"]:
-            print(f"✅ Translation complete: {result.get('translation', '')}")
-        else:
-            print(f"❌ Translation failed: {result.get('error', '')}")
-            sys.exit(1)
+    if args.command == "status":
+        status = processor.qm.get_detailed_status()
+        print(f"Queue Status (Detailed):")
+        print(f"  Pending: {status['pending']} ({status['pending_with_retries']} with retries)")
+        print(f"  Processing: {status['processing']}")
+        print(f"  Completed: {status['completed']}")
+        print(f"  Failed: {status['failed']}")
+        print(f"  Notified: {status['notified']}")
+        if status["current"]:
+            print(f"\nCurrently processing:")
+            print(f"  {status['current']['title']}")
+            print(f"  {status['current']['videoId']}")
+            if status['current'].get('attempts', 0) > 0:
+                print(f"  Retry attempt: {status['current']['attempts']}/3")
+        if status["retry_videos"]:
+            print(f"\nVideos awaiting retry:")
+            for v in status["retry_videos"]:
+                print(f"  - {v['title']} (attempt {v['attempts']}/3)")
         return
 
-    # YouTube channels to monitor
-    channels = [
-        {
-            "url": "https://www.youtube.com/@AIDailyBrief/videos",
-            "name": "AIDailyBrief"
-        },
-        {
-            "url": "https://www.youtube.com/@mreflow/videos",
-            "name": "mreflow"
-        }
-    ]
-
-    # Run one complete cycle
-    result = processor.run_once(channels)
-
-    if result["success"]:
-        if "video" in result:
-            print(f"\n✅ Completed: {result['video']['title']}")
+    elif args.command == "check-notify":
+        print("Checking for failed videos needing notification...")
+        notified = processor.check_failed_notifications()
+        if notified:
+            print(f"Sent notifications for {len(notified)} video(s): {', '.join(notified)}")
         else:
-            print(f"\n✅ {result['message']}")
-    else:
-        print(f"\n❌ Failed: {result['error']}")
+            print("No videos needing notification")
+        return
+
+    result = processor.run(max_videos=args.max_videos, json_output=args.json_output)
+
+    # Exit with error code if processing failed
+    if not result['success']:
+        sys.exit(1)
 
 
 if __name__ == "__main__":

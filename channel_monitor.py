@@ -89,6 +89,39 @@ class YouTubeChannelMonitor:
 
         return None
 
+    def get_video_duration(self, video_id):
+        """Get video duration in seconds using yt-dlp.
+
+        Args:
+            video_id: YouTube video ID
+
+        Returns:
+            Duration in seconds or None if failed
+        """
+        try:
+            cmd = [
+                "yt-dlp",
+                "--print", "%(duration)s",
+                "--no-download",
+                f"https://www.youtube.com/watch?v={video_id}"
+            ]
+
+            result = subprocess.run(
+                cmd,
+                capture_output=True,
+                text=True,
+                timeout=30,
+                cwd=str(self.skill_dir)
+            )
+
+            if result.returncode == 0 and result.stdout.strip():
+                return int(float(result.stdout.strip()))
+            return None
+        except (subprocess.TimeoutExpired, ValueError):
+            return None
+        except Exception:
+            return None
+
     def get_channel_videos(self, channel_url, max_videos=3):
         """Fetch latest videos from a YouTube channel.
 
@@ -123,18 +156,25 @@ class YouTubeChannelMonitor:
                 print(f"   ⚠️  yt-dlp failed: {result.stderr}")
                 return []
 
-            # Parse output
+            # Parse output and filter by duration
             videos = []
             for line in result.stdout.strip().split('\n'):
                 if '|||' in line:
                     video_id, title = line.split('|||', 1)
+
+                    # Check duration - skip if < 10 minutes (600 seconds)
+                    duration = self.get_video_duration(video_id)
+                    if duration is not None and duration < 600:
+                        print(f"   ⏭️  Skipping (short video, {duration}s < 10min): {title.strip()[:50]}...")
+                        continue
+
                     videos.append({
                         'videoId': video_id,
                         'title': title.strip(),
                         'url': f"https://www.youtube.com/watch?v={video_id}"
                     })
 
-            print(f"   ✅ Found {len(videos)} videos")
+            print(f"   ✅ Found {len(videos)} videos (short videos filtered)")
             return videos
 
         except subprocess.TimeoutExpired:

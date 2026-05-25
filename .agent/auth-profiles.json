@@ -1,0 +1,34 @@
+{
+  "version": 1,
+  "profiles": {
+    "zai:manual": {
+      "type": "api_key",
+      "provider": "zai",
+      "key": "9f90f467332449f7997fc57cdea5174c.YzD93oQL1i6phM5N"
+    },
+    "openrouter:default": {
+      "type": "token",
+      "provider": "openrouter",
+      "key": "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"
+    },
+    "zai:default": {
+      "type": "api_key",
+      "provider": "zai",
+      "key": "9f90f467332449f7997fc57cdea5174c.YzD93oQL1i6phM5N"
+    }
+  },
+  "lastGood": {
+    "zai": "zai:manual"
+  },
+  "usageStats": {
+    "zai:manual": {
+      "lastUsed": 1774939332200,
+      "errorCount": 0,
+      "lastFailureAt": 1771240135137
+    },
+    "zai:default": {
+      "lastUsed": 1774330645688,
+      "errorCount": 0
+    }
+  }
+}

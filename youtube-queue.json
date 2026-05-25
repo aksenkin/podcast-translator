@@ -1,192 +1,279 @@
 {
   "pending": [
     {
+      "videoId": "Oy7tzmfbl64",
+      "title": "AI News: OpenAI Finally Released What We Asked For",
+      "url": "https://www.youtube.com/watch?v=Oy7tzmfbl64",
+      "channel": "mreflow",
+      "addedAt": "2026-05-18T05:30:10.844864+00:00",
+      "startedAt": "2026-05-18T06:30:48.840554+00:00",
+      "error": "Transcription timeout — chunk processing exceeded time limit",
+      "attempts": 1,
+      "lastError": "Transcription timeout — chunk processing exceeded time limit"
+    },
+    {
+      "videoId": "RXzIezfeEdE",
+      "title": "Claude’s New Integration Is Actually Useful",
+      "url": "https://www.youtube.com/watch?v=RXzIezfeEdE",
+      "channel": "mreflow",
+      "addedAt": "2026-05-14T20:02:54.083486+00:00",
+      "startedAt": "2026-05-18T05:42:28.025072+00:00",
+      "error": "Video too short",
+      "attempts": 1,
+      "lastError": "Video too short"
+    },
+    {
+      "videoId": "SXneZ3bRKO4",
+      "title": "AI News: OpenAI Absolutely Cooked This Week!",
+      "url": "https://www.youtube.com/watch?v=SXneZ3bRKO4",
+      "channel": "mreflow",
+      "addedAt": "2026-05-14T20:02:54.083474+00:00",
+      "startedAt": "2026-05-15T06:56:24.044535+00:00",
+      "error": "Transcription timed out after ~95min",
+      "attempts": 1,
+      "lastError": "Transcription timed out after ~95min"
+    },
+    {
+      "videoId": "oxerUfMFuCU",
+      "title": "I've Said Too Much Already!",
+      "url": "https://www.youtube.com/watch?v=oxerUfMFuCU",
+      "channel": "mreflow",
+      "addedAt": "2026-05-14T20:02:54.083470+00:00",
+      "startedAt": "2026-05-15T06:24:54.085742+00:00",
+      "error": "Transcription timed out after ~95min",
+      "attempts": 1,
+      "lastError": "Transcription timed out after ~95min"
+    },
+    {
+      "videoId": "-UTIXsziBJI",
+      "title": "Towards AI That Can Actually Interact",
+      "url": "https://www.youtube.com/watch?v=-UTIXsziBJI",
+      "channel": "AIDailyBrief",
+      "addedAt": "2026-05-14T20:02:54.083448+00:00",
+      "startedAt": "2026-05-15T05:31:09.646093+00:00",
+      "error": "Transcription process was interrupted after ~30min",
+      "attempts": 1,
+      "lastError": "Transcription process was interrupted after ~30min"
+    },
+    {
+      "videoId": "jvqQ8VlhO-w",
+      "title": "How Harness-as-a-Service Will Change Agents",
+      "url": "https://www.youtube.com/watch?v=jvqQ8VlhO-w",
+      "channel": "AIDailyBrief",
+      "addedAt": "2026-05-03T05:30:32.313757+00:00",
+      "startedAt": "2026-05-03T06:01:45.722752+00:00",
+      "error": "Transcription timeout - process killed at 50%",
+      "attempts": 1,
+      "lastError": "Transcription timeout - process killed at 50%"
+    },
+    {
+      "videoId": "IpD1chtKILE",
+      "title": "The Week AI Grew Up",
+      "url": "https://www.youtube.com/watch?v=IpD1chtKILE",
+      "channel": "AIDailyBrief",
+      "addedAt": "2026-05-03T05:30:32.313719+00:00",
+      "startedAt": "2026-05-03T05:44:08.519599+00:00",
+      "error": "Transcription failed - process timed out repeatedly",
+      "attempts": 1,
+      "lastError": "Transcription failed - process timed out repeatedly"
+    },
+    {
+      "videoId": "qDI4odijz44",
+      "title": "AI News: Open Source is Finally Catching Up!",
+      "url": "https://www.youtube.com/watch?v=qDI4odijz44",
+      "channel": "mreflow",
+      "addedAt": "2026-05-02T05:30:32.851814+00:00",
+      "startedAt": "2026-05-03T05:40:38.527187+00:00",
+      "error": "Download failed",
+      "attempts": 1,
+      "lastError": "Download failed"
+    },
+    {
+      "videoId": "jblguhXunZs",
+      "title": "What I Learned Testing GPT 5 5",
+      "url": "https://www.youtube.com/watch?v=jblguhXunZs",
+      "channel": "AIDailyBrief",
+      "addedAt": "2026-04-26T05:30:14.990046Z",
+      "startedAt": "2026-04-26T05:40:13.652434Z",
+      "error": "Transcription failed: process killed by system",
+      "attempts": 1,
+      "lastError": "Transcription failed: process killed by system"
+    },
+    {
+      "videoId": "TR5A_sydR1Y",
+      "title": "Rapid Fire Top AI News This Week",
+      "url": "https://www.youtube.com/watch?v=TR5A_sydR1Y",
+      "channel": "mreflow",
+      "addedAt": "2026-04-25T05:30:15.921577Z",
+      "startedAt": "2026-04-25T06:04:00.333830Z",
+      "error": "Video too short (13s) - not a podcast",
+      "attempts": 1,
+      "lastError": "Video too short (13s) - not a podcast"
+    },
+    {
+      "videoId": "jsP-eRriC0k",
+      "title": "AI News: The Biggest Leap We've Seen This Year!",
+      "url": "https://www.youtube.com/watch?v=jsP-eRriC0k",
+      "channel": "mreflow",
+      "addedAt": "2026-04-25T05:30:15.921572Z",
+      "startedAt": "2026-04-25T05:51:07.959888Z",
+      "error": "Transcription failed (timeout/signal)",
+      "attempts": 1,
+      "lastError": "Transcription failed (timeout/signal)"
+    },
+    {
+      "videoId": "aiiSDXgCVPI",
+      "title": "The Biggest Unlocks of GPT Images 2",
+      "url": "https://www.youtube.com/watch?v=aiiSDXgCVPI",
+      "channel": "AIDailyBrief",
+      "addedAt": "2026-04-25T05:30:15.921565Z",
+      "startedAt": "2026-04-25T05:40:26.383840Z",
+      "error": "Transcription failed (timeout/signal)",
+      "attempts": 1,
+      "lastError": "Transcription failed (timeout/signal)"
+    },
+    {
+      "videoId": "jSPFi-mW0ns",
+      "title": "Automating Your AI Context",
+      "url": "https://www.youtube.com/watch?v=jSPFi-mW0ns",
+      "channel": "AIDailyBrief",
+      "addedAt": "2026-04-23T05:30:15.779492Z",
+      "startedAt": "2026-04-23T05:43:32.440954Z",
+      "error": "Transcription failed - process killed",
+      "attempts": 1,
+      "lastError": "Transcription failed - process killed"
+    },
+    {
+      "videoId": "XwdLT7qF14E",
+      "title": "How Apple's AI Strategy Changes with a New CEO",
+      "url": "https://www.youtube.com/watch?v=XwdLT7qF14E",
+      "channel": "AIDailyBrief",
+      "addedAt": "2026-04-23T05:30:15.779488Z",
+      "startedAt": "2026-04-23T05:40:27.875730Z",
+      "error": "Transcription failed - process killed",
+      "attempts": 1,
+      "lastError": "Transcription failed - process killed"
+    },
+    {
+      "videoId": "bJg5T2qq5dQ",
+      "title": "The Best Claude Design Use Cases",
+      "url": "https://www.youtube.com/watch?v=bJg5T2qq5dQ",
+      "channel": "AIDailyBrief",
+      "addedAt": "2026-04-22T05:30:50.528114Z",
+      "startedAt": "2026-04-22T05:44:17.939691Z",
+      "error": "Transcription failed",
+      "attempts": 1,
+      "lastError": "Transcription failed"
+    },
+    {
+      "videoId": "qYLysI6AkQ8",
+      "title": "Agent Building Trends",
+      "url": "https://www.youtube.com/watch?v=qYLysI6AkQ8",
+      "channel": "AIDailyBrief",
+      "addedAt": "2026-04-22T05:30:50.528109Z",
+      "startedAt": "2026-04-22T05:40:43.067068Z",
+      "error": "Transcription failed",
+      "attempts": 1,
+      "lastError": "Transcription failed"
+    },
+    {
+      "videoId": "rNDaRO68JEc",
+      "title": "Vibe Coding Gets an Upgrade",
+      "url": "https://www.youtube.com/watch?v=rNDaRO68JEc",
+      "channel": "AIDailyBrief",
+      "addedAt": "2026-04-19T05:32:33.727377Z",
+      "startedAt": "2026-04-19T05:40:29.123990Z",
+      "error": "Transcription killed (timeout)",
+      "attempts": 1,
+      "lastError": "Transcription killed (timeout)"
+    },
+    {
       "videoId": "0oBJ7PY1q9s",
       "title": "The AI Sandbox - CES, Nvidia News, Cool AI Tools and More!",
       "url": "https://www.youtube.com/watch?v=0oBJ7PY1q9s",
       "channel": "mreflow",
-      "addedAt": "2026-04-08T05:32:14.808870Z"
+      "addedAt": "2026-04-17T05:33:49.379292Z",
+      "startedAt": "2026-04-17T05:46:52.720609Z",
+      "error": "Video too long (12h) - skipped",
+      "attempts": 1,
+      "lastError": "Video too long (12h) - skipped"
     },
     {
-      "videoId": "eU3XwwguttU",
-      "title": "The AI Sandbox - Keeping Looped in on AI, My Income Sources, AI in Education, The Metaverse and more",
-      "url": "https://www.youtube.com/watch?v=eU3XwwguttU",
+      "videoId": "ncVQneK7FlE",
+      "title": "The Truth About My Channel (And How Much $$ I Make)",
+      "url": "https://www.youtube.com/watch?v=ncVQneK7FlE",
       "channel": "mreflow",
-      "addedAt": "2026-04-08T05:32:14.808873Z"
-    },
-    {
-      "videoId": "QymmGOKO5sk",
-      "title": "OpenAI's Latest Move Doesn't Add Up",
-      "url": "https://www.youtube.com/watch?v=QymmGOKO5sk",
-      "channel": "mreflow",
-      "addedAt": "2026-04-08T05:32:14.808877Z"
-    },
-    {
-      "videoId": "_E7XMiVomJA",
-      "title": "Should We Be Scared of Anthropic's Mythos?",
-      "url": "https://www.youtube.com/watch?v=_E7XMiVomJA",
-      "channel": "AIDailyBrief",
-      "addedAt": "2026-04-09T05:30:59.556441Z"
-    },
-    {
-      "videoId": "BZ1hs2ZcnJc",
-      "title": "AI News: Anthropic Leak is Bigger Than You Think",
-      "url": "https://www.youtube.com/watch?v=BZ1hs2ZcnJc",
-      "channel": "mreflow",
-      "addedAt": "2026-04-09T05:30:59.556495Z"
-    },
-    {
-      "videoId": "-lRnSrhTXDc",
-      "title": "OpenAI Just Made History (Holy Sh*t?!)",
-      "url": "https://www.youtube.com/watch?v=-lRnSrhTXDc",
-      "channel": "mreflow",
-      "addedAt": "2026-04-09T05:30:59.556504Z"
-    },
-    {
-      "videoId": "20vZc0cOpOw",
-      "title": "All of AI's New Models and Tools",
-      "url": "https://www.youtube.com/watch?v=20vZc0cOpOw",
-      "channel": "AIDailyBrief",
-      "addedAt": "2026-04-10T05:30:12.266666Z"
-    },
-    {
-      "videoId": "P_oabCLJhb0",
-      "title": "OpenAI Proposes a New Deal",
-      "url": "https://www.youtube.com/watch?v=P_oabCLJhb0",
-      "channel": "AIDailyBrief",
-      "addedAt": "2026-04-10T05:30:12.266692Z"
-    },
-    {
-      "videoId": "7IgfvURUUx4",
-      "title": "This Unknown AI Model is Shockingly Good",
-      "url": "https://www.youtube.com/watch?v=7IgfvURUUx4",
-      "channel": "mreflow",
-      "addedAt": "2026-04-10T05:30:12.266699Z"
-    },
-    {
-      "videoId": "634oIgg3v5c",
-      "title": "Why Every AI Product Seems the Same",
-      "url": "https://www.youtube.com/watch?v=634oIgg3v5c",
-      "channel": "AIDailyBrief",
-      "addedAt": "2026-04-10T15:33:54.742800Z"
+      "addedAt": "2026-04-17T05:33:49.379287Z",
+      "startedAt": "2026-04-17T05:40:31.334078Z",
+      "error": "Transcription killed (SIGTERM)",
+      "attempts": 1,
+      "lastError": "Transcription killed (SIGTERM)"
     },
     {
       "videoId": "SguncMvE77I",
       "title": "AI News: The Scariest AI Model Ever!",
       "url": "https://www.youtube.com/watch?v=SguncMvE77I",
       "channel": "mreflow",
-      "addedAt": "2026-04-10T15:33:54.742848Z"
+      "addedAt": "2026-04-10T15:33:54.742848Z",
+      "startedAt": "2026-04-15T08:04:00.000000Z",
+      "error": "Subagent timeout - full translation pipeline too resource-intensive for cron job",
+      "attempts": 1,
+      "lastError": "Subagent timeout - full translation pipeline too resource-intensive for cron job"
     },
     {
-      "videoId": "pRoIjB5eNKo",
-      "title": "Claude Mythos Explained",
-      "url": "https://www.youtube.com/watch?v=pRoIjB5eNKo",
-      "channel": "mreflow",
-      "addedAt": "2026-04-11T05:30:15.833276Z"
-    }
-  ],
-  "processing": null,
-  "completed": [
-    {
-      "videoId": "slX_lDDobEs",
-      "title": "This Datacenter Problem Nobody's Talking About",
-      "url": "https://www.youtube.com/watch?v=slX_lDDobEs",
-      "channel": "mreflow",
-      "addedAt": "2026-04-08T05:32:14.808866Z",
-      "startedAt": "2026-04-10T15:35:43.268294Z",
-      "completedAt": "2026-04-10T15:37:25.996575Z"
-    }
-  ],
-  "failed": [
-    {
-      "videoId": "fs_Y3gvj7lk",
-      "title": "Agent Skills Masterclass with Nufar Gaspar",
-      "url": "https://www.youtube.com/watch?v=fs_Y3gvj7lk",
+      "videoId": "634oIgg3v5c",
+      "title": "Why Every AI Product Seems the Same",
+      "url": "https://www.youtube.com/watch?v=634oIgg3v5c",
       "channel": "AIDailyBrief",
-      "addedAt": "2026-04-05T20:11:14.050671Z",
-      "startedAt": "2026-04-06T13:42:02.622569Z",
-      "failedAt": "2026-04-06T13:42:07.301400Z",
-      "error": "error: unknown option '--runtime'\n"
+      "addedAt": "2026-04-10T15:33:54.742800Z",
+      "startedAt": "2026-04-15T07:58:00.000000Z",
+      "error": "Subagent timeout - full translation pipeline too resource-intensive for cron job",
+      "attempts": 1,
+      "lastError": "Subagent timeout - full translation pipeline too resource-intensive for cron job"
     },
     {
-      "videoId": "Jov9Mn2Q2s8",
-      "title": "The Ultimate AI Catch-Up Guide",
-      "url": "https://www.youtube.com/watch?v=Jov9Mn2Q2s8",
-      "channel": "AIDailyBrief",
-      "addedAt": "2026-04-05T20:11:14.050697Z",
-      "startedAt": "2026-04-06T13:42:07.301795Z",
-      "failedAt": "2026-04-06T13:42:10.952921Z",
-      "error": "error: unknown option '--runtime'\n"
-    },
-    {
-      "videoId": "bkzMuF7bKqY",
-      "title": "🤯 ChatGPT Talks Back (Example)",
-      "url": "https://www.youtube.com/watch?v=bkzMuF7bKqY",
-      "channel": "AIDailyBrief",
-      "addedAt": "2026-04-05T20:11:14.050701Z",
-      "startedAt": "2026-04-06T15:43:13.987377Z",
-      "failedAt": "2026-04-06T15:43:28.330194Z",
-      "error": "Gateway agent failed; falling back to embedded: Error: Unknown agent id \"podcast-translator\". Use \"openclaw agents list\" to see configured agents.\nError: Unknown agent id \"podcast-translator\". Use \"openclaw agents list\" to see configured agents.\n"
-    },
-    {
-      "videoId": "ptxvJXzO1pE",
-      "title": "Talking Glasses?! MetaAI Takes Over RayBan! 🔊",
-      "url": "https://www.youtube.com/watch?v=ptxvJXzO1pE",
-      "channel": "AIDailyBrief",
-      "addedAt": "2026-04-05T20:11:14.050705Z",
-      "startedAt": "2026-04-06T15:43:28.331062Z",
-      "failedAt": "2026-04-06T15:43:43.347222Z",
-      "error": "Gateway agent failed; falling back to embedded: Error: Unknown agent id \"podcast-translator\". Use \"openclaw agents list\" to see configured agents.\nError: Unknown agent id \"podcast-translator\". Use \"openclaw agents list\" to see configured agents.\n"
-    },
-    {
-      "videoId": "Jlh-Hy185r0",
-      "title": "Meta's AI: Your Selfies Turn Picasso in a Snap! 🎨✨ Backdrop, Restyle and Stickers",
-      "url": "https://www.youtube.com/watch?v=Jlh-Hy185r0",
-      "channel": "AIDailyBrief",
-      "addedAt": "2026-04-05T20:11:14.050708Z",
-      "startedAt": "2026-04-06T15:58:36.532533Z",
-      "failedAt": "2026-04-06T15:58:46.914694Z",
-      "error": "Gateway agent failed; falling back to embedded: Error: Pass --to <E.164>, --session-id, or --agent to choose a session\nError: Pass --to <E.164>, --session-id, or --agent to choose a session\n"
-    },
-    {
-      "videoId": "OYyS0Gu5xj8",
-      "title": "AI News: Anthropic Went Crazy This Week!",
-      "url": "https://www.youtube.com/watch?v=OYyS0Gu5xj8",
+      "videoId": "7IgfvURUUx4",
+      "title": "This Unknown AI Model is Shockingly Good",
+      "url": "https://www.youtube.com/watch?v=7IgfvURUUx4",
       "channel": "mreflow",
-      "addedAt": "2026-04-05T20:11:14.050711Z",
-      "startedAt": "2026-04-06T15:58:57.225976Z",
-      "failedAt": "2026-04-06T15:59:06.567143Z",
-      "error": "Error: Pass --to <E.164>, --session-id, or --agent to choose a session\n"
+      "addedAt": "2026-04-10T05:30:12.266699Z",
+      "startedAt": "2026-04-15T07:56:00.000000Z",
+      "error": "Skipped - full translation pipeline consistently timing out on this hardware",
+      "attempts": 1,
+      "lastError": "Skipped - full translation pipeline consistently timing out on this hardware"
     },
     {
-      "videoId": "tZ2B3itsgUw",
-      "title": "The AI Sandbox - Testing Cool AI Stuff Live",
-      "url": "https://www.youtube.com/watch?v=tZ2B3itsgUw",
-      "channel": "mreflow",
-      "addedAt": "2026-04-05T20:11:14.050717Z",
-      "startedAt": "2026-04-06T21:07:01.157731Z",
-      "failedAt": "2026-04-06T21:07:11.187267Z",
-      "error": "Error: Pass --to <E.164>, --session-id, or --agent to choose a session\n"
+      "videoId": "P_oabCLJhb0",
+      "title": "OpenAI Proposes a New Deal",
+      "url": "https://www.youtube.com/watch?v=P_oabCLJhb0",
+      "channel": "AIDailyBrief",
+      "addedAt": "2026-04-10T05:30:12.266692Z",
+      "startedAt": "2026-04-15T07:50:00.000000Z",
+      "error": "Subagent timeout after 6 minutes",
+      "attempts": 1,
+      "lastError": "Subagent timeout after 6 minutes"
     },
     {
-      "videoId": "osycm8ZK7iY",
-      "title": "How AI Gets Data Wrong (and how to fix it)",
-      "url": "https://www.youtube.com/watch?v=osycm8ZK7iY",
+      "videoId": "BZ1hs2ZcnJc",
+      "title": "AI News: Anthropic Leak is Bigger Than You Think",
+      "url": "https://www.youtube.com/watch?v=BZ1hs2ZcnJc",
       "channel": "mreflow",
-      "addedAt": "2026-04-05T20:11:14.050725Z",
-      "startedAt": "2026-04-07T10:59:31.222502Z",
-      "failedAt": "2026-04-07T11:00:10.633943Z",
-      "error": "[diagnostic] lane task error: lane=main durationMs=15420 error=\"Error: session file locked (timeout 10000ms): pid=2029 /home/clawd/.openclaw/agents/claude/sessions/887028cd-581c-4831-8eba-6cecf4a5af87.jsonl.lock\"\n[diagnostic] lane task error: lane=session:agent:claude:main durationMs=15425 error=\"Error: session file locked (timeout 10000ms): pid=2029 /home/clawd/.openclaw/agents/claude/sessions/887028cd-581c-4831-8eba-6cecf4a5af87.jsonl.lock\"\n[model-fallback/decision] model fallback decision: decision=candidate_failed requested=zai/glm-4.7 candidate=zai/glm-4.7 reason=timeout next=none\nFailoverError: session file locked (timeout 10000ms): pid=2029 /home/clawd/.openclaw/agents/claude/sessions/887028cd-581c-4831-8eba-6cecf4a5af87.jsonl.lock\n"
+      "addedAt": "2026-04-09T05:30:59.556495Z",
+      "startedAt": "2026-04-15T06:12:00.000000Z",
+      "error": "Subagent timeout after 12 minutes",
+      "attempts": 1,
+      "lastError": "Subagent timeout after 12 minutes"
     },
     {
-      "videoId": "4-XNvaV2KPk",
-      "title": "Claude's Source Code Got Leaked Across The Whole Internet",
-      "url": "https://www.youtube.com/watch?v=4-XNvaV2KPk",
-      "channel": "mreflow",
-      "addedAt": "2026-04-07T05:31:28.928258Z",
-      "startedAt": "2026-04-07T13:00:35.764278Z",
-      "failedAt": "2026-04-07T13:00:53.558578Z",
-      "error": "[openclaw] Failed to start CLI: Error: Cannot find module '@buape/carbon'\nRequire stack:\n- /home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/dist/ui-7MjYF8PY.js\n    at Function._resolveFilename (node:internal/modules/cjs/loader:1383:15)\n    at Function.resolve (node:internal/modules/helpers:157:19)\n    at jitiResolve (/home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/node_modules/jiti/dist/jiti.cjs:1:148703)\n    at jitiRequire (/home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/node_modules/jiti/dist/jiti.cjs:1:150290)\n    at /home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/node_modules/jiti/dist/jiti.cjs:1:157987\n    at /home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/dist/ui-7MjYF8PY.js:14:15\n    at eval_evalModule (/home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/node_modules/jiti/dist/jiti.cjs:1:155533)\n    at jitiRequire (/home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/node_modules/jiti/dist/jiti.cjs:1:150967)\n    at /home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/node_modules/jiti/dist/jiti.cjs:1:157987\n    at /home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/dist/channel-D0kY3Gd-.js:29:19\n    at eval_evalModule (/home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/node_modules/jiti/dist/jiti.cjs:1:155533)\n    at jitiRequire (/home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/node_modules/jiti/dist/jiti.cjs:1:150967)\n    at /home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/node_modules/jiti/dist/jiti.cjs:1:157987\n    at /home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/dist/extensions/discord/channel-plugin-api.js:1:431\n    at eval_evalModule (/home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/node_modules/jiti/dist/jiti.cjs:1:155533)\n    at jitiRequire (/home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/node_modules/jiti/dist/jiti.cjs:1:150967)\n    at /home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/node_modules/jiti/dist/jiti.cjs:1:157987\n    at loadBundledEntryModuleSync (file:///home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/dist/channel-entry-contract-DyY5TZkc.js:68:35)\n    at loadBundledEntryExportSync (file:///home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/dist/channel-entry-contract-DyY5TZkc.js:73:17)\n    at Object.loadChannelPlugin (file:///home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/dist/channel-entry-contract-DyY5TZkc.js:82:34)\n    at getBundledChannelPlugin (file:///home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/dist/bootstrap-registry-DSG7nIY1.js:164:24)\n    at getBootstrapChannelPlugin (file:///home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/dist/bootstrap-registry-DSG7nIY1.js:245:24)\n    at iterateBootstrapChannelPlugins (file:///home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/dist/bootstrap-registry-DSG7nIY1.js:234:18)\n    at iterateBootstrapChannelPlugins.next (<anonymous>)\n    at listChannelSecretTargetRegistryEntries (file:///home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/dist/target-registry-4ZVRjB-K.js:9:13)\n    at file:///home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/dist/target-registry-4ZVRjB-K.js:432:7\n    at ModuleJob.run (node:internal/modules/esm/module_job:343:25)\n    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:665:26)\n    at async Object.register (file:///home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/dist/command-registry-CNkzrn92.js:119:5)\n    at async registerCoreCliByName (file:///home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/dist/command-registry-CNkzrn92.js:175:2)\n    at async runCli (file:///home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/dist/run-main-8bQWSeWd.js:398:5)\n"
+      "videoId": "_E7XMiVomJA",
+      "title": "Should We Be Scared of Anthropic's Mythos?",
+      "url": "https://www.youtube.com/watch?v=_E7XMiVomJA",
+      "channel": "AIDailyBrief",
+      "addedAt": "2026-04-09T05:30:59.556441Z",
+      "startedAt": "2026-04-15T05:40:00.000000Z",
+      "error": "Subagent timeout after 29 minutes",
+      "attempts": 1,
+      "lastError": "Subagent timeout after 29 minutes"
     },
     {
       "videoId": "Jg-wQBw0LDQ",
@@ -195,8 +282,665 @@
       "channel": "AIDailyBrief",
       "addedAt": "2026-04-07T13:01:49.342109Z",
       "startedAt": "2026-04-07T13:01:54.263375Z",
-      "failedAt": "2026-04-07T13:03:48.694335Z",
-      "error": "Config invalid\nFile: ~/.openclaw/openclaw.json\nProblem:\n  - tools.web.search: tools.web.search provider-owned config moved to plugins.entries.<plugin>.config.webSearch. Run \"openclaw doctor --fix\".\nLegacy config keys detected:\n  - tools.web.search: tools.web.search provider-owned config moved to plugins.entries.<plugin>.config.webSearch. Run \"openclaw doctor --fix\".\n\nRun: openclaw doctor --fix\n"
+      "error": "Config invalid\nFile: ~/.openclaw/openclaw.json\nProblem:\n  - tools.web.search: tools.web.search provider-owned config moved to plugins.entries.<plugin>.config.webSearch. Run \"openclaw doctor --fix\".\nLegacy config keys detected:\n  - tools.web.search: tools.web.search provider-owned config moved to plugins.entries.<plugin>.config.webSearch. Run \"openclaw doctor --fix\".\n\nRun: openclaw doctor --fix\n",
+      "attempts": 1,
+      "lastError": "Config invalid\nFile: ~/.openclaw/openclaw.json\nProblem:\n  - tools.web.search: tools.web.search provider-owned config moved to plugins.entries.<plugin>.config.webSearch. Run \"openclaw doctor --fix\".\nLegacy config keys detected:\n  - tools.web.search: tools.web.search provider-owned config moved to plugins.entries.<plugin>.config.webSearch. Run \"openclaw doctor --fix\".\n\nRun: openclaw doctor --fix\n"
+    },
+    {
+      "videoId": "4-XNvaV2KPk",
+      "title": "Claude's Source Code Got Leaked Across The Whole Internet",
+      "url": "https://www.youtube.com/watch?v=4-XNvaV2KPk",
+      "channel": "mreflow",
+      "addedAt": "2026-04-07T05:31:28.928258Z",
+      "startedAt": "2026-04-07T13:00:35.764278Z",
+      "error": "[openclaw] Failed to start CLI: Error: Cannot find module '@buape/carbon'\nRequire stack:\n- /home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/dist/ui-7MjYF8PY.js\n    at Function._resolveFilename (node:internal/modules/cjs/loader:1383:15)\n    at Function.resolve (node:internal/modules/helpers:157:19)\n    at jitiResolve (/home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/node_modules/jiti/dist/jiti.cjs:1:148703)\n    at jitiRequire (/home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/node_modules/jiti/dist/jiti.cjs:1:150290)\n    at /home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/node_modules/jiti/dist/jiti.cjs:1:157987\n    at /home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/dist/ui-7MjYF8PY.js:14:15\n    at eval_evalModule (/home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/node_modules/jiti/dist/jiti.cjs:1:155533)\n    at jitiRequire (/home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/node_modules/jiti/dist/jiti.cjs:1:150967)\n    at /home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/node_modules/jiti/dist/jiti.cjs:1:157987\n    at /home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/dist/channel-D0kY3Gd-.js:29:19\n    at eval_evalModule (/home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/node_modules/jiti/dist/jiti.cjs:1:155533)\n    at jitiRequire (/home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/node_modules/jiti/dist/jiti.cjs:1:150967)\n    at /home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/node_modules/jiti/dist/jiti.cjs:1:157987\n    at /home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/dist/extensions/discord/channel-plugin-api.js:1:431\n    at eval_evalModule (/home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/node_modules/jiti/dist/jiti.cjs:1:155533)\n    at jitiRequire (/home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/node_modules/jiti/dist/jiti.cjs:1:150967)\n    at /home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/node_modules/jiti/dist/jiti.cjs:1:157987\n    at loadBundledEntryModuleSync (file:///home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/dist/channel-entry-contract-DyY5TZkc.js:68:35)\n    at loadBundledEntryExportSync (file:///home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/dist/channel-entry-contract-DyY5TZkc.js:73:17)\n    at Object.loadChannelPlugin (file:///home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/dist/channel-entry-contract-DyY5TZkc.js:82:34)\n    at getBundledChannelPlugin (file:///home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/dist/bootstrap-registry-DSG7nIY1.js:164:24)\n    at getBootstrapChannelPlugin (file:///home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/dist/bootstrap-registry-DSG7nIY1.js:245:24)\n    at iterateBootstrapChannelPlugins (file:///home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/dist/bootstrap-registry-DSG7nIY1.js:234:18)\n    at iterateBootstrapChannelPlugins.next (<anonymous>)\n    at listChannelSecretTargetRegistryEntries (file:///home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/dist/target-registry-4ZVRjB-K.js:9:13)\n    at file:///home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/dist/target-registry-4ZVRjB-K.js:432:7\n    at ModuleJob.run (node:internal/modules/esm/module_job:343:25)\n    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:665:26)\n    at async Object.register (file:///home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/dist/command-registry-CNkzrn92.js:119:5)\n    at async registerCoreCliByName (file:///home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/dist/command-registry-CNkzrn92.js:175:2)\n    at async runCli (file:///home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/dist/run-main-8bQWSeWd.js:398:5)\n",
+      "attempts": 1,
+      "lastError": "[openclaw] Failed to start CLI: Error: Cannot find module '@buape/carbon'\nRequire stack:\n- /home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/dist/ui-7MjYF8PY.js\n    at Function._resolveFilename (node:internal/modules/cjs/loader:1383:15)\n    at Function.resolve (node:internal/modules/helpers:157:19)\n    at jitiResolve (/home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/node_modules/jiti/dist/jiti.cjs:1:148703)\n    at jitiRequire (/home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/node_modules/jiti/dist/jiti.cjs:1:150290)\n    at /home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/node_modules/jiti/dist/jiti.cjs:1:157987\n    at /home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/dist/ui-7MjYF8PY.js:14:15\n    at eval_evalModule (/home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/node_modules/jiti/dist/jiti.cjs:1:155533)\n    at jitiRequire (/home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/node_modules/jiti/dist/jiti.cjs:1:150967)\n    at /home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/node_modules/jiti/dist/jiti.cjs:1:157987\n    at /home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/dist/channel-D0kY3Gd-.js:29:19\n    at eval_evalModule (/home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/node_modules/jiti/dist/jiti.cjs:1:155533)\n    at jitiRequire (/home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/node_modules/jiti/dist/jiti.cjs:1:150967)\n    at /home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/node_modules/jiti/dist/jiti.cjs:1:157987\n    at /home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/dist/extensions/discord/channel-plugin-api.js:1:431\n    at eval_evalModule (/home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/node_modules/jiti/dist/jiti.cjs:1:155533)\n    at jitiRequire (/home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/node_modules/jiti/dist/jiti.cjs:1:150967)\n    at /home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/node_modules/jiti/dist/jiti.cjs:1:157987\n    at loadBundledEntryModuleSync (file:///home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/dist/channel-entry-contract-DyY5TZkc.js:68:35)\n    at loadBundledEntryExportSync (file:///home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/dist/channel-entry-contract-DyY5TZkc.js:73:17)\n    at Object.loadChannelPlugin (file:///home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/dist/channel-entry-contract-DyY5TZkc.js:82:34)\n    at getBundledChannelPlugin (file:///home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/dist/bootstrap-registry-DSG7nIY1.js:164:24)\n    at getBootstrapChannelPlugin (file:///home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/dist/bootstrap-registry-DSG7nIY1.js:245:24)\n    at iterateBootstrapChannelPlugins (file:///home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/dist/bootstrap-registry-DSG7nIY1.js:234:18)\n    at iterateBootstrapChannelPlugins.next (<anonymous>)\n    at listChannelSecretTargetRegistryEntries (file:///home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/dist/target-registry-4ZVRjB-K.js:9:13)\n    at file:///home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/dist/target-registry-4ZVRjB-K.js:432:7\n    at ModuleJob.run (node:internal/modules/esm/module_job:343:25)\n    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:665:26)\n    at async Object.register (file:///home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/dist/command-registry-CNkzrn92.js:119:5)\n    at async registerCoreCliByName (file:///home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/dist/command-registry-CNkzrn92.js:175:2)\n    at async runCli (file:///home/clawd/.nvm/versions/node/v22.22.0/lib/node_modules/openclaw/dist/run-main-8bQWSeWd.js:398:5)\n"
+    },
+    {
+      "videoId": "osycm8ZK7iY",
+      "title": "How AI Gets Data Wrong (and how to fix it)",
+      "url": "https://www.youtube.com/watch?v=osycm8ZK7iY",
+      "channel": "mreflow",
+      "addedAt": "2026-04-05T20:11:14.050725Z",
+      "startedAt": "2026-04-07T10:59:31.222502Z",
+      "error": "[diagnostic] lane task error: lane=main durationMs=15420 error=\"Error: session file locked (timeout 10000ms): pid=2029 /home/clawd/.openclaw/agents/claude/sessions/887028cd-581c-4831-8eba-6cecf4a5af87.jsonl.lock\"\n[diagnostic] lane task error: lane=session:agent:claude:main durationMs=15425 error=\"Error: session file locked (timeout 10000ms): pid=2029 /home/clawd/.openclaw/agents/claude/sessions/887028cd-581c-4831-8eba-6cecf4a5af87.jsonl.lock\"\n[model-fallback/decision] model fallback decision: decision=candidate_failed requested=zai/glm-4.7 candidate=zai/glm-4.7 reason=timeout next=none\nFailoverError: session file locked (timeout 10000ms): pid=2029 /home/clawd/.openclaw/agents/claude/sessions/887028cd-581c-4831-8eba-6cecf4a5af87.jsonl.lock\n",
+      "attempts": 1,
+      "lastError": "[diagnostic] lane task error: lane=main durationMs=15420 error=\"Error: session file locked (timeout 10000ms): pid=2029 /home/clawd/.openclaw/agents/claude/sessions/887028cd-581c-4831-8eba-6cecf4a5af87.jsonl.lock\"\n[diagnostic] lane task error: lane=session:agent:claude:main durationMs=15425 error=\"Error: session file locked (timeout 10000ms): pid=2029 /home/clawd/.openclaw/agents/claude/sessions/887028cd-581c-4831-8eba-6cecf4a5af87.jsonl.lock\"\n[model-fallback/decision] model fallback decision: decision=candidate_failed requested=zai/glm-4.7 candidate=zai/glm-4.7 reason=timeout next=none\nFailoverError: session file locked (timeout 10000ms): pid=2029 /home/clawd/.openclaw/agents/claude/sessions/887028cd-581c-4831-8eba-6cecf4a5af87.jsonl.lock\n"
+    },
+    {
+      "videoId": "tZ2B3itsgUw",
+      "title": "The AI Sandbox - Testing Cool AI Stuff Live",
+      "url": "https://www.youtube.com/watch?v=tZ2B3itsgUw",
+      "channel": "mreflow",
+      "addedAt": "2026-04-05T20:11:14.050717Z",
+      "startedAt": "2026-04-06T21:07:01.157731Z",
+      "error": "Error: Pass --to <E.164>, --session-id, or --agent to choose a session\n",
+      "attempts": 1,
+      "lastError": "Error: Pass --to <E.164>, --session-id, or --agent to choose a session\n"
+    },
+    {
+      "videoId": "OYyS0Gu5xj8",
+      "title": "AI News: Anthropic Went Crazy This Week!",
+      "url": "https://www.youtube.com/watch?v=OYyS0Gu5xj8",
+      "channel": "mreflow",
+      "addedAt": "2026-04-05T20:11:14.050711Z",
+      "startedAt": "2026-04-06T15:58:57.225976Z",
+      "error": "Error: Pass --to <E.164>, --session-id, or --agent to choose a session\n",
+      "attempts": 1,
+      "lastError": "Error: Pass --to <E.164>, --session-id, or --agent to choose a session\n"
+    },
+    {
+      "videoId": "Jlh-Hy185r0",
+      "title": "Meta's AI: Your Selfies Turn Picasso in a Snap! 🎨✨ Backdrop, Restyle and Stickers",
+      "url": "https://www.youtube.com/watch?v=Jlh-Hy185r0",
+      "channel": "AIDailyBrief",
+      "addedAt": "2026-04-05T20:11:14.050708Z",
+      "startedAt": "2026-04-06T15:58:36.532533Z",
+      "error": "Gateway agent failed; falling back to embedded: Error: Pass --to <E.164>, --session-id, or --agent to choose a session\nError: Pass --to <E.164>, --session-id, or --agent to choose a session\n",
+      "attempts": 1,
+      "lastError": "Gateway agent failed; falling back to embedded: Error: Pass --to <E.164>, --session-id, or --agent to choose a session\nError: Pass --to <E.164>, --session-id, or --agent to choose a session\n"
+    },
+    {
+      "videoId": "ptxvJXzO1pE",
+      "title": "Talking Glasses?! MetaAI Takes Over RayBan! 🔊",
+      "url": "https://www.youtube.com/watch?v=ptxvJXzO1pE",
+      "channel": "AIDailyBrief",
+      "addedAt": "2026-04-05T20:11:14.050705Z",
+      "startedAt": "2026-04-06T15:43:28.331062Z",
+      "error": "Gateway agent failed; falling back to embedded: Error: Unknown agent id \"podcast-translator\". Use \"openclaw agents list\" to see configured agents.\nError: Unknown agent id \"podcast-translator\". Use \"openclaw agents list\" to see configured agents.\n",
+      "attempts": 1,
+      "lastError": "Gateway agent failed; falling back to embedded: Error: Unknown agent id \"podcast-translator\". Use \"openclaw agents list\" to see configured agents.\nError: Unknown agent id \"podcast-translator\". Use \"openclaw agents list\" to see configured agents.\n"
+    },
+    {
+      "videoId": "bkzMuF7bKqY",
+      "title": "🤯 ChatGPT Talks Back (Example)",
+      "url": "https://www.youtube.com/watch?v=bkzMuF7bKqY",
+      "channel": "AIDailyBrief",
+      "addedAt": "2026-04-05T20:11:14.050701Z",
+      "startedAt": "2026-04-06T15:43:13.987377Z",
+      "error": "Gateway agent failed; falling back to embedded: Error: Unknown agent id \"podcast-translator\". Use \"openclaw agents list\" to see configured agents.\nError: Unknown agent id \"podcast-translator\". Use \"openclaw agents list\" to see configured agents.\n",
+      "attempts": 1,
+      "lastError": "Gateway agent failed; falling back to embedded: Error: Unknown agent id \"podcast-translator\". Use \"openclaw agents list\" to see configured agents.\nError: Unknown agent id \"podcast-translator\". Use \"openclaw agents list\" to see configured agents.\n"
+    },
+    {
+      "videoId": "Jov9Mn2Q2s8",
+      "title": "The Ultimate AI Catch-Up Guide",
+      "url": "https://www.youtube.com/watch?v=Jov9Mn2Q2s8",
+      "channel": "AIDailyBrief",
+      "addedAt": "2026-04-05T20:11:14.050697Z",
+      "startedAt": "2026-04-06T13:42:07.301795Z",
+      "error": "error: unknown option '--runtime'\n",
+      "attempts": 1,
+      "lastError": "error: unknown option '--runtime'\n"
+    },
+    {
+      "videoId": "fs_Y3gvj7lk",
+      "title": "Agent Skills Masterclass with Nufar Gaspar",
+      "url": "https://www.youtube.com/watch?v=fs_Y3gvj7lk",
+      "channel": "AIDailyBrief",
+      "addedAt": "2026-04-05T20:11:14.050671Z",
+      "startedAt": "2026-04-06T13:42:02.622569Z",
+      "error": "error: unknown option '--runtime'\n",
+      "attempts": 1,
+      "lastError": "error: unknown option '--runtime'\n"
     }
-  ]
+  ],
+  "processing": {
+    "videoId": "9N3jEavj5Ps",
+    "title": "Anthropic Just Reset AI Expectations",
+    "url": "https://www.youtube.com/watch?v=9N3jEavj5Ps",
+    "channel": "AIDailyBrief",
+    "addedAt": "2026-05-22T05:30:10.832350+00:00",
+    "startedAt": "2026-05-25T17:52:52.300583+00:00",
+    "error": "Transcription failed - process timed out",
+    "attempts": 1,
+    "lastError": "Transcription failed - process timed out",
+    "statusHistory": [
+      {
+        "status": "processing",
+        "timestamp": "2026-05-25T17:52:52.300583+00:00"
+      }
+    ]
+  },
+  "completed": [
+    {
+      "videoId": "eU3XwwguttU",
+      "title": "The AI Sandbox - Keeping Looped in on AI, My Income Sources, AI in Education, The Metaverse and more",
+      "url": "https://www.youtube.com/watch?v=eU3XwwguttU",
+      "channel": "mreflow",
+      "addedAt": "2026-04-08T05:32:14.808873Z",
+      "startedAt": "2026-04-13T05:30:21.957010Z",
+      "completedAt": "2026-04-13T05:35:00.490527Z"
+    },
+    {
+      "videoId": "QymmGOKO5sk",
+      "title": "OpenAI's Latest Move Doesn't Add Up",
+      "url": "https://www.youtube.com/watch?v=QymmGOKO5sk",
+      "channel": "mreflow",
+      "addedAt": "2026-04-08T05:32:14.808877Z",
+      "startedAt": "2026-04-14T16:40:51.255867Z",
+      "completedAt": "2026-04-14T16:41:46.655883Z"
+    },
+    {
+      "videoId": "20vZc0cOpOw",
+      "title": "All of AI's New Models and Tools",
+      "url": "https://www.youtube.com/watch?v=20vZc0cOpOw",
+      "channel": "AIDailyBrief",
+      "addedAt": "2026-04-10T05:30:12.266666Z",
+      "startedAt": "2026-04-15T07:41:18.574347Z",
+      "completedAt": "2026-04-15T07:43:44.091081Z"
+    },
+    {
+      "videoId": "BZ1hs2ZcnJc",
+      "title": "AI News: Anthropic Leak is Bigger Than You Think",
+      "url": "https://www.youtube.com/watch?v=BZ1hs2ZcnJc",
+      "channel": "mreflow",
+      "addedAt": "2026-04-09T05:30:59.556495Z",
+      "startedAt": "2026-04-15T07:43:57.244110Z",
+      "completedAt": "2026-04-15T07:46:08.278175Z"
+    },
+    {
+      "videoId": "-lRnSrhTXDc",
+      "title": "OpenAI Just Made History (Holy Sh*t?!)",
+      "url": "https://www.youtube.com/watch?v=-lRnSrhTXDc",
+      "channel": "mreflow",
+      "addedAt": "2026-04-09T05:30:59.556504Z",
+      "startedAt": "2026-04-15T07:46:15.592056Z",
+      "completedAt": "2026-04-15T07:48:13.169778Z"
+    },
+    {
+      "videoId": "20vZc0cOpOw",
+      "title": "All of AI's New Models and Tools",
+      "url": "https://www.youtube.com/watch?v=20vZc0cOpOw",
+      "channel": "AIDailyBrief",
+      "addedAt": "2026-04-10T05:30:12.266666Z",
+      "startedAt": "2026-04-15T07:48:24.971067Z",
+      "completedAt": "2026-04-15T07:50:25.008836Z"
+    },
+    {
+      "videoId": "K_jquzUz5eA",
+      "title": "Is Mythos Just A Marketing Ploy?",
+      "url": "https://www.youtube.com/watch?v=K_jquzUz5eA",
+      "channel": "mreflow",
+      "addedAt": "2026-04-12T05:30:11.950092Z",
+      "startedAt": "2026-04-15T15:40:37.368977Z",
+      "completedAt": "2026-04-15T15:40:54.575520Z"
+    },
+    {
+      "videoId": "iRMIUmDZrtY",
+      "title": "Anthropic Now Leads OpenAI in Annualized Revenue",
+      "url": "https://www.youtube.com/watch?v=iRMIUmDZrtY",
+      "channel": "AIDailyBrief",
+      "addedAt": "2026-04-13T05:30:21.808691Z",
+      "startedAt": "2026-04-15T15:41:06.202480Z",
+      "completedAt": "2026-04-15T15:41:31.271793Z"
+    },
+    {
+      "videoId": "ByZsafOOKoM",
+      "title": "ANOTHER Big AI Leak?!",
+      "url": "https://www.youtube.com/watch?v=ByZsafOOKoM",
+      "channel": "mreflow",
+      "addedAt": "2026-04-13T05:30:21.808770Z",
+      "startedAt": "2026-04-15T15:41:46.267513Z",
+      "completedAt": "2026-04-15T15:42:33.603597Z"
+    },
+    {
+      "videoId": "OTjZBjq5FPg",
+      "title": "Harness Engineering 101",
+      "channel": "AIDailyBrief",
+      "addedAt": "2026-04-15T16:43:42.773515Z",
+      "startedAt": "2026-04-15T16:43:42.774456Z",
+      "completedAt": "2026-04-15T17:10:57.033163Z",
+      "outputFiles": {
+        "audio": "/home/clawd/.openclaw/workspace/skills/podcast-translator/audio/podcast_20260415_194342.ru.mp3",
+        "translation": "/home/clawd/.openclaw/workspace/skills/podcast-translator/translations/podcast_20260415_194342_ru.txt",
+        "ttsText": "/home/clawd/.openclaw/workspace/skills/podcast-translator/translations/podcast_20260415_194342_ru_tts.txt",
+        "transcript": "/home/clawd/.openclaw/workspace/skills/podcast-translator/transcripts/podcast_20260415_194342.txt"
+      }
+    },
+    {
+      "videoId": "O4Jbv_8jLyk",
+      "title": "AI Populism Turns Violent",
+      "channel": "AIDailyBrief",
+      "addedAt": "2026-04-15T16:43:42.773536Z",
+      "startedAt": "2026-04-15T17:11:55.757695Z",
+      "completedAt": "2026-04-15T17:46:23.360418Z",
+      "outputFiles": {
+        "audio": "/home/clawd/.openclaw/workspace/skills/podcast-translator/audio/podcast_20260415_201155.ru.mp3",
+        "translation": "/home/clawd/.openclaw/workspace/skills/podcast-translator/translations/podcast_20260415_201155_ru.txt",
+        "ttsText": "/home/clawd/.openclaw/workspace/skills/podcast-translator/translations/podcast_20260415_201155_ru_tts.txt",
+        "transcript": "/home/clawd/.openclaw/workspace/skills/podcast-translator/transcripts/podcast_20260415_201155.txt"
+      }
+    },
+    {
+      "videoId": "p0p5j9aAub0",
+      "title": "The New AI Org Chart",
+      "channel": "AIDailyBrief",
+      "addedAt": "2026-04-15T16:43:42.773542Z",
+      "startedAt": "2026-04-16T05:40:38.209744Z",
+      "completedAt": "2026-04-16T05:41:44.713674Z"
+    },
+    {
+      "videoId": "WRdCJ0aNXU0",
+      "title": "Can You Monetize AI Videos?",
+      "url": "https://www.youtube.com/watch?v=WRdCJ0aNXU0",
+      "channel": "mreflow",
+      "addedAt": "2026-04-17T05:33:49.379295Z",
+      "startedAt": "2026-04-17T05:52:03.106563Z",
+      "completedAt": "2026-04-17T05:56:19.193333Z"
+    },
+    {
+      "videoId": "7z8n8rUsHpQ",
+      "title": "This AI Editing Trick Saves Me HOURS",
+      "url": "https://www.youtube.com/watch?v=7z8n8rUsHpQ",
+      "channel": "mreflow",
+      "addedAt": "2026-04-17T05:33:49.379298Z",
+      "startedAt": "2026-04-17T05:56:25.628479Z",
+      "completedAt": "2026-04-17T05:59:57.806218Z"
+    },
+    {
+      "videoId": "0T3xgE_diIw",
+      "title": "Insane Open Source AI Model Just Dropped",
+      "url": "https://www.youtube.com/watch?v=0T3xgE_diIw",
+      "channel": "mreflow",
+      "addedAt": "2026-04-17T05:33:49.379300Z",
+      "startedAt": "2026-04-17T06:00:07.381184Z",
+      "completedAt": "2026-04-17T06:04:09.238188Z"
+    },
+    {
+      "videoId": "bIrzOQtnp8w",
+      "title": "AI News: OpenAI SuperApp, Opus 4.7, New Chrome and more!",
+      "url": "https://www.youtube.com/watch?v=bIrzOQtnp8w",
+      "channel": "mreflow",
+      "addedAt": "2026-04-18T05:31:28.645579Z",
+      "startedAt": "2026-04-18T05:40:25.660580Z",
+      "completedAt": "2026-04-18T06:00:37.721090Z"
+    },
+    {
+      "videoId": "bRecJsl3dHQ",
+      "title": "The Easiest Way To Edit YouTube Videos",
+      "url": "https://www.youtube.com/watch?v=bRecJsl3dHQ",
+      "channel": "mreflow",
+      "addedAt": "2026-04-18T05:31:28.645584Z",
+      "startedAt": "2026-04-18T06:00:39.280770Z",
+      "completedAt": "2026-04-18T06:04:34.110942Z"
+    },
+    {
+      "videoId": "BLdY1fqy8FE",
+      "title": "Testing Out OpenAI's New \"Super App\"",
+      "url": "https://www.youtube.com/watch?v=BLdY1fqy8FE",
+      "channel": "mreflow",
+      "addedAt": "2026-04-19T05:32:33.727385Z",
+      "startedAt": "2026-04-19T05:46:15.329347Z",
+      "completedAt": "2026-04-19T05:48:32.405652Z"
+    },
+    {
+      "videoId": "ViJa2KJnO3M",
+      "title": "AllBirds Is Now An AI Company????",
+      "url": "https://www.youtube.com/watch?v=ViJa2KJnO3M",
+      "channel": "mreflow",
+      "addedAt": "2026-04-20T05:31:59.367564Z",
+      "completedAt": "2026-04-20T05:54:54.354461Z",
+      "outputFiles": {
+        "audio": "audio/ViJa2KJnO3M.ru.mp3",
+        "translation": "translations/ViJa2KJnO3M_ru.txt",
+        "ttsText": "translations/ViJa2KJnO3M_ru_tts.txt",
+        "transcript": "transcripts/ViJa2KJnO3M.txt"
+      }
+    },
+    {
+      "videoId": "t8vitqIj7u4",
+      "title": "How the Best Companies Use AI",
+      "url": "https://www.youtube.com/watch?v=t8vitqIj7u4",
+      "channel": "AIDailyBrief",
+      "addedAt": "2026-04-21T05:30:26.608809Z",
+      "startedAt": "2026-04-21T05:40:25.397614Z",
+      "completedAt": "2026-04-21T06:05:02.729006Z"
+    },
+    {
+      "videoId": "5LdCJHnGwNo",
+      "title": "How to Use Opus 4.7 and the New Codex",
+      "url": "https://www.youtube.com/watch?v=5LdCJHnGwNo",
+      "channel": "AIDailyBrief",
+      "addedAt": "2026-04-21T05:30:26.608813Z",
+      "startedAt": "2026-04-21T06:05:04.735969Z",
+      "completedAt": "2026-04-21T06:30:01.514781Z"
+    },
+    {
+      "videoId": "0L-OsXGIJnc",
+      "title": "Is Claude's New Model Any Good?",
+      "url": "https://www.youtube.com/watch?v=0L-OsXGIJnc",
+      "channel": "mreflow",
+      "addedAt": "2026-04-21T05:30:26.608820Z",
+      "startedAt": "2026-04-21T06:30:32.288995Z",
+      "completedAt": "2026-04-21T06:33:57.666031Z"
+    },
+    {
+      "videoId": "z5sL3nXPsss",
+      "title": "Canva AI 2.0 Features Announced (MAJOR Upgrades!)",
+      "url": "https://www.youtube.com/watch?v=z5sL3nXPsss",
+      "channel": "mreflow",
+      "addedAt": "2026-04-22T05:30:50.528119Z",
+      "startedAt": "2026-04-22T05:49:20.037198Z",
+      "completedAt": "2026-04-22T05:52:09.849915Z"
+    },
+    {
+      "videoId": "Gl83QXGRfnk",
+      "title": "How Much Does YouTube Pay Me? 💰",
+      "url": "https://www.youtube.com/watch?v=Gl83QXGRfnk",
+      "channel": "mreflow",
+      "addedAt": "2026-04-23T05:30:15.779497Z",
+      "startedAt": "2026-04-23T05:46:49.515591Z",
+      "completedAt": "2026-04-23T05:48:38.200907Z"
+    },
+    {
+      "videoId": "jaRCRd0NjcA",
+      "title": "My most controversial opinion....",
+      "url": "https://www.youtube.com/watch?v=jaRCRd0NjcA",
+      "channel": "mreflow",
+      "addedAt": "2026-04-24T05:30:28.206277Z",
+      "startedAt": "2026-04-24T05:41:01.856196Z",
+      "completedAt": "2026-04-24T05:46:55.264798Z"
+    },
+    {
+      "videoId": "HsPXJXm663Q",
+      "title": "The Most Important GPT-5.5 Upgrade",
+      "url": "https://www.youtube.com/watch?v=HsPXJXm663Q",
+      "channel": "mreflow",
+      "addedAt": "2026-04-26T05:30:14.990052Z",
+      "startedAt": "2026-04-26T05:48:11.357410Z",
+      "completedAt": "2026-04-26T05:51:01.958485Z"
+    },
+    {
+      "videoId": "TRvGr1x7h5w",
+      "title": "The Most Slept On Claude Feature",
+      "url": "https://www.youtube.com/watch?v=TRvGr1x7h5w",
+      "channel": "mreflow",
+      "addedAt": "2026-04-27T05:32:30.048499Z",
+      "startedAt": "2026-04-28T11:21:38.824309+00:00",
+      "completedAt": "2026-04-28T11:23:32.420149+00:00"
+    },
+    {
+      "videoId": "ntvkDnk_5jA",
+      "title": "How To Build a Personal Agentic Operating System",
+      "url": "https://www.youtube.com/watch?v=ntvkDnk_5jA",
+      "channel": "AIDailyBrief",
+      "addedAt": "2026-04-28T11:34:35.210364+00:00",
+      "startedAt": "2026-04-28T11:36:15.303636+00:00",
+      "completedAt": "2026-04-28T12:28:35.190048+00:00"
+    },
+    {
+      "videoId": "M2-hytpxccg",
+      "title": "Where the Economy Thrives After AI",
+      "channel": "AIDailyBrief",
+      "url": "https://www.youtube.com/watch?v=M2-hytpxccg",
+      "addedAt": "2026-04-28T16:37:48.972992+00:00",
+      "startedAt": "2026-04-29T05:40:53.150586+00:00",
+      "completedAt": "2026-04-29T06:54:52.786347+00:00"
+    },
+    {
+      "videoId": "5TiuGoLzAwE",
+      "title": "ChatGPT Images 2.0 Is Actually Crazy",
+      "channel": "mreflow",
+      "url": "https://www.youtube.com/watch?v=5TiuGoLzAwE",
+      "addedAt": "2026-04-28T16:37:48.972996+00:00",
+      "startedAt": "2026-04-29T06:54:57.045747+00:00",
+      "completedAt": "2026-04-29T06:58:37.905542+00:00"
+    },
+    {
+      "videoId": "qkKEV9rkFqI",
+      "title": "How Deepseek v4 Connects to the US Grid",
+      "url": "https://www.youtube.com/watch?v=qkKEV9rkFqI",
+      "channel": "AIDailyBrief",
+      "addedAt": "2026-04-29T05:32:17.507339+00:00",
+      "startedAt": "2026-04-29T18:24:12.622890+00:00",
+      "completedAt": "2026-04-29T19:56:29.595261+00:00"
+    },
+    {
+      "videoId": "gOhcHit63eQ",
+      "title": "This \"Dangerous\" AI Model Just Got Hacked",
+      "url": "https://www.youtube.com/watch?v=gOhcHit63eQ",
+      "channel": "mreflow",
+      "addedAt": "2026-04-29T05:32:17.507415+00:00",
+      "startedAt": "2026-04-30T05:40:40.934870+00:00",
+      "completedAt": "2026-04-30T05:42:36.251508+00:00"
+    },
+    {
+      "videoId": "4qv6NIpY9Fo",
+      "title": "AI Lab Power Rankings",
+      "url": "https://www.youtube.com/watch?v=4qv6NIpY9Fo",
+      "channel": "AIDailyBrief",
+      "addedAt": "2026-04-30T05:30:28.486856+00:00",
+      "startedAt": "2026-04-30T05:42:38.847717+00:00",
+      "completedAt": "2026-04-30T06:27:46.624095+00:00"
+    },
+    {
+      "videoId": "Yt3UcL_EPus",
+      "title": "The AI Solution Nobody’s Talking About",
+      "url": "https://www.youtube.com/watch?v=Yt3UcL_EPus",
+      "channel": "mreflow",
+      "addedAt": "2026-04-30T05:30:28.486888+00:00",
+      "startedAt": "2026-04-30T06:27:50.933086+00:00",
+      "completedAt": "2026-04-30T06:30:17.432495+00:00"
+    },
+    {
+      "videoId": "jsZ1ey43Tcg",
+      "title": "You’re Losing Money Not Using This New AI Model",
+      "url": "https://www.youtube.com/watch?v=jsZ1ey43Tcg",
+      "channel": "mreflow",
+      "addedAt": "2026-04-30T05:30:28.486893+00:00",
+      "startedAt": "2026-04-30T06:30:20.310366+00:00",
+      "completedAt": "2026-04-30T06:32:40.231692+00:00"
+    },
+    {
+      "videoId": "2u_T68P9H_U",
+      "title": "40+ INSANE Ways To Use ChatGPT Image (For FREE)",
+      "url": "https://www.youtube.com/watch?v=2u_T68P9H_U",
+      "channel": "mreflow",
+      "addedAt": "2026-05-01T05:30:32.526773+00:00",
+      "startedAt": "2026-05-01T05:40:35.238836+00:00",
+      "completedAt": "2026-05-01T06:33:41.317881+00:00"
+    },
+    {
+      "videoId": "KgtwlcHP6DM",
+      "title": "This AI Actually Surprised Me",
+      "url": "https://www.youtube.com/watch?v=KgtwlcHP6DM",
+      "channel": "mreflow",
+      "addedAt": "2026-05-01T05:30:32.526779+00:00",
+      "startedAt": "2026-05-01T06:33:44.110182+00:00",
+      "completedAt": "2026-05-01T06:35:55.689076+00:00"
+    },
+    {
+      "videoId": "D0XouckgAt8",
+      "title": "Elon vs. OpenAI Trial Explained",
+      "url": "https://www.youtube.com/watch?v=D0XouckgAt8",
+      "channel": "mreflow",
+      "addedAt": "2026-05-02T05:30:32.851817+00:00",
+      "startedAt": "2026-05-03T05:41:00.143170+00:00",
+      "completedAt": "2026-05-03T05:43:58.071076+00:00"
+    },
+    {
+      "videoId": "1P3h36Lz5bI",
+      "title": "Deepseek V4 May Disrupt The Entire AI Economy",
+      "url": "https://www.youtube.com/watch?v=1P3h36Lz5bI",
+      "channel": "mreflow",
+      "addedAt": "2026-05-03T05:30:32.313765+00:00",
+      "startedAt": "2026-05-03T06:12:56.909497+00:00",
+      "completedAt": "2026-05-03T06:16:01.714338+00:00"
+    },
+    {
+      "videoId": "HnE5oKiWVRc",
+      "title": "Why Agents Make Every Job a Startup",
+      "url": "https://www.youtube.com/watch?v=HnE5oKiWVRc",
+      "channel": "AIDailyBrief",
+      "addedAt": "2026-05-05T17:47:15.355335+00:00",
+      "startedAt": "2026-05-06T05:40:08.832166+00:00",
+      "completedAt": "2026-05-06T06:28:13.455881+00:00"
+    },
+    {
+      "videoId": "WZw8QTXJfjQ",
+      "title": "Anthropic Users Are PISSED",
+      "url": "https://www.youtube.com/watch?v=WZw8QTXJfjQ",
+      "channel": "mreflow",
+      "addedAt": "2026-05-05T17:47:15.355372+00:00",
+      "startedAt": "2026-05-06T06:28:17.624280+00:00",
+      "completedAt": "2026-05-06T06:32:37.853157+00:00"
+    },
+    {
+      "videoId": "Mwl5rQyCMvA",
+      "title": "Did Google Just Sell Out?!",
+      "url": "https://www.youtube.com/watch?v=Mwl5rQyCMvA",
+      "channel": "mreflow",
+      "addedAt": "2026-05-05T17:47:15.355377+00:00",
+      "startedAt": "2026-05-06T06:32:41.864533+00:00",
+      "completedAt": "2026-05-06T06:35:23.590442+00:00"
+    },
+    {
+      "videoId": "NNxGQw1uQHc",
+      "title": "The Best Way to Talk to Your Agents",
+      "url": "https://www.youtube.com/watch?v=NNxGQw1uQHc",
+      "channel": "AIDailyBrief",
+      "addedAt": "2026-05-14T20:02:54.083456+00:00",
+      "startedAt": "2026-05-15T05:42:04.443848+00:00",
+      "completedAt": "2026-05-15T06:24:51.930118+00:00"
+    },
+    {
+      "videoId": "oyfU_wfIFxU",
+      "title": "OpenAI Internal Chaos Exposed In Trial",
+      "url": "https://www.youtube.com/watch?v=oyfU_wfIFxU",
+      "channel": "mreflow",
+      "addedAt": "2026-05-14T20:02:54.083482+00:00",
+      "startedAt": "2026-05-18T05:40:06.001797+00:00",
+      "completedAt": "2026-05-18T05:42:26.597054+00:00"
+    },
+    {
+      "videoId": "wefrL6CnfUA",
+      "title": "Claude Users FINALLY Get More Usage",
+      "url": "https://www.youtube.com/watch?v=wefrL6CnfUA",
+      "channel": "mreflow",
+      "addedAt": "2026-05-14T20:02:54.083490+00:00",
+      "startedAt": "2026-05-18T05:42:45.526333+00:00",
+      "completedAt": "2026-05-18T05:45:03.306478+00:00"
+    },
+    {
+      "videoId": "htjkv-NUU5Q",
+      "title": "My Favorite AI Model Right Now",
+      "url": "https://www.youtube.com/watch?v=htjkv-NUU5Q",
+      "channel": "mreflow",
+      "addedAt": "2026-05-15T05:30:41.746202+00:00",
+      "startedAt": "2026-05-18T05:45:04.998029+00:00",
+      "completedAt": "2026-05-18T05:47:40.096802+00:00"
+    },
+    {
+      "videoId": "izRIZ1bMq4A",
+      "title": "In Defense of Tokenmaxxing",
+      "url": "https://www.youtube.com/watch?v=izRIZ1bMq4A",
+      "channel": "AIDailyBrief",
+      "addedAt": "2026-05-18T05:30:10.844826+00:00",
+      "startedAt": "2026-05-18T05:47:41.832160+00:00",
+      "completedAt": "2026-05-18T06:30:47.321399+00:00"
+    },
+    {
+      "videoId": "HdLTWc3KOfk",
+      "title": "New AI Model SHOCKED Me",
+      "url": "https://www.youtube.com/watch?v=HdLTWc3KOfk",
+      "channel": "mreflow",
+      "addedAt": "2026-05-18T05:30:10.844871+00:00",
+      "startedAt": "2026-05-18T07:01:51.236509+00:00",
+      "completedAt": "2026-05-18T07:04:43.096639+00:00"
+    },
+    {
+      "videoId": "6SinsxX5CUc",
+      "title": "Why I Didn’t Sell My Channel",
+      "url": "https://www.youtube.com/watch?v=6SinsxX5CUc",
+      "channel": "mreflow",
+      "addedAt": "2026-05-18T05:30:10.844874+00:00",
+      "startedAt": "2026-05-18T07:04:45.725805+00:00",
+      "completedAt": "2026-05-18T07:06:50.799771+00:00"
+    },
+    {
+      "videoId": "gVMz2vKzYRY",
+      "title": "Huge Codex Upgrade Just Dropped",
+      "url": "https://www.youtube.com/watch?v=gVMz2vKzYRY",
+      "channel": "mreflow",
+      "addedAt": "2026-05-19T05:30:09.641324+00:00",
+      "startedAt": "2026-05-19T05:30:28.481784+00:00",
+      "completedAt": "2026-05-19T05:33:46.382221+00:00"
+    },
+    {
+      "videoId": "XlyOJYwRdPg",
+      "title": "Krea AI Launches Crazy New Image Model",
+      "url": "https://www.youtube.com/watch?v=XlyOJYwRdPg",
+      "channel": "mreflow",
+      "addedAt": "2026-05-20T05:30:08.714033+00:00",
+      "startedAt": "2026-05-21T05:40:20.387355+00:00",
+      "completedAt": "2026-05-21T05:43:11.522309+00:00"
+    },
+    {
+      "videoId": "G2HX30CelNk",
+      "title": "The Most Important AI News from Google I/O",
+      "url": "https://www.youtube.com/watch?v=G2HX30CelNk",
+      "channel": "AIDailyBrief",
+      "addedAt": "2026-05-21T05:30:12.460919+00:00",
+      "startedAt": "2026-05-21T05:43:16.861874+00:00",
+      "completedAt": "2026-05-21T07:06:17.406905+00:00"
+    },
+    {
+      "videoId": "bQN-D8qeAgg",
+      "title": "Viral Post Embarrassingly Exposes AI Haters 💀",
+      "url": "https://www.youtube.com/watch?v=bQN-D8qeAgg",
+      "channel": "mreflow",
+      "addedAt": "2026-05-21T05:30:12.460989+00:00",
+      "startedAt": "2026-05-22T05:30:28.210032+00:00",
+      "completedAt": "2026-05-22T05:31:59.264362+00:00"
+    },
+    {
+      "videoId": "E6kQi65PKNc",
+      "title": "Notion Announces Massive Update For Developers",
+      "url": "https://www.youtube.com/watch?v=E6kQi65PKNc",
+      "channel": "mreflow",
+      "addedAt": "2026-05-22T05:30:10.832393+00:00",
+      "startedAt": "2026-05-22T05:37:42.886741+00:00",
+      "completedAt": "2026-05-22T05:39:01.371513+00:00"
+    },
+    {
+      "videoId": "kyOPFFy3I38",
+      "title": "AI News: These Google Updates Are Dividing People",
+      "url": "https://www.youtube.com/watch?v=kyOPFFy3I38",
+      "channel": "mreflow",
+      "addedAt": "2026-05-23T05:30:10.757042+00:00",
+      "startedAt": "2026-05-23T05:40:08.246022+00:00",
+      "completedAt": "2026-05-23T07:11:17.117166+00:00"
+    },
+    {
+      "videoId": "5HqJWBSqXFU",
+      "title": "Anthropic Is Raising Prices And Pissing People Off",
+      "url": "https://www.youtube.com/watch?v=5HqJWBSqXFU",
+      "channel": "mreflow",
+      "addedAt": "2026-05-23T05:30:10.757048+00:00",
+      "startedAt": "2026-05-23T07:11:20.698721+00:00",
+      "completedAt": "2026-05-23T07:13:26.447343+00:00"
+    },
+    {
+      "videoId": "fIO7yCTtrng",
+      "title": "The Only Important Announcements From Google I/O",
+      "url": "https://www.youtube.com/watch?v=fIO7yCTtrng",
+      "channel": "mreflow",
+      "addedAt": "2026-05-24T05:30:13.456589+00:00",
+      "startedAt": "2026-05-24T05:30:32.450501+00:00",
+      "completedAt": "2026-05-24T05:33:12.112037+00:00"
+    },
+    {
+      "videoId": "rTCusbsfDNI",
+      "title": "Is Google Search Officially Dead?",
+      "url": "https://www.youtube.com/watch?v=rTCusbsfDNI",
+      "channel": "mreflow",
+      "addedAt": "2026-05-25T05:30:10.206968+00:00",
+      "startedAt": "2026-05-25T05:40:06.501067+00:00",
+      "completedAt": "2026-05-25T05:42:08.571052+00:00"
+    }
+  ],
+  "failed": [],
+  "notified": []
 }

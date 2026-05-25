@@ -3,6 +3,11 @@
 YouTube Video Translation Queue Manager
 
 Manages a queue of YouTube videos to translate, processing them one at a time.
+Features:
+- Retry logic: failed videos return to pending queue
+- Attempt counter: tracks how many times video was tried
+- Last error tracking: stores error message for debugging
+- Notification threshold: alerts after 3 failed attempts
 """
 
 import json
@@ -30,7 +35,8 @@ class QueueManager:
                 "pending": [],
                 "processing": None,
                 "completed": [],
-                "failed": []
+                "failed": [],
+                "notified": []  # Videos with 3+ attempts that were already reported
             }, indent=2))
 
     def _load_queue(self):
@@ -52,6 +58,7 @@ class QueueManager:
         existing_ids = set(v["videoId"] for v in queue["pending"])
         existing_ids.update(v["videoId"] for v in queue["completed"])
         existing_ids.update(v["videoId"] for v in queue["failed"])
+        existing_ids.update(v["videoId"] for v in queue.get("notified", []))
         if queue["processing"]:
             existing_ids.add(queue["processing"]["videoId"])
 
@@ -59,6 +66,8 @@ class QueueManager:
         for video in videos:
             if video["videoId"] not in existing_ids:
                 video["addedAt"] = datetime.now(timezone.utc).isoformat()
+                video["attempts"] = 0  # Initialize attempt counter
+                video["lastError"] = None
                 queue["pending"].append(video)
                 added_count += 1
 
@@ -83,6 +92,18 @@ class QueueManager:
         # Move first pending video to processing
         video = queue["pending"].pop(0)
         video["startedAt"] = datetime.now(timezone.utc).isoformat()
+        if "attempts" not in video:
+            video["attempts"] = 0
+        if "lastError" not in video:
+            video["lastError"] = None
+        if "statusHistory" not in video:
+            video["statusHistory"] = []
+        
+        video["statusHistory"].append({
+            "status": "processing",
+            "timestamp": video["startedAt"]
+        })
+        
         queue["processing"] = video
 
         self._save_queue(queue)
@@ -100,8 +121,16 @@ class QueueManager:
         if queue["processing"] and queue["processing"]["videoId"] == video_id:
             video = queue["processing"]
             video["completedAt"] = datetime.now(timezone.utc).isoformat()
+            video["attempts"] = video.get("attempts", 0) + 1
             if output_files:
                 video["outputFiles"] = output_files
+            
+            video["statusHistory"] = video.get("statusHistory", [])
+            video["statusHistory"].append({
+                "status": "completed",
+                "timestamp": video["completedAt"]
+            })
+            
             queue["completed"].append(video)
             queue["processing"] = None
 
@@ -111,25 +140,103 @@ class QueueManager:
         return False
 
     def mark_failed(self, video_id, error):
-        """Mark a video as failed.
+        """Mark a video as failed with retry logic.
+        
+        If video has < 3 attempts, returns it to pending queue.
+        If video has >= 3 attempts, moves it to failed queue and returns notification info.
 
         Args:
             video_id: YouTube video ID
             error: Error message
+
+        Returns:
+            Dict with action taken:
+            - "action": "retry" if returned to pending
+            - "action": "failed" if moved to failed (3+ attempts)
+            - "action": "not_found" if video not in processing
+            - "video": video dict (for "failed" action, includes attempts)
         """
         queue = self._load_queue()
 
-        if queue["processing"] and queue["processing"]["videoId"] == video_id:
-            video = queue["processing"]
-            video["failedAt"] = datetime.now(timezone.utc).isoformat()
-            video["error"] = error
-            queue["failed"].append(video)
-            queue["processing"] = None
+        if not queue["processing"] or queue["processing"]["videoId"] != video_id:
+            return {"action": "not_found"}
 
+        video = queue["processing"]
+        video["failedAt"] = datetime.now(timezone.utc).isoformat()
+        video["lastError"] = error
+        video["attempts"] = video.get("attempts", 0) + 1
+        
+        video["statusHistory"] = video.get("statusHistory", [])
+        video["statusHistory"].append({
+            "status": "failed",
+            "timestamp": video["failedAt"],
+            "error": error
+        })
+
+        queue["processing"] = None
+
+        if video["attempts"] < 3:
+            # Return to pending for retry
+            # Remove stale timestamps that will be regenerated on next attempt
+            video.pop("startedAt", None)
+            video.pop("failedAt", None)
+            video.pop("statusHistory", None)  # Keep history? No, too large for repeated retries
+            
+            queue["pending"].insert(0, video)  # Put at front for immediate retry
+            self._save_queue(queue)
+            return {
+                "action": "retry",
+                "videoId": video_id,
+                "attempts": video["attempts"],
+                "lastError": error
+            }
+        else:
+            # 3+ attempts, move to failed
+            queue["failed"].append(video)
+            self._save_queue(queue)
+            return {
+                "action": "failed",
+                "videoId": video_id,
+                "title": video.get("title", "Unknown"),
+                "attempts": video["attempts"],
+                "lastError": error
+            }
+
+    def mark_notified(self, video_id):
+        """Mark a failed video as already notified.
+        
+        Moves video from failed to notified list.
+        
+        Args:
+            video_id: YouTube video ID
+        """
+        queue = self._load_queue()
+        
+        # Find in failed list
+        failed_video = None
+        for i, video in enumerate(queue["failed"]):
+            if video["videoId"] == video_id:
+                failed_video = queue["failed"].pop(i)
+                break
+        
+        if failed_video:
+            if "notified" not in queue:
+                queue["notified"] = []
+            failed_video["notifiedAt"] = datetime.now(timezone.utc).isoformat()
+            queue["notified"].append(failed_video)
             self._save_queue(queue)
             return True
-
+        
         return False
+
+    def get_failed_for_notification(self):
+        """Get videos that have failed 3+ times and need notification.
+        
+        Returns:
+            List of video dicts with attempts >= 3
+        """
+        queue = self._load_queue()
+        return [v for v in queue.get("failed", []) if v.get("attempts", 0) >= 3]
 
     def reset_stale(self, max_minutes=30):
         """Return a stuck video from processing back to pending.
@@ -175,13 +282,35 @@ class QueueManager:
         except Exception:
             pass
 
-        # Return to pending
+        # Return to pending (increment attempt count since this is a failure)
+        video["attempts"] = video.get("attempts", 0) + 1
+        video["lastError"] = f"Stale reset after {round(elapsed_minutes)} minutes"
         video.pop("startedAt", None)
+        
+        if video["attempts"] >= 3:
+            # Too many stale resets, move to failed
+            video["failedAt"] = datetime.now(timezone.utc).isoformat()
+            queue["failed"].append(video)
+            queue["processing"] = None
+            self._save_queue(queue)
+            return {
+                "videoId": video_id,
+                "action": "moved_to_failed",
+                "stale_minutes": round(elapsed_minutes),
+                "attempts": video["attempts"]
+            }
+        
+        # Return to pending
         queue["pending"].insert(0, video)
         queue["processing"] = None
         self._save_queue(queue)
 
-        return {"videoId": video_id, "action": "returned_to_pending", "stale_minutes": round(elapsed_minutes)}
+        return {
+            "videoId": video_id,
+            "action": "returned_to_pending",
+            "stale_minutes": round(elapsed_minutes),
+            "attempts": video["attempts"]
+        }
 
     def get_status(self):
         """Get queue status.
@@ -196,7 +325,38 @@ class QueueManager:
             "processing": 1 if queue["processing"] else 0,
             "completed": len(queue["completed"]),
             "failed": len(queue["failed"]),
+            "notified": len(queue.get("notified", [])),
             "current": queue["processing"]
+        }
+
+    def get_detailed_status(self):
+        """Get detailed queue status with retry info.
+        
+        Returns:
+            Dict with full queue info including attempts
+        """
+        queue = self._load_queue()
+        
+        # Count videos with retry attempts
+        retry_pending = [v for v in queue["pending"] if v.get("attempts", 0) > 0]
+        
+        return {
+            "pending": len(queue["pending"]),
+            "pending_with_retries": len(retry_pending),
+            "processing": 1 if queue["processing"] else 0,
+            "completed": len(queue["completed"]),
+            "failed": len(queue["failed"]),
+            "notified": len(queue.get("notified", [])),
+            "current": queue["processing"],
+            "retry_videos": [
+                {
+                    "videoId": v["videoId"],
+                    "title": v["title"],
+                    "attempts": v.get("attempts", 0),
+                    "lastError": v.get("lastError", "N/A")[:100]
+                }
+                for v in retry_pending
+            ]
         }
 
     def clear_old_completed(self, days=7):
@@ -240,10 +400,13 @@ def main():
         print("  add <videoId> <title> <channel>  Add video to queue")
         print("  next                               Get next video to process")
         print("  complete <videoId>                 Mark video as completed")
-        print("  fail <videoId> <error>             Mark video as failed")
+        print("  fail <videoId> <error>             Mark video as failed (with retry)")
         print("  status                             Show queue status")
+        print("  detailed-status                    Show detailed status with retry info")
         print("  reset-stale                        Return stuck video to pending")
         print("  clear-old [days]                   Clear old completed entries")
+        print("  notify <videoId>                   Mark failed video as notified")
+        print("  get-failed                         Get videos needing notification")
         sys.exit(1)
 
     command = sys.argv[1]
@@ -273,12 +436,18 @@ def main():
                     "title": video["title"],
                     "channel": video["channel"],
                     "url": f"https://www.youtube.com/watch?v={video['videoId']}",
-                    "startedAt": video.get("startedAt", "")
+                    "startedAt": video.get("startedAt", ""),
+                    "attempts": video.get("attempts", 0),
+                    "lastError": video.get("lastError", "")
                 }, indent=2, ensure_ascii=False))
             else:
                 print(f"Processing: {video['title']}")
                 print(f"Video ID: {video['videoId']}")
                 print(f"Channel: {video['channel']}")
+                if video.get("attempts", 0) > 0:
+                    print(f"Attempts: {video['attempts']} (retry)")
+                if video.get("lastError"):
+                    print(f"Last error: {video['lastError'][:100]}")
         else:
             if "--json" in sys.argv:
                 print(json.dumps({"empty": True}))
@@ -301,10 +470,39 @@ def main():
             sys.exit(1)
         video_id = sys.argv[2]
         error = " ".join(sys.argv[3:])
-        if qm.mark_failed(video_id, error):
-            print(f"Marked {video_id} as failed: {error}")
+        result = qm.mark_failed(video_id, error)
+        
+        if result["action"] == "retry":
+            print(f"Marked {video_id} as failed (attempt {result['attempts']}/3)")
+            print(f"Returned to pending queue for retry")
+            print(f"Error: {result['lastError'][:100]}")
+        elif result["action"] == "failed":
+            print(f"Marked {video_id} as PERMANENTLY FAILED after {result['attempts']} attempts")
+            print(f"Error: {result['lastError'][:100]}")
+            print("NOTIFICATION NEEDED: Send Telegram alert")
         else:
             print(f"Video {video_id} not in processing state")
+
+    elif command == "notify":
+        if len(sys.argv) < 3:
+            print("Error: notify requires videoId")
+            sys.exit(1)
+        video_id = sys.argv[2]
+        if qm.mark_notified(video_id):
+            print(f"Marked {video_id} as notified")
+        else:
+            print(f"Video {video_id} not in failed list")
+
+    elif command == "get-failed":
+        failed = qm.get_failed_for_notification()
+        if failed:
+            print(f"Videos needing notification ({len(failed)}):")
+            for video in failed:
+                print(f"  - {video['title']} ({video['videoId']})")
+                print(f"    Attempts: {video.get('attempts', 0)}")
+                print(f"    Last error: {video.get('lastError', 'N/A')[:100]}")
+        else:
+            print("No videos needing notification")
 
     elif command == "status":
         status = qm.get_status()
@@ -313,10 +511,25 @@ def main():
         print(f"  Processing: {status['processing']}")
         print(f"  Completed: {status['completed']}")
         print(f"  Failed: {status['failed']}")
+        print(f"  Notified: {status['notified']}")
         if status["current"]:
             print(f"\nCurrently processing:")
             print(f"  {status['current']['title']}")
             print(f"  {status['current']['videoId']}")
+
+    elif command == "detailed-status":
+        status = qm.get_detailed_status()
+        print(f"Queue Status (Detailed):")
+        print(f"  Pending: {status['pending']} ({status['pending_with_retries']} with retries)")
+        print(f"  Processing: {status['processing']}")
+        print(f"  Completed: {status['completed']}")
+        print(f"  Failed: {status['failed']}")
+        print(f"  Notified: {status['notified']}")
+        if status["retry_videos"]:
+            print(f"\nVideos with retries:")
+            for v in status["retry_videos"]:
+                print(f"  - {v['title']} (attempt {v['attempts']}/3)")
+                print(f"    Last error: {v['lastError']}")
 
     elif command == "reset-stale":
         result = qm.reset_stale()
