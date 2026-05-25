@@ -96,15 +96,31 @@ class TranscriptionHeartbeat:
         self._write("phase", message, phase=phase_name)
     
     def finish(self):
-        """Mark successful completion and delete log file."""
-        self._write("completed", "Transcription completed successfully", progress=100, phase="complete")
+        """Mark successful completion.
         
-        # Delete log file after successful completion
+        Writes completion status to log. Log file is kept until
+        next health check confirms completion.
+        """
+        self._write("completed", "All phases completed successfully", progress=100, phase="complete")
+
+    def cleanup_completed(self):
+        """Remove log file for completed transcriptions.
+        
+        Called by health monitor after verifying completion.
+        """
         try:
             if self.log_file.exists():
-                self.log_file.unlink()
-        except OSError:
+                # Verify it's actually completed
+                with open(self.log_file, 'r') as f:
+                    lines = f.readlines()
+                if lines:
+                    last_entry = json.loads(lines[-1])
+                    if last_entry.get("status") == "completed":
+                        self.log_file.unlink()
+                        return True
+        except (OSError, json.JSONDecodeError):
             pass
+        return False
     
     def fail(self, error_message):
         """Mark failure.
@@ -169,12 +185,20 @@ class TranscriptionHeartbeat:
         """
         active = TranscriptionHeartbeat.get_active_logs()
         stale = []
+        completed_to_cleanup = []
         
         for log in active:
             try:
                 last_update = datetime.fromisoformat(log["lastUpdate"])
                 elapsed = (datetime.now() - last_update).total_seconds()
                 
+                # Check if completed
+                if log.get("status") == "completed":
+                    # Mark for cleanup
+                    completed_to_cleanup.append(log["videoId"])
+                    continue
+                
+                # Check if stale
                 if elapsed > max_seconds:
                     stale.append({
                         "videoId": log["videoId"],
@@ -185,6 +209,11 @@ class TranscriptionHeartbeat:
                     })
             except (ValueError, TypeError):
                 continue
+        
+        # Cleanup completed logs
+        for video_id in completed_to_cleanup:
+            hb = TranscriptionHeartbeat(video_id)
+            hb.cleanup_completed()
         
         return stale
 
