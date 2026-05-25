@@ -60,3 +60,7 @@ models/
 *.tmp
 *.bak
 *.log
+
+# .agent files
+
+.agent/

@@ -21,6 +21,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
 from log_helper import log_event
+from heartbeat import TranscriptionHeartbeat
 
 CHUNKS_DIR = Path(__file__).parent.parent / "chunks"
 TRANSCRIPTS_DIR = Path(__file__).parent.parent / "transcripts"
@@ -43,20 +44,65 @@ def assemble_chunks(video_id):
     Returns:
         Dict with result
     """
+    hb = TranscriptionHeartbeat(video_id)
+    
     data = load_chunks_meta(video_id)
     if data is None:
+        hb.fail("no_chunks_json")
         return {"assembled": False, "reason": "no_chunks_json"}
 
     total = data["totalChunks"]
+    hb.start(f"Assembling {total} chunks for {video_id}")
 
     # Check for failed chunks
     failed_chunks = [c for c in data["chunks"] if c["status"] == "failed"]
     if failed_chunks:
         reason = f"chunk {failed_chunks[0]['index']}/{total} failed"
         log_event(video_id, "ASSEMBLE_FAIL", reason=reason)
+        hb.fail(reason)
         # Clean up all chunk files
         cleanup_chunks(video_id, data)
         return {"assembled": False, "reason": reason}
+
+    # Check if all chunks are done
+    done_chunks = [c for c in data["chunks"] if c["status"] == "done"]
+    if len(done_chunks) < total:
+        reason = f"not all chunks ready ({len(done_chunks)}/{total})"
+        log_event(video_id, "ASSEMBLE_SKIP", reason=reason)
+        hb.fail(reason)
+        return {"assembled": False, "reason": reason}
+
+    log_event(video_id, "ASSEMBLE_START", total=total)
+    hb.phase("assembling", f"Reading {total} chunk transcripts")
+
+    TRANSCRIPTS_DIR.mkdir(parents=True, exist_ok=True)
+    transcript_file = TRANSCRIPTS_DIR / f"{video_id}.txt"
+
+    assembled_count = 0
+    with open(transcript_file, 'w', encoding='utf-8') as f:
+        for i, chunk in enumerate(data["chunks"], 1):
+            chunk_file = CHUNKS_DIR / f"{video_id}_chunk{chunk['index']:03d}.txt"
+            if chunk_file.exists():
+                # Add chunk marker (for TTS cleanup later)
+                f.write(f"\n[chunk {i}/{total}]\n\n")
+                content = chunk_file.read_text(encoding='utf-8')
+                f.write(content)
+                f.write("\n")
+                assembled_count += 1
+                
+                progress = int((i / total) * 100)
+                hb.update_progress(progress, f"Assembled chunk {i}/{total}", phase="assembling")
+            else:
+                log_event(video_id, "ASSEMBLE_MISSING", chunk=f"{i}/{total}", file=chunk_file.name)
+
+    log_event(video_id, "ASSEMBLE_OK", segments=assembled_count, file=str(transcript_file))
+    hb.finish()
+
+    # Clean up chunk files
+    chunks_cleaned = cleanup_chunks(video_id, data)
+
+    return {"assembled": True, "transcript": str(transcript_file),
+            "segments": assembled_count, "chunksCleaned": chunks_cleaned}
 
     # Check all chunks are done
     pending_chunks = [c for c in data["chunks"] if c["status"] != "done"]

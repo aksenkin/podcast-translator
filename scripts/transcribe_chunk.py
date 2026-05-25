@@ -27,6 +27,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent))
 
 from log_helper import log_event
+from heartbeat import TranscriptionHeartbeat
 
 LOCK_FILE = Path("/tmp/transcribe_chunk.lock")
 
@@ -180,8 +181,12 @@ def transcribe_all_chunks(video_id):
     Returns:
         Dict with summary
     """
+    # Initialize heartbeat logger
+    hb = TranscriptionHeartbeat(video_id)
+    
     data = load_chunks_meta(video_id)
     if data is None:
+        hb.fail("no_chunks_json")
         return {"error": "no_chunks_json", "videoId": video_id}
 
     pending = [c for c in data["chunks"] if c["status"] == "pending"]
@@ -190,32 +195,41 @@ def transcribe_all_chunks(video_id):
         if all_done:
             data["status"] = "assembling"
             save_chunks_meta(video_id, data)
+            hb.finish()
             return {"allDone": True, "videoId": video_id, "totalChunks": data["totalChunks"]}
         return {"error": "all_chunks_processed", "videoId": video_id}
 
     from faster_whisper import WhisperModel
 
+    hb.start(f"Transcribing {len(pending)} chunks for {video_id}")
     log_event(video_id, "TRANSCRIBE_ALL_START", pending=len(pending))
     start_total = time.time()
 
     log_event(video_id, "MODEL_LOAD_START")
+    hb.phase("transcribing", f"Loading Whisper model for {len(pending)} chunks")
     try:
         model = WhisperModel(
             "small", device="cpu", compute_type="int8",
             download_root=str(CACHE_DIR), cpu_threads=4, num_workers=2
         )
     except Exception as e:
+        error = f"Model load failed: {e}"
         log_event(video_id, "MODEL_LOAD_FAIL", error=str(e))
-        return {"error": f"Model load failed: {e}"}
+        hb.fail(error)
+        return {"error": error}
 
     model_load_time = time.time() - start_total
     log_event(video_id, "MODEL_LOAD_OK", duration=f"{model_load_time:.1f}s")
+    hb.heartbeat(f"Model loaded in {model_load_time:.1f}s, starting chunks")
 
     results = []
-    for chunk in pending:
+    for i, chunk in enumerate(pending):
         chunk_idx = chunk["index"]
         total = data["totalChunks"]
         chunk_file = CHUNKS_DIR / chunk["file"]
+        
+        progress = int((i / len(pending)) * 100)
+        hb.update_progress(progress, f"Transcribing chunk {chunk_idx}/{total}", phase="transcribing")
 
         chunk["status"] = "transcribing"
         save_chunks_meta(video_id, data)
@@ -236,10 +250,12 @@ def transcribe_all_chunks(video_id):
             data["status"] = "failed"
             save_chunks_meta(video_id, data)
             log_event(video_id, "TRANSCRIBE_FAIL", chunk=f"{chunk_idx}/{total}", error=error, duration=f"{elapsed:.0f}s")
+            hb.fail(f"Chunk {chunk_idx} failed: {error}")
             return {"error": "chunk_failed", "videoId": video_id, "failedChunk": chunk_idx,
                     "completed": [r for r in results if r["status"] == "done"]}
 
         save_chunks_meta(video_id, data)
+        hb.heartbeat(f"Chunk {chunk_idx}/{total} done ({len(results)}/{len(pending)})")
 
     total_elapsed = time.time() - start_total
     all_done = all(c["status"] == "done" for c in data["chunks"])
@@ -248,10 +264,12 @@ def transcribe_all_chunks(video_id):
         data["status"] = "assembling"
         save_chunks_meta(video_id, data)
         log_event(video_id, "TRANSCRIBE_ALL_OK", total_duration=f"{total_elapsed:.0f}s", chunks=len(results))
+        hb.finish()
         return {"allDone": True, "videoId": video_id, "totalChunks": data["totalChunks"],
                 "transcribed": len(results), "totalDuration": f"{total_elapsed:.0f}s"}
 
     save_chunks_meta(video_id, data)
+    hb.update_progress(100, "All chunks transcribed", phase="assembling")
     return {"videoId": video_id, "transcribed": len(results), "totalDuration": f"{total_elapsed:.0f}s"}
 
 

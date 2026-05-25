@@ -46,14 +46,20 @@ def check_model_cached(model_size):
             return True, snapshots[0]
     return False, None
 
-class ProgressReporter:
-    """Machine-readable progress output for CLI agents"""
+sys.path.insert(0, str(Path(__file__).parent))
+from heartbeat import TranscriptionHeartbeat
 
-    def __init__(self):
+class ProgressReporter:
+    """Machine-readable progress output for CLI agents with file heartbeat"""
+
+    def __init__(self, video_id):
         self.last_heartbeat = time.time()
         self.heartbeat_interval = 10  # seconds
         self.segments_processed = 0
         self.estimated_total = 0
+        self.video_id = video_id
+        # Initialize file-based heartbeat logger
+        self.hb = TranscriptionHeartbeat(video_id) if video_id else None
 
     def heartbeat(self, message: str = ""):
         """Print heartbeat every 10 seconds so CLI agent knows process is alive"""
@@ -62,8 +68,12 @@ class ProgressReporter:
             if self.estimated_total > 0:
                 progress = min(100, (self.segments_processed / self.estimated_total) * 100)
                 print(f"HEARTBEAT: {progress:.1f}% | segments: {self.segments_processed} | {message}", flush=True)
+                if self.hb:
+                    self.hb.update_progress(progress, message, phase="transcribing")
             else:
                 print(f"HEARTBEAT: processing segment {self.segments_processed} | {message}", flush=True)
+                if self.hb:
+                    self.hb.heartbeat(message)
             self.last_heartbeat = now
 
     def status(self, message: str):
@@ -73,24 +83,36 @@ class ProgressReporter:
     def error(self, message: str):
         """Print error"""
         print(f"ERROR: {message}", flush=True)
+        if self.hb:
+            self.hb.fail(message)
 
     def success(self, message: str):
         """Print success"""
         print(f"SUCCESS: {message}", flush=True)
+        if self.hb:
+            self.hb.finish()
 
 
-def transcribe_audio(audio_file, output_dir, model_size="small"):
+def transcribe_audio(audio_file, output_dir, model_size="small", video_id=None):
     """Transcribe audio using faster-whisper (CPU-optimized)"""
 
-    reporter = ProgressReporter()
+    reporter = ProgressReporter(video_id)
+
+    # Initialize heartbeat
+    if reporter.hb:
+        reporter.hb.start(f"Loading model {model_size} for transcription")
 
     # Check if model is cached
     is_cached, model_path = check_model_cached(model_size)
 
     if is_cached:
         reporter.status(f"Using cached model: {model_size}")
+        if reporter.hb:
+            reporter.hb.heartbeat("Model cached, loading...")
     else:
         reporter.status(f"Downloading Whisper model ({model_size}) from HuggingFace...")
+        if reporter.hb:
+            reporter.hb.heartbeat("Downloading model...")
 
     try:
         # Load model (will download if not cached)
@@ -109,6 +131,8 @@ def transcribe_audio(audio_file, output_dir, model_size="small"):
         return None
 
     reporter.status(f"Starting transcription: {audio_file}")
+    if reporter.hb:
+        reporter.hb.phase("transcribing", f"Starting transcription: {os.path.basename(audio_file)}")
 
     # Get audio duration first for better progress estimation
     try:
@@ -209,7 +233,10 @@ if __name__ == "__main__":
     output_dir = sys.argv[2]
     model_size = sys.argv[3] if len(sys.argv) > 3 else "small"
 
-    result = transcribe_audio(audio_file, output_dir, model_size)
+    # Extract video_id from audio filename (e.g., "9N3jEavj5Ps.mp3" → "9N3jEavj5Ps")
+    video_id = Path(audio_file).stem
+
+    result = transcribe_audio(audio_file, output_dir, model_size, video_id)
 
     if result:
         sys.exit(0)
