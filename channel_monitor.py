@@ -46,6 +46,9 @@ class YouTubeChannelMonitor:
             "checked": 0,
             "added": 0,
             "skipped": 0,
+            "skipped_unknown": 0,
+            "skipped_short": 0,
+            "skipped_long": 0,
             "errors": 0,
             "videos": [],
             "channels_checked": []
@@ -90,37 +93,75 @@ class YouTubeChannelMonitor:
         return None
 
     def get_video_duration(self, video_id):
-        """Get video duration in seconds using yt-dlp.
+        """Get video duration in seconds using yt-dlp with multiple fallback methods.
+
+        Strategy:
+          1. Quick print (current method)
+          2. JSON dump (more reliable, extracts duration field)
+          3. Info extraction with web client
+          4. If all fail -> return None (caller will SKIP the video)
 
         Args:
             video_id: YouTube video ID
 
         Returns:
-            Duration in seconds or None if failed
+            Duration in seconds or None if all methods failed
         """
+        video_url = f"https://www.youtube.com/watch?v={video_id}"
+
+        # Method 1: Simple print (fastest)
         try:
-            cmd = [
-                "yt-dlp",
-                "--print", "%(duration)s",
-                "--no-download",
-                f"https://www.youtube.com/watch?v={video_id}"
-            ]
-
             result = subprocess.run(
-                cmd,
-                capture_output=True,
-                text=True,
-                timeout=30,
-                cwd=str(self.skill_dir)
+                ["yt-dlp", "--print", "%(duration)s", "--no-download", video_url],
+                capture_output=True, text=True, timeout=30, cwd=str(self.skill_dir)
             )
-
             if result.returncode == 0 and result.stdout.strip():
-                return int(float(result.stdout.strip()))
-            return None
+                duration = int(float(result.stdout.strip()))
+                print(f"   📏 Method 1 duration: {duration}s")
+                return duration
         except (subprocess.TimeoutExpired, ValueError):
-            return None
-        except Exception:
-            return None
+            pass
+        except Exception as e:
+            print(f"   ⚠️  Method 1 error: {e}")
+
+        # Method 2: JSON dump (more reliable)
+        try:
+            result = subprocess.run(
+                ["yt-dlp", "--dump-json", "--no-download", video_url],
+                capture_output=True, text=True, timeout=30, cwd=str(self.skill_dir)
+            )
+            if result.returncode == 0 and result.stdout.strip():
+                import json
+                data = json.loads(result.stdout.strip().split('\n')[0])
+                duration = data.get('duration')
+                if duration:
+                    duration = int(float(duration))
+                    print(f"   📏 Method 2 duration: {duration}s")
+                    return duration
+        except (subprocess.TimeoutExpired, ValueError, json.JSONDecodeError):
+            pass
+        except Exception as e:
+            print(f"   ⚠️  Method 2 error: {e}")
+
+        # Method 3: Extract with web client (bypasses some blocks)
+        try:
+            result = subprocess.run(
+                ["yt-dlp", "--skip-download", "--print", "%(duration)s",
+                 "--extractor-args", "youtube:player_client=web",
+                 video_url],
+                capture_output=True, text=True, timeout=45, cwd=str(self.skill_dir)
+            )
+            if result.returncode == 0 and result.stdout.strip():
+                duration = int(float(result.stdout.strip()))
+                print(f"   📏 Method 3 duration: {duration}s")
+                return duration
+        except (subprocess.TimeoutExpired, ValueError):
+            pass
+        except Exception as e:
+            print(f"   ⚠️  Method 3 error: {e}")
+
+        print(f"   ❌ Could not determine duration for {video_id}")
+        return None
 
     def get_channel_videos(self, channel_url, max_videos=3):
         """Fetch latest videos from a YouTube channel.
@@ -162,10 +203,20 @@ class YouTubeChannelMonitor:
                 if '|||' in line:
                     video_id, title = line.split('|||', 1)
 
-                    # Check duration - skip if < 10 minutes (600 seconds)
+                    # Check duration - skip if < 10 minutes or > 1 hour
+                    # HARD RULE: if duration unknown, SKIP (conservative)
                     duration = self.get_video_duration(video_id)
-                    if duration is not None and duration < 600:
+                    if duration is None:
+                        print(f"   ⏭️  Skipping (unknown duration): {title.strip()[:50]}...")
+                        self.results['skipped_unknown'] += 1
+                        continue
+                    if duration < 600:
                         print(f"   ⏭️  Skipping (short video, {duration}s < 10min): {title.strip()[:50]}...")
+                        self.results['skipped_short'] += 1
+                        continue
+                    if duration > 3600:
+                        print(f"   ⏭️  Skipping (long video, {duration}s > 1h): {title.strip()[:50]}...")
+                        self.results['skipped_long'] += 1
                         continue
 
                     videos.append({
@@ -295,7 +346,13 @@ class YouTubeChannelMonitor:
             print(f"⏱️  Elapsed: {elapsed:.1f} seconds")
             print(f"📺 Channels checked: {result['checked']}")
             print(f"📹 Videos added: {result['added']}")
-            print(f"⏭️  Videos skipped: {result['skipped']}")
+            print(f"⏭️  Videos skipped (duplicates): {result['skipped']}")
+            if result.get('skipped_unknown', 0) > 0:
+                print(f"❓ Skipped (unknown duration): {result['skipped_unknown']}")
+            if result.get('skipped_short', 0) > 0:
+                print(f"⏱️  Skipped (too short): {result['skipped_short']}")
+            if result.get('skipped_long', 0) > 0:
+                print(f"🕐 Skipped (too long): {result['skipped_long']}")
 
             return result
 

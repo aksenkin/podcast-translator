@@ -26,7 +26,7 @@ from log_helper import log_event
 
 CHUNKS_DIR = Path(__file__).parent.parent / "chunks"
 MIN_DURATION = 30       # seconds — skip videos shorter than this
-MAX_DURATION = 7200     # seconds (2h) — skip videos longer than this
+MAX_DURATION = 3600     # seconds (1h) — skip videos longer than this
 DEFAULT_CHUNK_DURATION = 300  # 5 minutes
 
 

@@ -60,3 +60,4 @@ models/
 *.tmp
 *.bak
 *.log
+.agent/auth-profiles.json
