@@ -56,6 +56,9 @@ podcast-translator-workspace/
 .cache/
 models/
 
+# Credentials
+.agent/auth-profiles.json
+
 # Temporary files
 *.tmp
 *.bak
