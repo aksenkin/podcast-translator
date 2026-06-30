@@ -69,13 +69,19 @@ class QueueManager:
         """Get the next video to process.
 
         Resets stale processing video first.
+        If a video is already being processed (and not stale), returns None
+        — only ONE item can be in processing at any time.
 
         Returns:
-            Video dict or None if no pending videos
+            Video dict or None if no pending videos or processing slot occupied
         """
         self.reset_stale()
 
         queue = self._load_queue()
+
+        # If processing slot is occupied (and not stale), don't give another video
+        if queue["processing"] is not None:
+            return None
 
         if not queue["pending"]:
             return None

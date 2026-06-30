@@ -1,0 +1,12 @@
+{
+  "channels": [
+    {
+      "url": "https://www.youtube.com/@AIDailyBrief/videos",
+      "name": "AIDailyBrief"
+    },
+    {
+      "url": "https://www.youtube.com/@mreflow/videos",
+      "name": "mreflow"
+    }
+  ]
+}

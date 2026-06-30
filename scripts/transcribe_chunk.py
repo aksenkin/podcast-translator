@@ -277,9 +277,6 @@ def release_lock():
 
 
 if __name__ == "__main__":
-    # Lower process priority to avoid hogging CPU on ARM
-    os.nice(10)
-
     # Parse --all flag
     do_all = "--all" in sys.argv
     args = [a for a in sys.argv[1:] if a != "--all"]
