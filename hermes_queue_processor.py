@@ -421,13 +421,24 @@ def run_pipeline_for_video(video, voice="ru-RU-DmitryNeural"):
     if not output_audio.exists():
         raise Exception(f"TTS audio file not found: {output_audio}")
 
-    # Embed cover art from YouTube thumbnail
+    # Embed cover art from YouTube thumbnail + full metadata
     try:
         import urllib.request
-        thumb_url = f"https://img.youtube.com/vi/{video_id}/maxresdefault.jpg"
         thumb_path = SKILL_DIR / "input" / f"{basename}_thumb.jpg"
-        urllib.request.urlretrieve(thumb_url, str(thumb_path))
-        if thumb_path.exists() and thumb_path.stat().st_size > 1000:
+        # Try thumbnail qualities in order of preference
+        thumb_downloaded = False
+        for quality in ['maxresdefault', 'hqdefault', 'mqdefault']:
+            thumb_url = f"https://img.youtube.com/vi/{video_id}/{quality}.jpg"
+            try:
+                urllib.request.urlretrieve(thumb_url, str(thumb_path))
+                if thumb_path.exists() and thumb_path.stat().st_size > 1000:
+                    thumb_downloaded = True
+                    print(f"🖼️ Thumbnail: {quality}.jpg ({thumb_path.stat().st_size} bytes)")
+                    break
+            except Exception:
+                continue
+
+        if thumb_downloaded:
             # Embed cover art + full metadata using ffmpeg
             meta_cmd = [
                 "ffmpeg", "-y", "-i", str(output_audio),
@@ -436,8 +447,8 @@ def run_pipeline_for_video(video, voice="ru-RU-DmitryNeural"):
                 "-c:a", "copy", "-c:v", "mjpeg",
                 "-metadata", f"title={video['title']}",
                 "-metadata", f"artist={video.get('channel', '')}",
-                "-metadata", f"album=Podcast Translation",
-                "-metadata", f"genre=Podcast",
+                "-metadata", "album=Podcast Translation",
+                "-metadata", "genre=Podcast",
                 "-metadata", f"date={datetime.now().strftime('%Y-%m-%d')}",
                 "-disposition:v:0", "attached_pic",
                 str(output_audio).replace('.ru.mp3', '.meta.ru.mp3')
@@ -447,12 +458,12 @@ def run_pipeline_for_video(video, voice="ru-RU-DmitryNeural"):
                 meta_file = Path(str(output_audio).replace('.ru.mp3', '.meta.ru.mp3'))
                 if meta_file.exists():
                     os.replace(str(meta_file), str(output_audio))
-                    print(f"🖼️ Cover art + metadata embedded")
+                    print("✅ Cover art + metadata embedded")
             else:
                 print(f"⚠️ Cover art embedding failed (non-fatal): {result.stderr[:200]}")
             thumb_path.unlink(missing_ok=True)
         else:
-            print("⚠️ Thumbnail not available (non-fatal)")
+            print("⚠️ No thumbnail available (non-fatal)")
     except Exception as e:
         print(f"⚠️ Cover art skipped (non-fatal): {e}")
 
