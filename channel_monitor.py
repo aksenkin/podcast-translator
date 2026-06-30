@@ -108,6 +108,8 @@ class YouTubeChannelMonitor:
                 "--flat-playlist",
                 "--print", "%(id)s|||%(title)s",
                 "--playlist-end", str(max_videos),
+                "--js-runtimes", "node:/home/dmaxy/.nvm/versions/node/v22.19.0/bin/node",
+                "--remote-components", "ejs:github",
                 channel_url
             ]
 

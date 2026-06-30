@@ -41,6 +41,8 @@ class TestDownload:
             [
                 "yt-dlp",
                 "-x", "--audio-format", "mp3", "--audio-quality", "0",
+                "--js-runtimes", "node:/home/dmaxy/.nvm/versions/node/v22.19.0/bin/node",
+                "--remote-components", "ejs:github",
                 "-o", str(output_path),
                 TEST_VIDEO_URL
             ],
@@ -158,7 +160,10 @@ class TestChunking:
         output = INPUT_DIR / "test_short.mp3"
 
         subprocess.run(
-            ["yt-dlp", "-x", "--audio-format", "mp3", "-o", str(output), short_url],
+            ["yt-dlp", "-x", "--audio-format", "mp3",
+             "--js-runtimes", "node:/home/dmaxy/.nvm/versions/node/v22.19.0/bin/node",
+             "--remote-components", "ejs:github",
+             "-o", str(output), short_url],
             capture_output=True, text=True, timeout=60
         )
 
@@ -193,7 +198,10 @@ class TestTranscription:
         output = INPUT_DIR / "test_short.mp3"
 
         subprocess.run(
-            ["yt-dlp", "-x", "--audio-format", "mp3", "-o", str(output), short_url],
+            ["yt-dlp", "-x", "--audio-format", "mp3",
+             "--js-runtimes", "node:/home/dmaxy/.nvm/versions/node/v22.19.0/bin/node",
+             "--remote-components", "ejs:github",
+             "-o", str(output), short_url],
             capture_output=True, text=True, timeout=60
         )
 

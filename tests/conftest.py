@@ -153,6 +153,8 @@ def session_audio_file():
         [
             "yt-dlp",
             "-x", "--audio-format", "mp3", "--audio-quality", "0",
+            "--js-runtimes", "node:/home/dmaxy/.nvm/versions/node/v22.19.0/bin/node",
+            "--remote-components", "ejs:github",
             "-o", str(output_path),
             TEST_VIDEO_URL
         ],

@@ -176,8 +176,6 @@ def transcribe_audio_inprocess(audio_file, output_dir, model, video_id=None):
         Path to transcript file, or None on failure
     """
     audio_path = Path(audio_file)
-    transcript_file = Path(output_dir) / audio_path.stem + ".txt"
-    # Fix: Path doesn't support + operator
     transcript_file = Path(output_dir) / (audio_path.stem + ".txt")
 
     print(f"STATUS: Transcribing {audio_path.name}...", flush=True)
@@ -296,8 +294,11 @@ def run_pipeline_for_video(video, voice="ru-RU-DmitryNeural"):
     """
     video_id = video['videoId']
     youtube_url = video.get('url', f"https://www.youtube.com/watch?v={video_id}")
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    basename = f"podcast_{timestamp}"
+    # Use video title as basename (sanitized for filesystem safety)
+    import re as _re
+    safe_title = _re.sub(r'[\\/:*?"<>|]', '', video['title'])  # remove invalid chars
+    safe_title = safe_title.strip().replace(' ', '_')[:80]  # spaces to underscores, max 80 chars
+    basename = safe_title if safe_title else f"podcast_{video_id}"
 
     print(f"\n{'='*60}")
     print(f"🎙️ Processing: {video['title']}")
@@ -312,12 +313,28 @@ def run_pipeline_for_video(video, voice="ru-RU-DmitryNeural"):
 
     # Step 1: Download audio
     print("\n📥 Step 1: Downloading audio...")
+    # Find node.js for yt-dlp JS runtime (YouTube requires it)
+    import shutil as _shutil
+    node_path = None
+    for candidate in [
+        "/home/dmaxy/.nvm/versions/node/v22.19.0/bin/node",
+        "/usr/bin/node", "/usr/local/bin/node",
+    ]:
+        if Path(candidate).exists():
+            node_path = candidate
+            break
+    if not node_path:
+        # Try finding node via PATH
+        node_path = _shutil.which("node")
+
     download_cmd = [
         "yt-dlp",
         "-x", "--audio-format", "mp3", "--audio-quality", "0",
         "-o", f"{SKILL_DIR}/input/{basename}.%(ext)s",
-        youtube_url
     ]
+    if node_path:
+        download_cmd += ["--js-runtimes", f"node:{node_path}", "--remote-components", "ejs:github"]
+    download_cmd.append(youtube_url)
     run_with_progress(download_cmd, TIMEOUT_DOWNLOAD, "Downloading audio")
 
     # Find the downloaded file
@@ -395,12 +412,49 @@ def run_pipeline_for_video(video, voice="ru-RU-DmitryNeural"):
     output_audio = SKILL_DIR / "audio" / f"{basename}.ru.mp3"
     tts_cmd = [
         "python3", str(SKILL_DIR / "scripts" / "generate_tts.py"),
-        str(tts_file), str(output_audio), voice
+        str(tts_file), str(output_audio), voice,
+        video['title'],           # title metadata
+        video.get('channel', ''),  # artist metadata
     ]
     run_with_progress(tts_cmd, TIMEOUT_TTS, "Generating TTS")
 
     if not output_audio.exists():
         raise Exception(f"TTS audio file not found: {output_audio}")
+
+    # Embed cover art from YouTube thumbnail
+    try:
+        import urllib.request
+        thumb_url = f"https://img.youtube.com/vi/{video_id}/maxresdefault.jpg"
+        thumb_path = SKILL_DIR / "input" / f"{basename}_thumb.jpg"
+        urllib.request.urlretrieve(thumb_url, str(thumb_path))
+        if thumb_path.exists() and thumb_path.stat().st_size > 1000:
+            # Embed cover art + full metadata using ffmpeg
+            meta_cmd = [
+                "ffmpeg", "-y", "-i", str(output_audio),
+                "-i", str(thumb_path),
+                "-map", "0:a", "-map", "1:v",
+                "-c:a", "copy", "-c:v", "mjpeg",
+                "-metadata", f"title={video['title']}",
+                "-metadata", f"artist={video.get('channel', '')}",
+                "-metadata", f"album=Podcast Translation",
+                "-metadata", f"genre=Podcast",
+                "-metadata", f"date={datetime.now().strftime('%Y-%m-%d')}",
+                "-disposition:v:0", "attached_pic",
+                str(output_audio).replace('.ru.mp3', '.meta.ru.mp3')
+            ]
+            result = subprocess.run(meta_cmd, capture_output=True, text=True, timeout=30)
+            if result.returncode == 0:
+                meta_file = Path(str(output_audio).replace('.ru.mp3', '.meta.ru.mp3'))
+                if meta_file.exists():
+                    os.replace(str(meta_file), str(output_audio))
+                    print(f"🖼️ Cover art + metadata embedded")
+            else:
+                print(f"⚠️ Cover art embedding failed (non-fatal): {result.stderr[:200]}")
+            thumb_path.unlink(missing_ok=True)
+        else:
+            print("⚠️ Thumbnail not available (non-fatal)")
+    except Exception as e:
+        print(f"⚠️ Cover art skipped (non-fatal): {e}")
 
     # Get audio duration and size
     dur_result = subprocess.run(

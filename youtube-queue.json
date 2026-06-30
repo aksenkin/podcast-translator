@@ -1,90 +1,26 @@
 {
-  "pending": [
-    {
-      "videoId": "eU3XwwguttU",
-      "title": "The AI Sandbox - Keeping Looped in on AI, My Income Sources, AI in Education, The Metaverse and more",
-      "url": "https://www.youtube.com/watch?v=eU3XwwguttU",
-      "channel": "mreflow",
-      "addedAt": "2026-04-08T05:32:14.808873Z"
-    },
-    {
-      "videoId": "QymmGOKO5sk",
-      "title": "OpenAI's Latest Move Doesn't Add Up",
-      "url": "https://www.youtube.com/watch?v=QymmGOKO5sk",
-      "channel": "mreflow",
-      "addedAt": "2026-04-08T05:32:14.808877Z"
-    },
-    {
-      "videoId": "_E7XMiVomJA",
-      "title": "Should We Be Scared of Anthropic's Mythos?",
-      "url": "https://www.youtube.com/watch?v=_E7XMiVomJA",
-      "channel": "AIDailyBrief",
-      "addedAt": "2026-04-09T05:30:59.556441Z"
-    },
-    {
-      "videoId": "BZ1hs2ZcnJc",
-      "title": "AI News: Anthropic Leak is Bigger Than You Think",
-      "url": "https://www.youtube.com/watch?v=BZ1hs2ZcnJc",
-      "channel": "mreflow",
-      "addedAt": "2026-04-09T05:30:59.556495Z"
-    },
-    {
-      "videoId": "-lRnSrhTXDc",
-      "title": "OpenAI Just Made History (Holy Sh*t?!)",
-      "url": "https://www.youtube.com/watch?v=-lRnSrhTXDc",
-      "channel": "mreflow",
-      "addedAt": "2026-04-09T05:30:59.556504Z"
-    },
+  "pending": [],
+  "processing": {
+    "videoId": "P_oabCLJhb0",
+    "title": "OpenAI Proposes a New Deal",
+    "channel": "AIDailyBrief",
+    "addedAt": "2026-06-30T20:12:21.236069+00:00",
+    "startedAt": "2026-06-30T20:31:10.823638+00:00"
+  },
+  "completed": [
     {
       "videoId": "20vZc0cOpOw",
       "title": "All of AI's New Models and Tools",
-      "url": "https://www.youtube.com/watch?v=20vZc0cOpOw",
       "channel": "AIDailyBrief",
-      "addedAt": "2026-04-10T05:30:12.266666Z"
-    },
-    {
-      "videoId": "P_oabCLJhb0",
-      "title": "OpenAI Proposes a New Deal",
-      "url": "https://www.youtube.com/watch?v=P_oabCLJhb0",
-      "channel": "AIDailyBrief",
-      "addedAt": "2026-04-10T05:30:12.266692Z"
-    },
-    {
-      "videoId": "7IgfvURUUx4",
-      "title": "This Unknown AI Model is Shockingly Good",
-      "url": "https://www.youtube.com/watch?v=7IgfvURUUx4",
-      "channel": "mreflow",
-      "addedAt": "2026-04-10T05:30:12.266699Z"
-    },
-    {
-      "videoId": "634oIgg3v5c",
-      "title": "Why Every AI Product Seems the Same",
-      "url": "https://www.youtube.com/watch?v=634oIgg3v5c",
-      "channel": "AIDailyBrief",
-      "addedAt": "2026-04-10T15:33:54.742800Z"
-    },
-    {
-      "videoId": "SguncMvE77I",
-      "title": "AI News: The Scariest AI Model Ever!",
-      "url": "https://www.youtube.com/watch?v=SguncMvE77I",
-      "channel": "mreflow",
-      "addedAt": "2026-04-10T15:33:54.742848Z"
-    },
-    {
-      "videoId": "pRoIjB5eNKo",
-      "title": "Claude Mythos Explained",
-      "url": "https://www.youtube.com/watch?v=pRoIjB5eNKo",
-      "channel": "mreflow",
-      "addedAt": "2026-04-11T05:30:15.833276Z"
-    },
-    {
-      "videoId": "0oBJ7PY1q9s",
-      "title": "The AI Sandbox - CES, Nvidia News, Cool AI Tools and More!",
-      "channel": "mreflow",
-      "addedAt": "2026-06-29T08:28:20.779713+00:00"
+      "addedAt": "2026-06-30T20:12:21.236050+00:00",
+      "startedAt": "2026-06-30T20:12:21.286851+00:00",
+      "completedAt": "2026-06-30T20:31:10.823244+00:00",
+      "outputFiles": {
+        "audio": "/home/dmaxy/work/podcast-translator/audio/All_of_AI's_New_Models_and_Tools.ru.mp3",
+        "ttsText": "/home/dmaxy/work/podcast-translator/translations/All_of_AI's_New_Models_and_Tools_ru_tts.txt",
+        "transcript": "/home/dmaxy/work/podcast-translator/transcripts/All_of_AI's_New_Models_and_Tools.txt"
+      }
     }
   ],
-  "processing": null,
-  "completed": [],
   "failed": []
 }

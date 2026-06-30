@@ -46,6 +46,8 @@ class QueueProcessor:
                         "--get-id",
                         "--get-title",
                         "--playlist-end", "3",
+                        "--js-runtimes", "node:/home/dmaxy/.nvm/versions/node/v22.19.0/bin/node",
+                        "--remote-components", "ejs:github",
                         channel["url"]
                     ],
                     capture_output=True,
@@ -115,6 +117,8 @@ class QueueProcessor:
                     "-x",
                     "--audio-format", "mp3",
                     "--audio-quality", "0",
+                    "--js-runtimes", "node:/home/dmaxy/.nvm/versions/node/v22.19.0/bin/node",
+                    "--remote-components", "ejs:github",
                     "-o", f"{self.skill_dir}/input/{basename}.%(ext)s",
                     youtube_url
                 ],

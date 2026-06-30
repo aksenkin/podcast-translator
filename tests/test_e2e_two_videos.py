@@ -101,33 +101,23 @@ class TestE2ETwoVideos:
             f"Processor failed (exit {result.returncode}):\n{result.stderr[:500]}"
 
         # Parse JSON summary — may be multi-line (indent=2) or single line
-        # Find the JSON block that contains "processed" and "results"
+        # The JSON block may be followed by non-JSON output (HERMES_* lines)
         stdout = result.stdout.strip()
-        # Try to find the last JSON object in the output
-        # Look for the pattern: { ... "processed" ... }
-        json_start = stdout.rfind('\n{')
-        if json_start == -1:
-            json_start = 0 if stdout.startswith('{') else -1
-
-        if json_start >= 0:
-            json_str = stdout[json_start:].strip()
-            if json_str.startswith('{'):
-                summary = json.loads(json_str)
-            else:
-                # Fallback: try line by line
-                summary = None
-                for line in stdout.split('\n'):
-                    line = line.strip()
-                    if line.startswith('{') and line.endswith('}'):
-                        try:
-                            candidate = json.loads(line)
-                            if 'processed' in candidate:
-                                summary = candidate
-                                break
-                        except json.JSONDecodeError:
-                            continue
-        else:
-            summary = None
+        # Find the last JSON object that contains "processed"
+        summary = None
+        # Search for JSON blocks starting with '{' on its own line
+        for i, line in enumerate(stdout.split('\n')):
+            if line.strip().startswith('{'):
+                candidate_str = '\n'.join(stdout.split('\n')[i:])
+                try:
+                    # raw_decode parses the first JSON object and returns end position
+                    decoder = json.JSONDecoder()
+                    obj, end = decoder.raw_decode(candidate_str)
+                    if isinstance(obj, dict) and 'processed' in obj:
+                        summary = obj
+                        break
+                except json.JSONDecodeError:
+                    continue
 
         assert summary is not None, \
             f"Could not parse JSON summary from output:\n{stdout[-500:]}"
