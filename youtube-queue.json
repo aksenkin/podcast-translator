@@ -1,6 +1,119 @@
 {
   "pending": [],
   "processing": null,
-  "completed": [],
+  "completed": [
+    {
+      "videoId": "gP8A3x2mFRM",
+      "title": "How Big is the AI Economy",
+      "url": "https://www.youtube.com/watch?v=gP8A3x2mFRM",
+      "channel": "AIDailyBrief",
+      "addedAt": "2026-07-01T05:30:27.236082+00:00",
+      "startedAt": "2026-07-01T06:18:10.479954+00:00",
+      "completedAt": "2026-07-01T06:52:45.876025+00:00",
+      "outputFiles": {
+        "audio": "/home/dmaxy/work/podcast-translator/audio/How_Big_is_the_AI_Economy.ru.mp3",
+        "ttsText": "/home/dmaxy/work/podcast-translator/translations/How_Big_is_the_AI_Economy_ru_tts.txt",
+        "transcript": "/home/dmaxy/work/podcast-translator/transcripts/How_Big_is_the_AI_Economy.txt"
+      }
+    },
+    {
+      "videoId": "187eNPPTa_w",
+      "title": "Mythos Returns But Not For Everyone",
+      "url": "https://www.youtube.com/watch?v=187eNPPTa_w",
+      "channel": "AIDailyBrief",
+      "addedAt": "2026-07-01T05:30:27.236128+00:00",
+      "startedAt": "2026-07-01T06:52:45.876426+00:00",
+      "completedAt": "2026-07-01T07:37:01.228578+00:00",
+      "outputFiles": {
+        "audio": "/home/dmaxy/work/podcast-translator/audio/Mythos_Returns_But_Not_For_Everyone.ru.mp3",
+        "ttsText": "/home/dmaxy/work/podcast-translator/translations/Mythos_Returns_But_Not_For_Everyone_ru_tts.txt",
+        "transcript": "/home/dmaxy/work/podcast-translator/transcripts/Mythos_Returns_But_Not_For_Everyone.txt"
+      }
+    },
+    {
+      "videoId": "WkXuk8NlPAQ",
+      "title": "Meet Your Ad Hoc AI Licensing Regime",
+      "url": "https://www.youtube.com/watch?v=WkXuk8NlPAQ",
+      "channel": "AIDailyBrief",
+      "addedAt": "2026-07-01T05:30:27.236132+00:00",
+      "startedAt": "2026-07-01T07:37:01.229157+00:00",
+      "completedAt": "2026-07-01T07:53:26.363565+00:00",
+      "outputFiles": {
+        "audio": "/home/dmaxy/work/podcast-translator/audio/Meet_Your_Ad_Hoc_AI_Licensing_Regime.ru.mp3",
+        "ttsText": "/home/dmaxy/work/podcast-translator/translations/Meet_Your_Ad_Hoc_AI_Licensing_Regime_ru_tts.txt",
+        "transcript": "/home/dmaxy/work/podcast-translator/transcripts/Meet_Your_Ad_Hoc_AI_Licensing_Regime.txt"
+      }
+    },
+    {
+      "videoId": "zMVZvgCOr40",
+      "title": "AI News: The New Model That's As Good As Fable",
+      "url": "https://www.youtube.com/watch?v=zMVZvgCOr40",
+      "channel": "mreflow",
+      "addedAt": "2026-07-01T05:30:27.236135+00:00",
+      "startedAt": "2026-07-01T07:53:26.363994+00:00",
+      "completedAt": "2026-07-01T08:29:55.579432+00:00",
+      "outputFiles": {
+        "audio": "/home/dmaxy/work/podcast-translator/audio/AI_News_The_New_Model_That's_As_Good_As_Fable.ru.mp3",
+        "ttsText": "/home/dmaxy/work/podcast-translator/translations/AI_News_The_New_Model_That's_As_Good_As_Fable_ru_tts.txt",
+        "transcript": "/home/dmaxy/work/podcast-translator/transcripts/AI_News_The_New_Model_That's_As_Good_As_Fable.txt"
+      }
+    },
+    {
+      "videoId": "STH929HARLo",
+      "title": "9 Free AI Skills That Feel Like Cheat Codes",
+      "url": "https://www.youtube.com/watch?v=STH929HARLo",
+      "channel": "mreflow",
+      "addedAt": "2026-07-01T05:30:27.236138+00:00",
+      "startedAt": "2026-07-01T08:29:55.580676+00:00",
+      "completedAt": "2026-07-01T09:14:06.975817+00:00",
+      "outputFiles": {
+        "audio": "/home/dmaxy/work/podcast-translator/audio/9_Free_AI_Skills_That_Feel_Like_Cheat_Codes.ru.mp3",
+        "ttsText": "/home/dmaxy/work/podcast-translator/translations/9_Free_AI_Skills_That_Feel_Like_Cheat_Codes_ru_tts.txt",
+        "transcript": "/home/dmaxy/work/podcast-translator/transcripts/9_Free_AI_Skills_That_Feel_Like_Cheat_Codes.txt"
+      }
+    },
+    {
+      "videoId": "Db260rUuKJg",
+      "title": "AI News: No One Saw This Coming!",
+      "url": "https://www.youtube.com/watch?v=Db260rUuKJg",
+      "channel": "mreflow",
+      "addedAt": "2026-07-01T05:30:27.236141+00:00",
+      "startedAt": "2026-07-01T09:14:06.976416+00:00",
+      "completedAt": "2026-07-01T10:08:04.855980+00:00",
+      "outputFiles": {
+        "audio": "/home/dmaxy/work/podcast-translator/audio/AI_News_No_One_Saw_This_Coming!.ru.mp3",
+        "ttsText": "/home/dmaxy/work/podcast-translator/translations/AI_News_No_One_Saw_This_Coming!_ru_tts.txt",
+        "transcript": "/home/dmaxy/work/podcast-translator/transcripts/AI_News_No_One_Saw_This_Coming!.txt"
+      }
+    },
+    {
+      "videoId": "ztCLWKwyMJY",
+      "title": "Fable Is Back: Here's What You Should Try First",
+      "url": "https://www.youtube.com/watch?v=ztCLWKwyMJY",
+      "channel": "AIDailyBrief",
+      "addedAt": "2026-07-02T05:30:20.721783+00:00",
+      "startedAt": "2026-07-02T05:30:47.425483+00:00",
+      "completedAt": "2026-07-02T06:06:46.995164+00:00",
+      "outputFiles": {
+        "audio": "/home/dmaxy/work/podcast-translator/audio/Fable_Is_Back_Here's_What_You_Should_Try_First.ru.mp3",
+        "ttsText": "/home/dmaxy/work/podcast-translator/translations/Fable_Is_Back_Here's_What_You_Should_Try_First_ru_tts.txt",
+        "transcript": "/home/dmaxy/work/podcast-translator/transcripts/Fable_Is_Back_Here's_What_You_Should_Try_First.txt"
+      }
+    },
+    {
+      "videoId": "XbHeJL45USQ",
+      "title": "GLM-5.2 Proves Open-Source AI is Finally Good Now!",
+      "url": "https://www.youtube.com/watch?v=XbHeJL45USQ",
+      "channel": "mreflow",
+      "addedAt": "2026-07-02T05:30:20.721823+00:00",
+      "startedAt": "2026-07-02T06:06:46.995740+00:00",
+      "completedAt": "2026-07-02T06:43:52.260136+00:00",
+      "outputFiles": {
+        "audio": "/home/dmaxy/work/podcast-translator/audio/GLM-5.2_Proves_Open-Source_AI_is_Finally_Good_Now!.ru.mp3",
+        "ttsText": "/home/dmaxy/work/podcast-translator/translations/GLM-5.2_Proves_Open-Source_AI_is_Finally_Good_Now!_ru_tts.txt",
+        "transcript": "/home/dmaxy/work/podcast-translator/transcripts/GLM-5.2_Proves_Open-Source_AI_is_Finally_Good_Now!.txt"
+      }
+    }
+  ],
   "failed": []
 }

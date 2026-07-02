@@ -217,7 +217,7 @@ class YouTubeChannelMonitor:
             try:
                 print(f"\n🚀 Launching queue_processor...")
                 subprocess.Popen(
-                    ["python3", str(self.skill_dir / "queue_processor.py"), "--max-videos", "1"],
+                    ["python3", str(self.skill_dir / "hermes_queue_processor.py"), "--max-videos", "0"],
                     cwd=str(self.skill_dir),
                     stdout=subprocess.DEVNULL,
                     stderr=subprocess.DEVNULL,

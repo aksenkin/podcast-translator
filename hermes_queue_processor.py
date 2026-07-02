@@ -135,6 +135,9 @@ def get_whisper_model(model_size="small"):
     First call: loads model (~7 min cold, ~2 sec warm from HF cache).
     Subsequent calls: returns cached instance.
 
+    Uses local snapshot path from HF cache to avoid network calls that
+    can hang for 20+ minutes on RPi (see Pitfall #24).
+
     Returns:
         WhisperModel instance
     """
@@ -144,14 +147,29 @@ def get_whisper_model(model_size="small"):
 
     from faster_whisper import WhisperModel
 
+    # Find the local model snapshot path to avoid HuggingFace network calls
+    model_path = model_size
+    try:
+        cache_snapshots = CACHE_DIR / f"models--Systran--faster-whisper-{model_size}" / "snapshots"
+        if cache_snapshots.exists():
+            snapshots = list(cache_snapshots.iterdir())
+            if snapshots:
+                # Verify the snapshot has model.bin
+                for snap in snapshots:
+                    if (snap / "model.bin").exists():
+                        model_path = str(snap)
+                        print(f"STATUS: Using cached model: {model_path}", flush=True)
+                        break
+    except Exception as e:
+        print(f"STATUS: Cache lookup failed ({e}), falling back to download", flush=True)
+
     print(f"STATUS: Loading Whisper model ({model_size})...", flush=True)
     start = time.time()
 
     _model = WhisperModel(
-        model_size,
+        model_path,
         device="cpu",
         compute_type="int8",
-        download_root=str(CACHE_DIR),
         cpu_threads=4,
         num_workers=2
     )
@@ -352,14 +370,20 @@ def run_pipeline_for_video(video, voice="ru-RU-DmitryNeural"):
     chunk_cmd = ["python3", str(SKILL_DIR / "scripts" / "chunk_audio.py"), str(input_file)]
     chunk_output = run_with_progress(chunk_cmd, 120, "Checking audio duration")
 
-    # Parse chunk result from last JSON line
+    # Parse chunk result — chunk_audio.py outputs pretty-printed JSON (indent=2)
+    # so individual lines are not valid JSON. Join all output and parse.
     chunk_data = None
-    for line in reversed(chunk_output):
-        try:
-            chunk_data = json.loads(line)
-            break
-        except json.JSONDecodeError:
-            continue
+    full_output = "\n".join(chunk_output)
+    try:
+        chunk_data = json.loads(full_output)
+    except json.JSONDecodeError:
+        # Try finding JSON block in output
+        for i in range(len(chunk_output)):
+            try:
+                chunk_data = json.loads("\n".join(chunk_output[i:]))
+                break
+            except json.JSONDecodeError:
+                continue
 
     if chunk_data is None:
         chunk_data = {"chunking": False}
