@@ -56,6 +56,9 @@ podcast-translator-workspace/
 .cache/
 models/
 
+# Agent credentials (contains API keys — never commit)
+.agent/
+
 # Temporary files
 *.tmp
 *.bak
